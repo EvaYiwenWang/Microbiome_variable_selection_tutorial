@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html >
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Chapter 3 CODA_LOGISTIC_LASSO | Methods Comparison</title>
+  <meta name="description" content="Methods comparison">
+  <meta name="generator" content="bookdown  and GitBook 2.6.7">
+
+  <meta property="og:title" content="Chapter 3 CODA_LOGISTIC_LASSO | Methods Comparison" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="Methods comparison" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 3 CODA_LOGISTIC_LASSO | Methods Comparison" />
+  
+  <meta name="twitter:description" content="Methods comparison" />
+  
+
+
+
+<meta name="date" content="2019-02-26">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  
+<link rel="prev" href="implem.html">
+<link rel="next" href="clr.html">
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Methods comparison</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a><ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#packages-installation-and-loading"><i class="fa fa-check"></i><b>1.1</b> Packages installation and loading</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#simulations"><i class="fa fa-check"></i><b>1.2</b> Simulations</a></li>
+<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#example-datasets"><i class="fa fa-check"></i><b>1.3</b> Example datasets</a><ul>
+<li class="chapter" data-level="1.3.1" data-path="index.html"><a href="index.html#crohn-disease-data"><i class="fa fa-check"></i><b>1.3.1</b> Crohn disease data</a></li>
+<li class="chapter" data-level="1.3.2" data-path="index.html"><a href="index.html#beme-day1-data"><i class="fa fa-check"></i><b>1.3.2</b> BEME day1 data</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="implem.html"><a href="implem.html"><i class="fa fa-check"></i><b>2</b> Methods implementation</a><ul>
+<li class="chapter" data-level="2.1" data-path="implem.html"><a href="implem.html#logistic-lasso"><i class="fa fa-check"></i><b>2.1</b> LOGISTIC LASSO</a></li>
+<li class="chapter" data-level="2.2" data-path="implem.html"><a href="implem.html#logistic-elastic-net"><i class="fa fa-check"></i><b>2.2</b> LOGISTIC ELASTIC NET</a></li>
+<li class="chapter" data-level="2.3" data-path="implem.html"><a href="implem.html#ranglambda"><i class="fa fa-check"></i><b>2.3</b> rangLambda</a></li>
+<li class="chapter" data-level="2.4" data-path="implem.html"><a href="implem.html#soft-thresholding"><i class="fa fa-check"></i><b>2.4</b> Soft thresholding</a></li>
+<li class="chapter" data-level="2.5" data-path="implem.html"><a href="implem.html#other-functions"><i class="fa fa-check"></i><b>2.5</b> Other functions</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="coda.html"><a href="coda.html"><i class="fa fa-check"></i><b>3</b> CODA_LOGISTIC_LASSO</a><ul>
+<li class="chapter" data-level="3.1" data-path="coda.html"><a href="coda.html#crohn-disease-data-1"><i class="fa fa-check"></i><b>3.1</b> Crohn disease data</a></li>
+<li class="chapter" data-level="3.2" data-path="coda.html"><a href="coda.html#beme-day1-data-1"><i class="fa fa-check"></i><b>3.2</b> BEME day1 data</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="clr.html"><a href="clr.html"><i class="fa fa-check"></i><b>4</b> CLR_LOGISTIC_LASSO</a><ul>
+<li class="chapter" data-level="4.1" data-path="clr.html"><a href="clr.html#crohn-disease-data-2"><i class="fa fa-check"></i><b>4.1</b> Crohn disease data</a></li>
+<li class="chapter" data-level="4.2" data-path="clr.html"><a href="clr.html#beme-day1-data-2"><i class="fa fa-check"></i><b>4.2</b> BEME day1 data</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="selbal.html"><a href="selbal.html"><i class="fa fa-check"></i><b>5</b> Selbal: selection of balances</a><ul>
+<li class="chapter" data-level="5.1" data-path="selbal.html"><a href="selbal.html#crohn-disease-data-3"><i class="fa fa-check"></i><b>5.1</b> Crohn disease data</a></li>
+<li class="chapter" data-level="5.2" data-path="selbal.html"><a href="selbal.html#beme-day1-data-3"><i class="fa fa-check"></i><b>5.2</b> BEME day1 data</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="comparison.html"><a href="comparison.html"><i class="fa fa-check"></i><b>6</b> Concordance of variables selected by the three methods</a><ul>
+<li class="chapter" data-level="6.1" data-path="comparison.html"><a href="comparison.html#crohn-disease-data-4"><i class="fa fa-check"></i><b>6.1</b> Crohn disease data</a></li>
+<li class="chapter" data-level="6.2" data-path="comparison.html"><a href="comparison.html#beme-day1-data-4"><i class="fa fa-check"></i><b>6.2</b> BEME day1 data</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/EvaYiwenWang/vignette" target="blank">Source codes on github</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Methods Comparison</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="coda" class="section level1">
+<h1><span class="header-section-number">Chapter 3</span> CODA_LOGISTIC_LASSO</h1>
+<div id="crohn-disease-data-1" class="section level2">
+<h2><span class="header-section-number">3.1</span> Crohn disease data</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">y&lt;-y_Crohn 
+<span class="kw">summary</span>(y)</code></pre></div>
+<pre><code>##  CD  no 
+## 662 313</code></pre>
+<p>y is the binary outcome, can be numerical (values 0 and 1), factor (2 levels) or categorical (2 categories)</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x&lt;-x_Crohn </code></pre></div>
+<p>x is the matrix of microbiome abundances, either absolute abundances (counts) or relative abundances (proportions);</p>
+<p>x should not be the matrix of log(counts) or log(proportions). The method itself performs the log-transformation of the abundances.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dim</span>(x)</code></pre></div>
+<pre><code>## [1] 975  48</code></pre>
+<p>The rows of x are individuals/samples, the columns are taxa</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rangLambda</span>(y,x,<span class="dt">numVar=</span><span class="dv">12</span>, <span class="dt">lambdaIni =</span><span class="fl">0.15</span>)</code></pre></div>
+<pre><code>## [1]  0.00  0.65 48.00 17.00
+## [1]  0.000  0.325 48.000  2.000
+## [1]  0.1625  0.3250 12.0000  2.0000</code></pre>
+<pre><code>## $`rang lambdas`
+## [1] 0.1625 0.3250
+## 
+## $`num selected variables`
+## [1] 12  2</code></pre>
+<p>It provides a rang of lambda values corresponding to a given number of variables to be selected (numVar).</p>
+<p>The default initial lambda is lambdaIni=1.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">results_codalasso&lt;-<span class="kw">coda_logistic_lasso</span>(y,x,<span class="dt">lambda=</span><span class="fl">0.19</span>)</code></pre></div>
+<p>lambda is the penalization parameter: the larger the value of lambda the fewer number of variables will be selected.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">results_codalasso</code></pre></div>
+<pre><code>## $`number of iterations`
+## [1] 23
+## 
+## $`number of selected taxa`
+## [1] 11
+## 
+## $`indices of taxa with non-zero coeff`
+##  [1]  0  2  5  9 19 27 31 32 33 39 40 48
+## 
+## $`taxa with non-zero coeff`
+##  [1] &quot;beta0&quot;                        &quot;g__Parabacteroides&quot;          
+##  [3] &quot;f__Peptostreptococcaceae_g__&quot; &quot;g__Eggerthella&quot;              
+##  [5] &quot;g__Dialister&quot;                 &quot;o__Lactobacillales_g__&quot;      
+##  [7] &quot;g__Prevotella&quot;                &quot;g__Roseburia&quot;                
+##  [9] &quot;g__Lachnospira&quot;               &quot;g__Streptococcus&quot;            
+## [11] &quot;g__Aggregatibacter&quot;           &quot;g__Bilophila&quot;                
+## 
+## $`beta non-zero coefficients`
+##  [1] -1.0023255478 -0.0057464016  0.0202907034 -0.0184875313 -0.0992393846
+##  [6] -0.0159418386 -0.0030842274  0.2530005235 -0.0085670215 -0.0818265310
+## [11] -0.0406982632  0.0002999724
+## 
+## $`proportion of explained deviance`
+## [1] 0.1542276
+## 
+## $betas
+##  [1] -1.0023255478  0.0000000000 -0.0057464016  0.0000000000  0.0000000000
+##  [6]  0.0202907034  0.0000000000  0.0000000000  0.0000000000 -0.0184875313
+## [11]  0.0000000000  0.0000000000  0.0000000000  0.0000000000  0.0000000000
+## [16]  0.0000000000  0.0000000000  0.0000000000  0.0000000000 -0.0992393846
+## [21]  0.0000000000  0.0000000000  0.0000000000  0.0000000000  0.0000000000
+## [26]  0.0000000000  0.0000000000 -0.0159418386  0.0000000000  0.0000000000
+## [31]  0.0000000000 -0.0030842274  0.2530005235 -0.0085670215  0.0000000000
+## [36]  0.0000000000  0.0000000000  0.0000000000  0.0000000000 -0.0818265310
+## [41] -0.0406982632  0.0000000000  0.0000000000  0.0000000000  0.0000000000
+## [46]  0.0000000000  0.0000000000  0.0000000000  0.0002999724</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">selected_codalasso&lt;-results_codalasso[[<span class="dv">4</span>]][<span class="op">-</span><span class="dv">1</span>]
+
+columns_selected_codalasso&lt;-results_codalasso[[<span class="dv">3</span>]][<span class="op">-</span><span class="dv">1</span>]
+
+<span class="co">#coef&lt;-results[[5]][-1]</span>
+
+<span class="kw">write.csv</span>(<span class="kw">data.frame</span>(columns_selected_codalasso,selected_codalasso),<span class="st">&quot;./Generated_datasets/results_codalasso_Crohn12.csv&quot;</span>)</code></pre></div>
+</div>
+<div id="beme-day1-data-1" class="section level2">
+<h2><span class="header-section-number">3.2</span> BEME day1 data</h2>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="implem.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="clr.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"download": ["Methods_comparison.pdf"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:" && /^https?:/.test(src))
+      src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
