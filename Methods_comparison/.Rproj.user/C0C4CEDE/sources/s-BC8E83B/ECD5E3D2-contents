@@ -1,0 +1,31 @@
+# Selbal: selection of balances {#selbal}
+
+## Crohn disease data
+
+```{r}
+y<-y_Crohn  
+```
+
+For binary outcomes (logistic regression), selbal requires y to be factor.           
+
+If y is numeric selbal implements linear regression.
+
+```{r}
+x<-x_Crohn 
+colnames(x)<-(1:ncol(x))
+
+selbal_Crohn<-selbal(x = x, y = y, logt=T, maxV=12)
+
+selected_selbal<-as.numeric(c(selbal_Crohn[[6]][,1],selbal_Crohn[[6]][,2]))
+id.na<-which(is.na(selected_selbal))
+selected_selbal<-selected_selbal[-id.na]
+selected_selbal<-as.character(selected_selbal)
+
+columns_selected_selbal<-which(colnames(x)%in% selected_selbal)
+taxa_id<-colnames(x_Crohn)[columns_selected_selbal]
+
+write.csv(data.frame(columns_selected_selbal, taxa_id),"./Generated_datasets/results_selbal_Crohn12.csv")
+
+```
+
+## BEME day1 data

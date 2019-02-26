@@ -1,0 +1,67 @@
+--- 
+title: "Methods Comparison"
+author: | 
+  | Malu Calle Rosingana 
+  | Coding: Yiwen Wang
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+documentclass: book
+bibliography: [book.bib]
+biblio-style: apalike
+link-citations: yes
+description: "Methods comparison"
+---
+
+# Introduction 
+
+This vignette provides a comparison of the 12 variables selected by the 3 methods: coda_logistic_lasso, clr+logistic_lasso, selbal.
+
+First, let us install and load the packages.
+
+## Packages installation and loading
+
+```{r,message=FALSE, warning=FALSE}
+#cran.packages = c('knitr','MASS','VennDiagram','gplots','glmnet')
+#install.packages(cran.packages)
+#devtools::install_github(repo = "UVic-omics/selbal")
+
+library(knitr)
+library(MASS)
+library(VennDiagram)
+library(gplots)
+library(glmnet)
+library(selbal)
+```
+
+## Simulations
+
+The way we simulate datasets.
+
+## Example datasets
+
+We have two case studies.
+
+### Crohn disease data
+
+```{r}
+load("./datasets/Crohn_data.rda")
+dim(x_Crohn)
+```
+
+The Crohn data have 975 samples and 48 taxa.
+
+
+```{r}
+summary(y_Crohn)
+```
+
+Among 975 samples, 662 samples are labeled as 'CD', the other 313 are labeled as 'no'.
+
+### BEME day1 data
+
+```{r}
+
+```
+
+
+
