@@ -5,7 +5,7 @@ bookdown::gitbook:
       before: |
         <li><a href="./">Methods comparison</a></li>
       after: |
-        <li><a href="https://github.com/EvaYiwenWang/vignette" target="blank">Source codes on github</a></li>
+        <li><a href="https://github.com/EvaYiwenWang/Methods_comparison" target="blank">Source codes on github</a></li>
     download: ["pdf"]
 bookdown::pdf_book:
   includes:
