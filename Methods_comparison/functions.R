@@ -1,41 +1,39 @@
-# Methods implementation {#implem}
+# title: Functions
+# author: Yiwen (Eva) Wang
+# date: May 13th, 2019
 
+## ---------------
 ## LOGISTIC LASSO
+## ---------------
 
-With linear constraint: $\sum \beta_{j} = 0$ (for $j>1$)
-
-```{r}
+# With linear constraint: $\sum \beta_{j} = 0$ (for $j>1$)
 # y: dependent variable, binary, vector of length n
 # X: matrix of k covarites (positive values, taxa abundances in counts, proportions, intensities, ...), matrix of dimension n by k
 
-coda_logistic_lasso<-function(y,X,lambda, maxiter=400, maxiter2=50, r=10, 
-                              tol=1.e-4, tol2=1.e-6){
-
-  #install.packages("MASS")
+coda_logistic_lasso <- function(y,X,lambda, maxiter=400, maxiter2=50, r=10, 
+                                tol=1.e-4, tol2=1.e-6){
+  
   library(MASS)   # for the computation of the generalized inverse ginv()
-#  library(tictoc)
-
+  
   if (!is.numeric(y)){
     y<-as.numeric(y)-1
   }
-
-  #source("functions_coda_logistic_lasso.R") 
-
+  
   # Transform initial data 
   ztransformation(X)
-
+  
   #initial values for beta
   #   p<<-ncol(X)   # p: number of covariates after filtering
   #   n<<-nrow(X);  # both defined on ztransformation function
-  #beta_ini<-rep(1,p+1)/(p+1)  # uniform values 
-  beta_ini<-c(log(mean(y)/(1-mean(y))),rep(1/p,p))   # b0 related to mean(y) and uniform values for the other components
+  # beta_ini<-rep(1,p+1)/(p+1)  # uniform values 
+  beta_ini<-c(log(mean(y)/(1-mean(y))),rep(1/p,p))   
+  # b0 related to mean(y) and uniform values for the other components
   
- #null deviance
+  #null deviance
   nulldev<-glm(y~1, family=binomial())[[10]]
   
   
   #initialization parameters
-  
   k<-1
   epsilon<-0.1
   beta_ant<-beta_ini
@@ -50,42 +48,42 @@ coda_logistic_lasso<-function(y,X,lambda, maxiter=400, maxiter2=50, r=10,
   start_iter = Sys.time(); 
   while((abs(epsilon)>tol)&(k<=maxiter)){
     #print(append("loop",k))
-      k0<-0
-      t_k<-10
-      condition<-0.1
-      while ((condition>0)&(k0<=maxiter2)){
-        k0<-k0+1
-        #print(append("k0",k0))
-        d_k<-y_ant-t_k*grad_g(y_ant, z, y, n)
-        
-        # Soft thresholding:
-        zproxi<-c(d_k[1],soft_thres(d_k[-1],lambda*t_k))
-        
-        # Projection:
-        zproj<-projection(zproxi,p_c)
-        
-        # line search condition
-        Gt<-(y_ant-zproj)/t_k
-        condition<-g(y_ant-t_k*Gt,z, y, n)-g(y_ant,z, y, n)+t_k*t(grad_g(y_ant,z, y, n))%*%Gt-t_k/2*normSqr(Gt)
-        #print(append("condition",condition))
-        #print(append("t_k",t_k))
-        t_k<-t_k/2
-      }
-      beta<-zproj
+    k0<-0
+    t_k<-10
+    condition<-0.1
+    while ((condition>0)&(k0<=maxiter2)){
+      k0<-k0+1
+      #print(append("k0",k0))
+      d_k<-y_ant-t_k*grad_g(y_ant, z, y, n)
       
-      y_k<-beta+(k-1)/(k+r-1)*(beta-beta_ant)
+      # Soft thresholding:
+      zproxi<-c(d_k[1],soft_thres(d_k[-1],lambda*t_k))
       
+      # Projection:
+      zproj<-projection(zproxi,p_c)
       
-      dev_explained<-1-(nrow(X)*2*g(beta,z, y, n)/nulldev)
-      epsilon<-abs(dev_explained-dev_explained_ant)  
-      
-                
-      y_ant<-y_k
-      beta_ant<-beta
-      dev_explained_ant<-dev_explained
-      k<-k+1
-  #print(append("epsilon",epsilon))
-
+      # line search condition
+      Gt<-(y_ant-zproj)/t_k
+      condition<-g(y_ant-t_k*Gt,z, y, n)-g(y_ant,z, y, n)+t_k*t(grad_g(y_ant,z, y, n))%*%Gt-t_k/2*normSqr(Gt)
+      #print(append("condition",condition))
+      #print(append("t_k",t_k))
+      t_k<-t_k/2
+    }
+    beta<-zproj
+    
+    y_k<-beta+(k-1)/(k+r-1)*(beta-beta_ant)
+    
+    
+    dev_explained<-1-(nrow(X)*2*g(beta,z, y, n)/nulldev)
+    epsilon<-abs(dev_explained-dev_explained_ant)  
+    
+    
+    y_ant<-y_k
+    beta_ant<-beta
+    dev_explained_ant<-dev_explained
+    k<-k+1
+    #print(append("epsilon",epsilon))
+    
   }
   end_iter = Sys.time(); 
   sprintf("iter time = %f",end_iter-start_iter)
@@ -107,7 +105,7 @@ coda_logistic_lasso<-function(y,X,lambda, maxiter=400, maxiter2=50, r=10,
   
   #print("taxa with non-zero coeff:")
   # selec<-colnames(z)[abs(beta_res)>0]
-
+  
   #print("beta non-zero coefficients:")
   # beta_res[abs(beta_res)>0]
   
@@ -120,47 +118,44 @@ coda_logistic_lasso<-function(y,X,lambda, maxiter=400, maxiter2=50, r=10,
   
   
   results<-list(
-  	 "number of iterations"=k,
-       "number of selected taxa"=
-         sum(abs(beta_res)>0)-1, 
-       "indices of taxa with non-zero coeff"=
-        which(abs(beta_res)>0)-1,
-       "taxa with non-zero coeff"=
-       colnames(z)[abs(beta_res)>0], 
-       "beta non-zero coefficients"=
-       beta_res[abs(beta_res)>0],
-       "proportion of explained deviance"=
-       dev_explained_beta_res, 
-  	 "betas"=
-  	 beta_res)
+    "number of iterations"=k,
+    "number of selected taxa"=
+      sum(abs(beta_res)>0)-1, 
+    "indices of taxa with non-zero coeff"=
+      which(abs(beta_res)>0)-1,
+    "taxa with non-zero coeff"=
+      colnames(z)[abs(beta_res)>0], 
+    "beta non-zero coefficients"=
+      beta_res[abs(beta_res)>0],
+    "proportion of explained deviance"=
+      dev_explained_beta_res, 
+    "betas"=
+      beta_res)
   
   return(results)
-
+  
 } # END function coda_logistic_lasso
 
-```
 
+
+## ---------------------
 ## LOGISTIC ELASTIC NET
-
-```{r}
+## ---------------------
 
 ##-----------------------------------------------------------------
 
 coda_logistic_elasticNet<-function(y,X,lambda, alpha=0.5, maxiter=1000, maxiter2=50, r=10, 
                                    tol=1.e-4, tol2=1.e-6){
   
-  #install.packages("MASS")
   library(MASS)   # for the computation of the generalized inverse ginv()
-#  library(tictoc)
-  
-#  source("functions_coda_logistic_lasso.R") 
   
   # Transform initial data 
   ztransformation(X)
   
   #initial values for beta
   #beta_ini<-rep(1,p+1)/(p+1)  # uniform values 
-  beta_ini<-c(log(mean(y)/(1-mean(y))),rep(1/p,p))   # b0 related to mean(y) and uniform values for the other components
+  beta_ini<-c(log(mean(y)/(1-mean(y))),rep(1/p,p))   
+  # b0 related to mean(y) and uniform values for the other components
   
   #null deviance
   nulldev<-glm(y~1, family=binomial())[[10]]
@@ -232,7 +227,7 @@ coda_logistic_elasticNet<-function(y,X,lambda, alpha=0.5, maxiter=1000, maxiter2
   end_iter = Sys.time()
   sprintf("iter time = %f",end_iter - start_iter)
   
-
+  
   #Projection of the optimal beta to fulfil the constraint sum(beta[j])=0, for j>1 
   indx<-which(abs(zproxi)>tol2)
   if (abs(zproxi[1])>0) indx<-indx[-1]
@@ -280,17 +275,13 @@ coda_logistic_elasticNet<-function(y,X,lambda, alpha=0.5, maxiter=1000, maxiter2
   return(results)
   
 } # END function coda_logistic_ElasticNet
-```
 
+## -----------
 ## rangLambda
+## -----------
 
-It provides a rang of lambda values corresponding to a given number of variables to be selected (numVar).      
-
-The default initial lambda is lambdaIni=1.
-
-```{r}
-
-##-----------------------------------------------------------------
+# It provides a rang of lambda values corresponding to a given number of variables to be selected (numVar).      
+# The default initial lambda is lambdaIni=1.
 
 rangLambda <- function(y,X,numVar, lambdaIni =1){
   lambdaB = lambdaIni;
@@ -337,13 +328,13 @@ rangLambda <- function(y,X,numVar, lambdaIni =1){
   return(results);
 }
 
-```
 
+## ------------------
 ## Soft thresholding
+## ------------------
 
-http://www.simonlucey.com/soft-thresholding/
+# http://www.simonlucey.com/soft-thresholding/
 
-```{r}
 soft_thres<-function(b, lambda){
   x<-rep(0,length(b))
   # Set the threshold
@@ -363,11 +354,11 @@ soft_thres<-function(b, lambda){
   
   return(x)
 }
-```
 
+## ----------------
 ## Other functions
+## ----------------
 
-```{r}
 ##-----------------------------------------------------------------
 
 norm1<-function(x){
@@ -455,7 +446,7 @@ F2<-function(x,Z,Y,n,lambda){
 }
 
 trapezInteg <- function(x,y) {
-# Compute AUC using trapezoid numerical method 
+  # Compute AUC using trapezoid numerical method 
   n = length(x);
   sumArea = 0;
   for (i in 1:(n-1)){
@@ -469,5 +460,4 @@ trapezInteg <- function(x,y) {
   return(sumArea)
 }
 
-```
 

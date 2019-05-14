@@ -1,0 +1,36 @@
+# Concordance of variables selected by the three methods {#comparison}
+
+## CD data
+
+```{r, fig.pos = 'H'}
+d_selbal <- read.csv("./Generated_datasets/results_selbal_Crohn12.csv", header = T)
+d_clrlasso <- read.csv("./Generated_datasets/results_clrlasso_Crohn12.csv", header = T)
+d_codalasso <- read.csv("./Generated_datasets/results_codalasso_Crohn12.csv", header = T)
+  
+taxa_selected <- list(d_clrlasso[,2], d_codalasso[,2], d_selbal[,2])
+taxa.id_selected <- list(d_clrlasso[,3], d_codalasso[,3], d_selbal[,3])
+
+
+venn.plot <- venn.diagram(taxa_selected, NULL, fill = c("magenta", "blue", "lightblue"), 
+                          alpha=c(0.5,0.5,0.5), cex = 2, cat.fontface=4, 
+                          category.names = c("clr+lasso", "coda-lasso", "selbal"),
+                          main = "Concordance of selected taxa for Crohn data")
+grid.draw(venn.plot)
+
+taxa.id <- venn(taxa.id_selected, show.plot=FALSE)
+taxa <- venn(taxa_selected, show.plot=FALSE)
+
+inters_taxa.id <- attr(taxa.id, "intersections")
+inters_taxa <- attr(taxa, "intersections")
+
+lapply(inters_taxa, head) 
+
+lapply(inters_taxa.id, head) 
+
+```
+
+need more explanation of the venn diagram.
+
+## BEME day1 data
+
+content need to be added.

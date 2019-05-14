@@ -1,0 +1,44 @@
+# Selbal: selection of balances {#selbal}
+
+The last method to illustrate is selbal, see details in [@rivera2018balances].
+
+## CD data
+
+```{r}
+x <- x_Crohn 
+colnames(x) <- (1:ncol(x))
+
+y <- y_Crohn  
+```
+
+For binary outcomes (logistic regression), *selbal()* requires y to be factor. If y is numeric, *selbal()* implements linear regression.
+
+```{r selbalfig, fig.cap='Description of the global balance for CD.', fig.pos = 'H', fig.height = 8, fig.width = 12}
+selbal_Crohn <- selbal(x = x, y = y, logt=T, maxV=12)
+```
+
+We use **A**rea **U**nder the receiver operating characteristic **C**urve (AUC) to deciede what is the optimal number of variables. Once the first two-taxon balance is selected, the algorithm performs a forward selection process. At each step, a new taxon is added to the existing balance such that AUC is improved, the algorithm stops when there is no additional variable that increase the current AUC or when the maximun number of variables to be included in the balance is achieved.
+
+
+In Figure \ref{fig:selbalfig}, the two groups of taxa that form the global balance are specified at the top of the plot. The box plot represents the distribution of the balance scores for CD and non-CD individuals. The right part of the figure contains the ROC curve with its AUC value and the density curve for each group.
+
+
+```{r, warning = FALSE, message = FALSE}
+selected_selbal <- as.numeric(c(selbal_Crohn[[6]][,1], selbal_Crohn[[6]][,2]))
+id.na <- which(is.na(selected_selbal))
+selected_selbal <- selected_selbal[-id.na]
+selected_selbal <- as.character(selected_selbal)
+
+columns_selected_selbal <- which(colnames(x)%in% selected_selbal)
+taxa_id <- colnames(x_Crohn)[columns_selected_selbal]
+
+write.csv(data.frame(columns_selected_selbal, taxa_id),
+          "./Generated_datasets/results_selbal_Crohn12.csv")
+
+```
+
+The name of selected genera and their indices are also saved as the other method did.
+
+## BEME day1 data
+
+content need to be added.
