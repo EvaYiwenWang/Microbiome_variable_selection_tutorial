@@ -5,11 +5,11 @@
 
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Chapter 3 CLR_LOGISTIC_LASSO | Methods Comparison</title>
+  <title>Chapter 3 CLR-lasso | Variable selection in microbiome compositional data analysis: tutorial</title>
   <meta name="description" content="Methods comparison">
   <meta name="generator" content="bookdown  and GitBook 2.6.7">
 
-  <meta property="og:title" content="Chapter 3 CLR_LOGISTIC_LASSO | Methods Comparison" />
+  <meta property="og:title" content="Chapter 3 CLR-lasso | Variable selection in microbiome compositional data analysis: tutorial" />
   <meta property="og:type" content="book" />
   
   
@@ -17,14 +17,14 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 3 CLR_LOGISTIC_LASSO | Methods Comparison" />
+  <meta name="twitter:title" content="Chapter 3 CLR-lasso | Variable selection in microbiome compositional data analysis: tutorial" />
   
   <meta name="twitter:description" content="Methods comparison" />
   
 
 
 
-<meta name="date" content="2019-05-14">
+<meta name="date" content="2019-09-25">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -100,32 +100,42 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
       <nav role="navigation">
 
 <ul class="summary">
-<li><a href="./">Methods comparison</a></li>
+<li><a href="./">Variable selection</a></li>
 
 <li class="divider"></li>
 <li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a><ul>
 <li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#packages-installation-and-loading"><i class="fa fa-check"></i><b>1.1</b> Packages installation and loading</a></li>
-<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#simulations"><i class="fa fa-check"></i><b>1.2</b> Simulations</a></li>
-<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#example-datasets"><i class="fa fa-check"></i><b>1.3</b> Example datasets</a><ul>
-<li class="chapter" data-level="1.3.1" data-path="index.html"><a href="index.html#microbiome-and-crohns-disease"><i class="fa fa-check"></i><b>1.3.1</b> Microbiome and Crohn’s disease</a></li>
-<li class="chapter" data-level="1.3.2" data-path="index.html"><a href="index.html#beme-day1-data"><i class="fa fa-check"></i><b>1.3.2</b> BEME day1 data</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#example-datasets"><i class="fa fa-check"></i><b>1.2</b> Example datasets</a><ul>
+<li class="chapter" data-level="1.2.1" data-path="index.html"><a href="index.html#crohns-disease"><i class="fa fa-check"></i><b>1.2.1</b> Crohn’s disease</a></li>
+<li class="chapter" data-level="1.2.2" data-path="index.html"><a href="index.html#high-fat-high-sugar-diet-in-mice"><i class="fa fa-check"></i><b>1.2.2</b> High fat high sugar diet in mice</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="2" data-path="coda.html"><a href="coda.html"><i class="fa fa-check"></i><b>2</b> CODA_LOGISTIC_LASSO</a><ul>
+<li class="chapter" data-level="2" data-path="coda.html"><a href="coda.html"><i class="fa fa-check"></i><b>2</b> CoDA-lasso</a><ul>
 <li class="chapter" data-level="2.1" data-path="coda.html"><a href="coda.html#cd-data"><i class="fa fa-check"></i><b>2.1</b> CD data</a></li>
-<li class="chapter" data-level="2.2" data-path="coda.html"><a href="coda.html#beme-day1-data-1"><i class="fa fa-check"></i><b>2.2</b> BEME day1 data</a></li>
+<li class="chapter" data-level="2.2" data-path="coda.html"><a href="coda.html#hfhs-day1-data"><i class="fa fa-check"></i><b>2.2</b> HFHS-Day1 data</a></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="clr.html"><a href="clr.html"><i class="fa fa-check"></i><b>3</b> CLR_LOGISTIC_LASSO</a><ul>
+<li class="chapter" data-level="3" data-path="clr.html"><a href="clr.html"><i class="fa fa-check"></i><b>3</b> CLR-lasso</a><ul>
 <li class="chapter" data-level="3.1" data-path="clr.html"><a href="clr.html#cd-data-1"><i class="fa fa-check"></i><b>3.1</b> CD data</a></li>
-<li class="chapter" data-level="3.2" data-path="clr.html"><a href="clr.html#beme-day1-data-2"><i class="fa fa-check"></i><b>3.2</b> BEME day1 data</a></li>
+<li class="chapter" data-level="3.2" data-path="clr.html"><a href="clr.html#hfhs-day1-data-1"><i class="fa fa-check"></i><b>3.2</b> HFHS-Day1 data</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="selbal.html"><a href="selbal.html"><i class="fa fa-check"></i><b>4</b> Selbal: selection of balances</a><ul>
 <li class="chapter" data-level="4.1" data-path="selbal.html"><a href="selbal.html#cd-data-2"><i class="fa fa-check"></i><b>4.1</b> CD data</a></li>
-<li class="chapter" data-level="4.2" data-path="selbal.html"><a href="selbal.html#beme-day1-data-3"><i class="fa fa-check"></i><b>4.2</b> BEME day1 data</a></li>
+<li class="chapter" data-level="4.2" data-path="selbal.html"><a href="selbal.html#hfhs-day1-data-2"><i class="fa fa-check"></i><b>4.2</b> HFHS-Day1 data</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="comparison.html"><a href="comparison.html"><i class="fa fa-check"></i><b>5</b> Concordance of variables selected by the three methods</a><ul>
-<li class="chapter" data-level="5.1" data-path="comparison.html"><a href="comparison.html#cd-data-3"><i class="fa fa-check"></i><b>5.1</b> CD data</a></li>
-<li class="chapter" data-level="5.2" data-path="comparison.html"><a href="comparison.html#beme-day1-data-4"><i class="fa fa-check"></i><b>5.2</b> BEME day1 data</a></li>
+<li class="chapter" data-level="5.1" data-path="comparison.html"><a href="comparison.html#cd-data-3"><i class="fa fa-check"></i><b>5.1</b> CD data</a><ul>
+<li class="chapter" data-level="5.1.1" data-path="comparison.html"><a href="comparison.html#upsetr"><i class="fa fa-check"></i><b>5.1.1</b> UpSetR</a></li>
+<li class="chapter" data-level="5.1.2" data-path="comparison.html"><a href="comparison.html#selbal-like-plot"><i class="fa fa-check"></i><b>5.1.2</b> Selbal-like plot</a></li>
+<li class="chapter" data-level="5.1.3" data-path="comparison.html"><a href="comparison.html#plotloadings"><i class="fa fa-check"></i><b>5.1.3</b> plotLoadings</a></li>
+<li class="chapter" data-level="5.1.4" data-path="comparison.html"><a href="comparison.html#trajectory-plots"><i class="fa fa-check"></i><b>5.1.4</b> Trajectory plots</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="comparison.html"><a href="comparison.html#hfhs-day1-data-3"><i class="fa fa-check"></i><b>5.2</b> HFHS-Day1 data</a><ul>
+<li class="chapter" data-level="5.2.1" data-path="comparison.html"><a href="comparison.html#upsetr-1"><i class="fa fa-check"></i><b>5.2.1</b> UpSetR</a></li>
+<li class="chapter" data-level="5.2.2" data-path="comparison.html"><a href="comparison.html#selbal-like-plot-1"><i class="fa fa-check"></i><b>5.2.2</b> Selbal-like plot</a></li>
+<li class="chapter" data-level="5.2.3" data-path="comparison.html"><a href="comparison.html#plotloadings-1"><i class="fa fa-check"></i><b>5.2.3</b> plotLoadings</a></li>
+<li class="chapter" data-level="5.2.4" data-path="comparison.html"><a href="comparison.html#trajectory-plots-1"><i class="fa fa-check"></i><b>5.2.4</b> Trajectory plots</a></li>
+<li class="chapter" data-level="5.2.5" data-path="comparison.html"><a href="comparison.html#graphlan"><i class="fa fa-check"></i><b>5.2.5</b> GraPhlAn</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
@@ -140,7 +150,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Methods Comparison</a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Variable selection in microbiome compositional data analysis: tutorial</a>
           </h1>
         </div>
 
@@ -149,39 +159,183 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
             <section class="normal" id="section-">
 <div id="clr" class="section level1">
-<h1><span class="header-section-number">Chapter 3</span> CLR_LOGISTIC_LASSO</h1>
-<p>Then, we illustrate a combined method with centered logratio transformation (CLR) and lasso.</p>
+<h1><span class="header-section-number">Chapter 3</span> CLR-lasso</h1>
+<p>Then, we illustrate <strong>CLR-lasso</strong>, which is the penalized regression after the centered log-ratio (CLR) transformation <span class="citation">(Zou and Hastie <a href="#ref-zou2005regularization">2005</a>; Tibshirani <a href="#ref-tibshirani1996regression">1996</a>; Le Cessie and Van Houwelingen <a href="#ref-le1992ridge">1992</a>)</span>. This method was applied based on function <em>glmnet()</em>. We also generated a wrapper function called <em>glmnet_wrapper()</em>. It is based on <em>glmnet()</em>, but provides additional outputs. All these functions are uploaded via <strong>functions.R</strong>.</p>
 <div id="cd-data-1" class="section level2">
 <h2><span class="header-section-number">3.1</span> CD data</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x &lt;-<span class="st"> </span><span class="kw">as.matrix</span>(x_Crohn)
-y &lt;-<span class="st"> </span>y_Crohn_numeric </code></pre></div>
-<p>Here, y is numeric, because <em>glmnet()</em> requires y to be numeric.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># CLR transformation Z=log(x)</span>
-z &lt;-<span class="st"> </span><span class="kw">log</span>(x)
-clrx &lt;-<span class="st"> </span><span class="kw">apply</span>(z, <span class="dv">2</span>, <span class="cf">function</span>(x) x<span class="op">-</span><span class="kw">rowMeans</span>(z))
-<span class="co"># rowMeans(clrx)  </span></code></pre></div>
-<p>x (the matrix of microbiome abundances) is then CLR transformed.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">clrlasso &lt;-<span class="st"> </span><span class="kw">glmnet</span>(clrx, y, <span class="dt">standardize =</span> <span class="ot">FALSE</span>, <span class="dt">alpha =</span> <span class="dv">1</span>,<span class="dt">family =</span> <span class="st">&quot;binomial&quot;</span>, 
-                   <span class="dt">lambda =</span> <span class="kw">seq</span>(<span class="fl">0.015</span>, <span class="dv">2</span>, <span class="fl">0.01</span>)) 
-<span class="kw">plot</span>(clrlasso)</code></pre></div>
-<p><img src="Methods_comparison_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#print(clrlasso)</span>
-clrlasso_coef &lt;-<span class="st"> </span><span class="kw">coef</span>(clrlasso, <span class="dt">s =</span> <span class="fl">0.10</span>)
-<span class="kw">sum</span>(<span class="kw">abs</span>(clrlasso_coef) <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>)</code></pre></div>
-<pre><code>## [1] 13</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">selected_clrlasso &lt;-<span class="st"> </span><span class="kw">which</span>(<span class="kw">as.numeric</span>(<span class="kw">abs</span>(<span class="kw">coef</span>(clrlasso, <span class="dt">s =</span> <span class="fl">0.1</span>))) <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>)[<span class="op">-</span><span class="dv">1</span>]; </code></pre></div>
-<p>We obtain the indices of selected variables (abs(coef) &gt; 0) from lasso.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">selected_clrlasso &lt;-<span class="st"> </span>selected_clrlasso <span class="op">-</span><span class="st"> </span><span class="dv">1</span>
-taxa_id &lt;-<span class="st"> </span><span class="kw">colnames</span>(x_Crohn)[selected_clrlasso]
-
-<span class="kw">write.csv</span>(<span class="kw">data.frame</span>(selected_clrlasso, taxa_id),
-          <span class="st">&quot;./Generated_datasets/results_clrlasso_Crohn12.csv&quot;</span>)</code></pre></div>
-<p>The name of selected genera and their indices are also saved in a csv file.</p>
+<p>As mentioned in the paper, CLR transformation is each log-transformed value subtracted with the arithmetic mean of the log-transformed values.</p>
+<p><span class="math display">\[clr(x) = clr(x_{1},...,x_{k}) = (log(x_{1})-M,...,log(x_{k})-M)\]</span></p>
+<p><span class="math display">\[M = \frac{1}{k}\sum_{i=1}^{k}log(x_{i})\]</span></p>
+<p>Where <span class="math inline">\(i=1,...,k\)</span> microbial variables, <span class="math inline">\(x_{k}\)</span> is the counts of variable <span class="math inline">\(k\)</span>, <span class="math inline">\(M\)</span> is the arithmetic mean of the log-transformed values.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># CLR transformation</span>
+CD.z &lt;-<span class="st"> </span><span class="kw">log</span>(CD.x)
+CD.clrx &lt;-<span class="st"> </span><span class="kw">apply</span>(CD.z, <span class="dv">2</span>, <span class="cf">function</span>(x) x <span class="op">-</span><span class="st"> </span><span class="kw">rowMeans</span>(CD.z))</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">CD.y.num &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(CD.y)</code></pre></div>
+<p>Here, <strong>Y</strong> is converted to be numeric, because <em>glmnet()</em> requires <strong>Y</strong> to be numeric.</p>
+<p>Same as CoDA-lasso, we first need to choose a <span class="math inline">\(\lambda\)</span>. We fit CLR transformed <strong>X</strong> and numeric <strong>Y</strong> as input of function <em>glmnet()</em>. We also need to specify the response family to be <strong>binomial</strong>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">CD.test_clrlasso &lt;-<span class="st"> </span><span class="kw">glmnet</span>(<span class="dt">x =</span> CD.clrx, <span class="dt">y =</span> CD.y.num, <span class="dt">family =</span> <span class="st">&#39;binomial&#39;</span>)
+<span class="kw">plot</span>(CD.test_clrlasso, <span class="dt">xvar =</span> <span class="st">&#39;lambda&#39;</span>, <span class="dt">label =</span> T)</code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:CDlasso"></span>
+<img src="Generated_plots/CDlasso-1.png" alt="Lasso plot of CD data" width="100%" />
+<p class="caption">
+Figure 3.1: Lasso plot of CD data
+</p>
 </div>
-<div id="beme-day1-data-2" class="section level2">
-<h2><span class="header-section-number">3.2</span> BEME day1 data</h2>
-<p>content need to be added.</p>
+<p>In Figure <a href="clr.html#fig:CDlasso">3.1</a>, each curve corresponds to a variable (e.g. genus). It shows the path of its coefficient against different <span class="math inline">\(log(\lambda)\)</span> values. At each <span class="math inline">\(log(\lambda)\)</span>, the shown curves indicate the number of nonzero coefficients. In the plot command, if <strong>label = T</strong>, each curve will be annotated with variable index.</p>
+<p>Once we have chosen the <span class="math inline">\(\lambda\)</span> value, it is input in our new wrapper function <em>glmnet_wrapper()</em>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">CD.lambda_clr =<span class="st"> </span><span class="fl">0.045</span>
+CD.results_clrlasso &lt;-<span class="st"> </span><span class="kw">glmnet_wrapper</span>(<span class="dt">Y =</span> CD.y.num, <span class="dt">X =</span> CD.clrx, <span class="dt">family =</span> <span class="st">&#39;binomial&#39;</span>, 
+                                      <span class="dt">lambda =</span> CD.lambda_clr)
+CD.results_clrlasso<span class="op">$</span>numVarSelect</code></pre></div>
+<pre><code>## [1] 11</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">CD.results_clrlasso<span class="op">$</span>varSelect</code></pre></div>
+<pre><code>##  [1] &quot;g__Roseburia&quot;                 &quot;g__Eggerthella&quot;              
+##  [3] &quot;g__Bacteroides&quot;               &quot;f__Peptostreptococcaceae_g__&quot;
+##  [5] &quot;g__Dialister&quot;                 &quot;g__Streptococcus&quot;            
+##  [7] &quot;g__Adlercreutzia&quot;             &quot;g__Aggregatibacter&quot;          
+##  [9] &quot;o__Clostridiales_g__&quot;         &quot;g__Lachnospira&quot;              
+## [11] &quot;o__Lactobacillales_g__&quot;</code></pre>
+<p>The method selects 11 genera with <span class="math inline">\(\lambda = 0.045\)</span>, and they are listed in the object <strong>CD.results_clrlasso</strong>.</p>
+</div>
+<div id="hfhs-day1-data-1" class="section level2">
+<h2><span class="header-section-number">3.2</span> HFHS-Day1 data</h2>
+<p>The analysis on HFHS-Day1 data is as similar as CD data.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># CLR transformation</span>
+HFHS.z &lt;-<span class="st"> </span><span class="kw">log</span>(HFHS.x)
+HFHS.clrx &lt;-<span class="st"> </span><span class="kw">apply</span>(HFHS.z, <span class="dv">2</span>, <span class="cf">function</span>(x) x<span class="op">-</span><span class="kw">rowMeans</span>(HFHS.z))</code></pre></div>
+<p><strong>X</strong> is centered log-ratio (CLR) transformed.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">HFHS.y.num &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(HFHS.y)</code></pre></div>
+<p><strong>Y</strong> is converted to a numeric vector.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">HFHS.test_clrlasso &lt;-<span class="st"> </span><span class="kw">glmnet</span>(<span class="dt">x =</span> HFHS.clrx, <span class="dt">y =</span> HFHS.y.num, <span class="dt">family =</span> <span class="st">&#39;binomial&#39;</span>)
+<span class="kw">plot</span>(HFHS.test_clrlasso, <span class="dt">xvar =</span> <span class="st">&#39;lambda&#39;</span>, <span class="dt">label =</span> T)</code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:HFHSlasso"></span>
+<img src="Generated_plots/HFHSlasso-1.png" alt="Lasso plot of HFHS-Day1 data" width="100%" />
+<p class="caption">
+Figure 3.2: Lasso plot of HFHS-Day1 data
+</p>
+</div>
+<p>The explanation of Figure <a href="clr.html#fig:HFHSlasso">3.2</a> is the same as Figure <a href="clr.html#fig:CDlasso">3.1</a>.</p>
+<p>Once we have chosen the <span class="math inline">\(\lambda\)</span> value, we use function <em>glmnet_wrapper()</em> with the same input as <em>glmnet()</em> and extra input <strong><span class="math inline">\(\lambda\)</span></strong>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">HFHS.lambda_clr =<span class="st"> </span><span class="fl">0.03</span>
+HFHS.results_clrlasso &lt;-<span class="st"> </span><span class="kw">glmnet_wrapper</span>(<span class="dt">Y =</span> HFHS.y.num, <span class="dt">X =</span> HFHS.clrx, <span class="dt">family =</span> <span class="st">&#39;binomial&#39;</span>, 
+                                        <span class="dt">lambda =</span> HFHS.lambda_clr) 
+HFHS.results_clrlasso<span class="op">$</span>numVarSelect</code></pre></div>
+<pre><code>## [1] 10</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">HFHS.results_clrlasso<span class="op">$</span>varSelect</code></pre></div>
+<pre><code>##  [1] &quot;400599&quot;  &quot;192222&quot;  &quot;348038&quot;  &quot;401384&quot;  &quot;290253&quot;  &quot;261265&quot;  &quot;300851&quot; 
+##  [8] &quot;462764&quot;  &quot;1108745&quot; &quot;265322&quot;</code></pre>
+<p>The method selects 10 OTUs with <span class="math inline">\(\lambda = 0.03\)</span>, and these OTUs are listed in the object <strong>HFHS.results_clrlasso</strong>.</p>
+<p>We also extract the taxonomic information of these selected OTUs.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">HFHS.tax_clrlasso &lt;-<span class="st"> </span>HFHS.taxonomy[<span class="kw">which</span>(<span class="kw">rownames</span>(HFHS.taxonomy) <span class="op">%in%</span><span class="st"> </span>
+<span class="st">                                           </span>HFHS.results_clrlasso<span class="op">$</span>varSelect), ]
+<span class="kw">kable</span>(HFHS.tax_clrlasso[ ,<span class="dv">2</span><span class="op">:</span><span class="dv">6</span>], <span class="dt">booktabs =</span> T)</code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th align="left">Phylum</th>
+<th align="left">Class</th>
+<th align="left">Order</th>
+<th align="left">Family</th>
+<th align="left">Genus</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>192222</td>
+<td align="left">Bacteroidetes</td>
+<td align="left">Bacteroidia</td>
+<td align="left">Bacteroidales</td>
+<td align="left">Prevotellaceae</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td>290253</td>
+<td align="left">Firmicutes</td>
+<td align="left">Clostridia</td>
+<td align="left">Clostridiales</td>
+<td align="left">Ruminococcaceae</td>
+<td align="left">Oscillospira</td>
+</tr>
+<tr class="odd">
+<td>261265</td>
+<td align="left">Firmicutes</td>
+<td align="left">Clostridia</td>
+<td align="left">Clostridiales</td>
+<td align="left">Lachnospiraceae</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td>1108745</td>
+<td align="left">Firmicutes</td>
+<td align="left">Clostridia</td>
+<td align="left">Clostridiales</td>
+<td align="left">[Mogibacteriaceae]</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td>462764</td>
+<td align="left">Firmicutes</td>
+<td align="left">Clostridia</td>
+<td align="left">Clostridiales</td>
+<td align="left">Ruminococcaceae</td>
+<td align="left">Ruminococcus</td>
+</tr>
+<tr class="even">
+<td>265322</td>
+<td align="left">Bacteroidetes</td>
+<td align="left">Bacteroidia</td>
+<td align="left">Bacteroidales</td>
+<td align="left">S24-7</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td>400599</td>
+<td align="left">Firmicutes</td>
+<td align="left">Clostridia</td>
+<td align="left">Clostridiales</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td>348038</td>
+<td align="left">Bacteroidetes</td>
+<td align="left">Bacteroidia</td>
+<td align="left">Bacteroidales</td>
+<td align="left">S24-7</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td>401384</td>
+<td align="left">Firmicutes</td>
+<td align="left">Clostridia</td>
+<td align="left">Clostridiales</td>
+<td align="left">Ruminococcaceae</td>
+<td align="left">Oscillospira</td>
+</tr>
+<tr class="even">
+<td>300851</td>
+<td align="left">Firmicutes</td>
+<td align="left">Clostridia</td>
+<td align="left">Clostridiales</td>
+<td align="left">Ruminococcaceae</td>
+<td align="left">Oscillospira</td>
+</tr>
+</tbody>
+</table>
 
+</div>
+</div>
+<h3>References</h3>
+<div id="refs" class="references">
+<div id="ref-zou2005regularization">
+<p>Zou, Hui, and Trevor Hastie. 2005. “Regularization and Variable Selection via the Elastic Net.” <em>Journal of the Royal Statistical Society: Series B (Statistical Methodology)</em> 67 (2). Wiley Online Library: 301–20.</p>
+</div>
+<div id="ref-tibshirani1996regression">
+<p>Tibshirani, Robert. 1996. “Regression Shrinkage and Selection via the Lasso.” <em>Journal of the Royal Statistical Society: Series B (Methodological)</em> 58 (1). Wiley Online Library: 267–88.</p>
+</div>
+<div id="ref-le1992ridge">
+<p>Le Cessie, Saskia, and Johannes C Van Houwelingen. 1992. “Ridge Estimators in Logistic Regression.” <em>Journal of the Royal Statistical Society: Series C (Applied Statistics)</em> 41 (1). Wiley Online Library: 191–201.</p>
 </div>
 </div>
             </section>

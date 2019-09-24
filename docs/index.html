@@ -5,11 +5,11 @@
 
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Methods Comparison</title>
+  <title>Variable selection in microbiome compositional data analysis: tutorial</title>
   <meta name="description" content="Methods comparison">
   <meta name="generator" content="bookdown  and GitBook 2.6.7">
 
-  <meta property="og:title" content="Methods Comparison" />
+  <meta property="og:title" content="Variable selection in microbiome compositional data analysis: tutorial" />
   <meta property="og:type" content="book" />
   
   
@@ -17,14 +17,14 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Methods Comparison" />
+  <meta name="twitter:title" content="Variable selection in microbiome compositional data analysis: tutorial" />
   
   <meta name="twitter:description" content="Methods comparison" />
   
 
 
 
-<meta name="date" content="2019-05-14">
+<meta name="date" content="2019-09-25">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -100,32 +100,42 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
       <nav role="navigation">
 
 <ul class="summary">
-<li><a href="./">Methods comparison</a></li>
+<li><a href="./">Variable selection</a></li>
 
 <li class="divider"></li>
 <li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a><ul>
 <li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#packages-installation-and-loading"><i class="fa fa-check"></i><b>1.1</b> Packages installation and loading</a></li>
-<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#simulations"><i class="fa fa-check"></i><b>1.2</b> Simulations</a></li>
-<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#example-datasets"><i class="fa fa-check"></i><b>1.3</b> Example datasets</a><ul>
-<li class="chapter" data-level="1.3.1" data-path="index.html"><a href="index.html#microbiome-and-crohns-disease"><i class="fa fa-check"></i><b>1.3.1</b> Microbiome and Crohn’s disease</a></li>
-<li class="chapter" data-level="1.3.2" data-path="index.html"><a href="index.html#beme-day1-data"><i class="fa fa-check"></i><b>1.3.2</b> BEME day1 data</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#example-datasets"><i class="fa fa-check"></i><b>1.2</b> Example datasets</a><ul>
+<li class="chapter" data-level="1.2.1" data-path="index.html"><a href="index.html#crohns-disease"><i class="fa fa-check"></i><b>1.2.1</b> Crohn’s disease</a></li>
+<li class="chapter" data-level="1.2.2" data-path="index.html"><a href="index.html#high-fat-high-sugar-diet-in-mice"><i class="fa fa-check"></i><b>1.2.2</b> High fat high sugar diet in mice</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="2" data-path="coda.html"><a href="coda.html"><i class="fa fa-check"></i><b>2</b> CODA_LOGISTIC_LASSO</a><ul>
+<li class="chapter" data-level="2" data-path="coda.html"><a href="coda.html"><i class="fa fa-check"></i><b>2</b> CoDA-lasso</a><ul>
 <li class="chapter" data-level="2.1" data-path="coda.html"><a href="coda.html#cd-data"><i class="fa fa-check"></i><b>2.1</b> CD data</a></li>
-<li class="chapter" data-level="2.2" data-path="coda.html"><a href="coda.html#beme-day1-data-1"><i class="fa fa-check"></i><b>2.2</b> BEME day1 data</a></li>
+<li class="chapter" data-level="2.2" data-path="coda.html"><a href="coda.html#hfhs-day1-data"><i class="fa fa-check"></i><b>2.2</b> HFHS-Day1 data</a></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="clr.html"><a href="clr.html"><i class="fa fa-check"></i><b>3</b> CLR_LOGISTIC_LASSO</a><ul>
+<li class="chapter" data-level="3" data-path="clr.html"><a href="clr.html"><i class="fa fa-check"></i><b>3</b> CLR-lasso</a><ul>
 <li class="chapter" data-level="3.1" data-path="clr.html"><a href="clr.html#cd-data-1"><i class="fa fa-check"></i><b>3.1</b> CD data</a></li>
-<li class="chapter" data-level="3.2" data-path="clr.html"><a href="clr.html#beme-day1-data-2"><i class="fa fa-check"></i><b>3.2</b> BEME day1 data</a></li>
+<li class="chapter" data-level="3.2" data-path="clr.html"><a href="clr.html#hfhs-day1-data-1"><i class="fa fa-check"></i><b>3.2</b> HFHS-Day1 data</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="selbal.html"><a href="selbal.html"><i class="fa fa-check"></i><b>4</b> Selbal: selection of balances</a><ul>
 <li class="chapter" data-level="4.1" data-path="selbal.html"><a href="selbal.html#cd-data-2"><i class="fa fa-check"></i><b>4.1</b> CD data</a></li>
-<li class="chapter" data-level="4.2" data-path="selbal.html"><a href="selbal.html#beme-day1-data-3"><i class="fa fa-check"></i><b>4.2</b> BEME day1 data</a></li>
+<li class="chapter" data-level="4.2" data-path="selbal.html"><a href="selbal.html#hfhs-day1-data-2"><i class="fa fa-check"></i><b>4.2</b> HFHS-Day1 data</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="comparison.html"><a href="comparison.html"><i class="fa fa-check"></i><b>5</b> Concordance of variables selected by the three methods</a><ul>
-<li class="chapter" data-level="5.1" data-path="comparison.html"><a href="comparison.html#cd-data-3"><i class="fa fa-check"></i><b>5.1</b> CD data</a></li>
-<li class="chapter" data-level="5.2" data-path="comparison.html"><a href="comparison.html#beme-day1-data-4"><i class="fa fa-check"></i><b>5.2</b> BEME day1 data</a></li>
+<li class="chapter" data-level="5.1" data-path="comparison.html"><a href="comparison.html#cd-data-3"><i class="fa fa-check"></i><b>5.1</b> CD data</a><ul>
+<li class="chapter" data-level="5.1.1" data-path="comparison.html"><a href="comparison.html#upsetr"><i class="fa fa-check"></i><b>5.1.1</b> UpSetR</a></li>
+<li class="chapter" data-level="5.1.2" data-path="comparison.html"><a href="comparison.html#selbal-like-plot"><i class="fa fa-check"></i><b>5.1.2</b> Selbal-like plot</a></li>
+<li class="chapter" data-level="5.1.3" data-path="comparison.html"><a href="comparison.html#plotloadings"><i class="fa fa-check"></i><b>5.1.3</b> plotLoadings</a></li>
+<li class="chapter" data-level="5.1.4" data-path="comparison.html"><a href="comparison.html#trajectory-plots"><i class="fa fa-check"></i><b>5.1.4</b> Trajectory plots</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="comparison.html"><a href="comparison.html#hfhs-day1-data-3"><i class="fa fa-check"></i><b>5.2</b> HFHS-Day1 data</a><ul>
+<li class="chapter" data-level="5.2.1" data-path="comparison.html"><a href="comparison.html#upsetr-1"><i class="fa fa-check"></i><b>5.2.1</b> UpSetR</a></li>
+<li class="chapter" data-level="5.2.2" data-path="comparison.html"><a href="comparison.html#selbal-like-plot-1"><i class="fa fa-check"></i><b>5.2.2</b> Selbal-like plot</a></li>
+<li class="chapter" data-level="5.2.3" data-path="comparison.html"><a href="comparison.html#plotloadings-1"><i class="fa fa-check"></i><b>5.2.3</b> plotLoadings</a></li>
+<li class="chapter" data-level="5.2.4" data-path="comparison.html"><a href="comparison.html#trajectory-plots-1"><i class="fa fa-check"></i><b>5.2.4</b> Trajectory plots</a></li>
+<li class="chapter" data-level="5.2.5" data-path="comparison.html"><a href="comparison.html#graphlan"><i class="fa fa-check"></i><b>5.2.5</b> GraPhlAn</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
@@ -140,7 +150,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Methods Comparison</a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Variable selection in microbiome compositional data analysis: tutorial</a>
           </h1>
         </div>
 
@@ -149,90 +159,117 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
             <section class="normal" id="section-">
 <div id="header">
-<h1 class="title">Methods Comparison</h1>
-<p class="author"><em><div style="white-space: pre-line;">Malu Calle Rosingana
-Coding: Yiwen Wang</div></em></p>
-<p class="date"><em>2019-05-14</em></p>
+<h1 class="title">Variable selection in microbiome compositional data analysis: tutorial</h1>
+<p class="author"><em><div style="white-space: pre-line;">Antoni Susin, Yiwen Wang, Kim-Anh Lê Cao, M.Luz Calle</div></em></p>
+<p class="date"><em>2019-09-25</em></p>
 </div>
 <div id="introduction" class="section level1">
 <h1><span class="header-section-number">Chapter 1</span> Introduction</h1>
-<p>This vignette provides a comparison of the 12 variables selected by the 3 methods:</p>
+<p>This vignette provides a comparison of three multivariate methods for microbiome variable selection that consider the compositional structure of microbiome data:</p>
 <ul>
-<li>logistic_lasso + linear constraints;</li>
-<li>centered logratio transformation (CLR) + logistic_lasso;</li>
-<li>selbal.</li>
+<li>CoDA-lasso: penalized regression with constraint coefficients (regression coefficients sum up to zero) <span class="citation">(Lu, Shi, and Li <a href="#ref-lu2019generalized">2019</a>; Lin et al. <a href="#ref-lin2014variable">2014</a>)</span>;</li>
+<li>CLR-lasso: penalized regression after the centered log-ratio (CLR) transformation <span class="citation">(Zou and Hastie <a href="#ref-zou2005regularization">2005</a>; Tibshirani <a href="#ref-tibshirani1996regression">1996</a>; Le Cessie and Van Houwelingen <a href="#ref-le1992ridge">1992</a>)</span>;</li>
+<li>selbal: forward selection to identify the balance between two groups of taxa that is more associated with the response variable <span class="citation">(Rivera-Pinto et al. <a href="#ref-rivera2018balances">2018</a>)</span>.</li>
 </ul>
-<p>First, you will need to install then load the following packages:</p>
 <div id="packages-installation-and-loading" class="section level2">
 <h2><span class="header-section-number">1.1</span> Packages installation and loading</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#cran.packages &lt;- c(&#39;knitr&#39;, &#39;MASS&#39;, &#39;VennDiagram&#39;, &#39;gplots&#39;, &#39;glmnet&#39;)</span>
-<span class="co">#install.packages(cran.packages)</span>
-<span class="co">#devtools::install_github(repo = &quot;UVic-omics/selbal&quot;)</span>
+<p>Install then load the following packages:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># cran.packages &lt;- c(&#39;knitr&#39;, &#39;glmnet&#39;, &#39;ggplot2&#39;, &#39;gridExtra&#39;,</span>
+<span class="co">#                    &#39;UpSetR&#39;, &#39;ggforce&#39;, &#39;pROC&#39;)</span>
+<span class="co"># install.packages(cran.packages)</span>
+<span class="co"># devtools::install_github(repo = &#39;UVic-omics/selbal&#39;)</span>
 
-<span class="kw">library</span>(knitr) <span class="co"># rbookdown</span>
-<span class="kw">library</span>(MASS) <span class="co"># ginv</span>
-<span class="kw">library</span>(VennDiagram) <span class="co"># venn.diagram</span>
-<span class="kw">library</span>(gplots) <span class="co"># venn</span>
+<span class="kw">library</span>(knitr) <span class="co"># rbookdown, kable</span>
 <span class="kw">library</span>(glmnet) <span class="co"># glmnet</span>
 <span class="kw">library</span>(selbal) <span class="co"># selbal</span>
+<span class="kw">library</span>(ggplot2) <span class="co"># draw selbal</span>
+<span class="kw">library</span>(gridExtra) <span class="co"># grid.arrange</span>
+<span class="kw">library</span>(UpSetR) <span class="co"># upset</span>
+<span class="kw">library</span>(ggforce) <span class="co"># selbal-like plot</span>
+<span class="kw">library</span>(pROC) <span class="co"># ROC curve</span>
 
 <span class="co"># build in functions</span>
 <span class="kw">source</span>(<span class="dt">file =</span> <span class="st">&#39;functions.R&#39;</span>)</code></pre></div>
 </div>
-<div id="simulations" class="section level2">
-<h2><span class="header-section-number">1.2</span> Simulations</h2>
-<p>The way we simulate datasets.</p>
-</div>
 <div id="example-datasets" class="section level2">
-<h2><span class="header-section-number">1.3</span> Example datasets</h2>
-<p>We have two case studies.</p>
-<div id="microbiome-and-crohns-disease" class="section level3">
-<h3><span class="header-section-number">1.3.1</span> Microbiome and Crohn’s disease</h3>
-<p>Crohn’s disease (CD) is an inflammatory bowel disease that has been linked to microbial alterations in the gut <span class="citation">(Gevers et al. <a href="#ref-gevers2014treatment">2014</a>; Øyri, Műzes, and Sipos <a href="#ref-oyri2015dysbiotic">2015</a>)</span>. We use data from a large pediatric CD cohort study <span class="citation">(Gevers et al. <a href="#ref-gevers2014treatment">2014</a>)</span> to compare the proposed methodologies for identification of microbial signatures.</p>
-<p>Microbiome data from 16S rRNA gene sequencing and QIIME 1.7.0 bioinformatics processing were downloaded from Qiita <span class="citation">(Rivera-Pinto et al. <a href="#ref-rivera2018balances">2018</a>)</span>. Only patients with Crohn’s disease (n = 662) and those without any symptoms (n = 313) were analyzed. The OTU table was agglomerated to the genus level, resulting in a matrix with 48 genera and 975 samples.</p>
-<p>We load the data that are provided in advance.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">load</span>(<span class="st">&quot;./datasets/Crohn_data.rda&quot;</span>)
-<span class="co"># dim(x_Crohn)</span>
-<span class="co"># summary(y_Crohn)</span></code></pre></div>
+<h2><span class="header-section-number">1.2</span> Example datasets</h2>
+<div id="crohns-disease" class="section level3">
+<h3><span class="header-section-number">1.2.1</span> Crohn’s disease</h3>
+<p>Crohn’s disease (CD) is an inflammatory bowel disease that has been linked to microbial alterations in the gut <span class="citation">(Gevers et al. <a href="#ref-gevers2014treatment">2014</a>; Øyri, Műzes, and Sipos <a href="#ref-oyri2015dysbiotic">2015</a>)</span>. We used data from a large pediatric CD cohort study <span class="citation">(Gevers et al. <a href="#ref-gevers2014treatment">2014</a>)</span> to compare the proposed methodologies for identification of microbial signatures.</p>
+<p>The microbiome data were generated using 16S rRNA gene sequencing with QIIME 1.7.0 bioinformatics processing, and the processed data were downloaded from Qiita <span class="citation">(Rivera-Pinto et al. <a href="#ref-rivera2018balances">2018</a>)</span>. Only patients with Crohn’s disease (n = 662) and those without any symptoms (n = 313) were analyzed. The OTU table was agglomerated to the genus level, resulting in a matrix with 48 genera and 975 samples (see Table <a href="index.html#tab:summary">1.1</a>).</p>
+<p>Load the data as follows:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">load</span>(<span class="st">&#39;./datasets/CD_data.RData&#39;</span>)</code></pre></div>
+</div>
+<div id="high-fat-high-sugar-diet-in-mice" class="section level3">
+<h3><span class="header-section-number">1.2.2</span> High fat high sugar diet in mice</h3>
+<p>The study was conducted by Dr Lê Cao at the University of Queensland Diamantina Institute that investigated the effect of diet in mice. C57/B6 female black mice were housed in cages (3 animals per cage and fed with a high fat high sugar diet (HFHS) or a normal diet). Stool sampling was performed at Day 0, 1, 4 and 7. Illumina MiSeq sequencing was used to obtain the 16S rRNA sequencing data. The sequencing data were then processed with QIIME 1.9.0. For our analysis, we considered Day 1 only (HFHS-Day1). The OTU (Operational Taxonomy Units) table after OTU filtering included 558 taxa and 47 samples (24 HFHS diet and 23 normal diet) (see Table <a href="index.html#tab:summary">1.1</a>). Taxonomy information from Family, Genus, and Species are also available and reported here.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">load</span>(<span class="st">&#39;./datasets/HFHS_data.RData&#39;</span>)</code></pre></div>
 <table>
-<caption><strong>CD data summary</strong></caption>
+<caption><span id="tab:summary">Table 1.1: </span> <strong>Summary of case studies</strong></caption>
+<thead>
+<tr class="header">
+<th align="center">CD data</th>
+<th align="center"></th>
+<th align="center">HFHS-Day1 data</th>
+<th align="center"></th>
+</tr>
+</thead>
 <tbody>
 <tr class="odd">
 <td align="center">No. of genera</td>
 <td align="center">48</td>
+<td align="center">No. of OTUs</td>
+<td align="center">558</td>
 </tr>
 <tr class="even">
 <td align="center">No. of samples</td>
 <td align="center">975</td>
+<td align="center">No. of samples</td>
+<td align="center">47</td>
 </tr>
 <tr class="odd">
 <td align="center">No. of patients with CD</td>
 <td align="center">662</td>
+<td align="center">No. of mice with HFHS diet</td>
+<td align="center">24</td>
 </tr>
 <tr class="even">
 <td align="center">No. of healthy patients</td>
 <td align="center">313</td>
+<td align="center">No. of mice with normal diet</td>
+<td align="center">23</td>
 </tr>
 </tbody>
 </table>
-</div>
-<div id="beme-day1-data" class="section level3">
-<h3><span class="header-section-number">1.3.2</span> BEME day1 data</h3>
-<p>content need to be added.</p>
 
 </div>
 </div>
 </div>
 <h3>References</h3>
 <div id="refs" class="references">
+<div id="ref-lu2019generalized">
+<p>Lu, Jiarui, Pixu Shi, and Hongzhe Li. 2019. “Generalized Linear Models with Linear Constraints for Microbiome Compositional Data.” <em>Biometrics</em> 75 (1). Wiley Online Library: 235–44.</p>
+</div>
+<div id="ref-lin2014variable">
+<p>Lin, Wei, Pixu Shi, Rui Feng, and Hongzhe Li. 2014. “Variable Selection in Regression with Compositional Covariates.” <em>Biometrika</em> 101 (4). Oxford University Press: 785–97.</p>
+</div>
+<div id="ref-zou2005regularization">
+<p>Zou, Hui, and Trevor Hastie. 2005. “Regularization and Variable Selection via the Elastic Net.” <em>Journal of the Royal Statistical Society: Series B (Statistical Methodology)</em> 67 (2). Wiley Online Library: 301–20.</p>
+</div>
+<div id="ref-tibshirani1996regression">
+<p>Tibshirani, Robert. 1996. “Regression Shrinkage and Selection via the Lasso.” <em>Journal of the Royal Statistical Society: Series B (Methodological)</em> 58 (1). Wiley Online Library: 267–88.</p>
+</div>
+<div id="ref-le1992ridge">
+<p>Le Cessie, Saskia, and Johannes C Van Houwelingen. 1992. “Ridge Estimators in Logistic Regression.” <em>Journal of the Royal Statistical Society: Series C (Applied Statistics)</em> 41 (1). Wiley Online Library: 191–201.</p>
+</div>
+<div id="ref-rivera2018balances">
+<p>Rivera-Pinto, J, JJ Egozcue, Vera Pawlowsky-Glahn, Raul Paredes, Marc Noguera-Julian, and ML Calle. 2018. “Balances: A New Perspective for Microbiome Analysis.” <em>MSystems</em> 3 (4). Am Soc Microbiol: e00053–18.</p>
+</div>
 <div id="ref-gevers2014treatment">
 <p>Gevers, Dirk, Subra Kugathasan, Lee A Denson, Yoshiki Vázquez-Baeza, Will Van Treuren, Boyu Ren, Emma Schwager, et al. 2014. “The Treatment-Naive Microbiome in New-Onset Crohn’s Disease.” <em>Cell Host &amp; Microbe</em> 15 (3). Elsevier: 382–92.</p>
 </div>
 <div id="ref-oyri2015dysbiotic">
 <p>Øyri, Styrk Furnes, Györgyi Műzes, and Ferenc Sipos. 2015. “Dysbiotic Gut Microbiome: A Key Element of Crohn’s Disease.” <em>Comparative Immunology, Microbiology and Infectious Diseases</em> 43. Elsevier: 36–49.</p>
-</div>
-<div id="ref-rivera2018balances">
-<p>Rivera-Pinto, J, JJ Egozcue, Vera Pawlowsky-Glahn, Raul Paredes, Marc Noguera-Julian, and ML Calle. 2018. “Balances: A New Perspective for Microbiome Analysis.” <em>MSystems</em> 3 (4). Am Soc Microbiol: e00053–18.</p>
 </div>
 </div>
             </section>

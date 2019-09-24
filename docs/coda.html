@@ -5,11 +5,11 @@
 
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Chapter 2 CODA_LOGISTIC_LASSO | Methods Comparison</title>
+  <title>Chapter 2 CoDA-lasso | Variable selection in microbiome compositional data analysis: tutorial</title>
   <meta name="description" content="Methods comparison">
   <meta name="generator" content="bookdown  and GitBook 2.6.7">
 
-  <meta property="og:title" content="Chapter 2 CODA_LOGISTIC_LASSO | Methods Comparison" />
+  <meta property="og:title" content="Chapter 2 CoDA-lasso | Variable selection in microbiome compositional data analysis: tutorial" />
   <meta property="og:type" content="book" />
   
   
@@ -17,14 +17,14 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 2 CODA_LOGISTIC_LASSO | Methods Comparison" />
+  <meta name="twitter:title" content="Chapter 2 CoDA-lasso | Variable selection in microbiome compositional data analysis: tutorial" />
   
   <meta name="twitter:description" content="Methods comparison" />
   
 
 
 
-<meta name="date" content="2019-05-14">
+<meta name="date" content="2019-09-25">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -100,32 +100,42 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
       <nav role="navigation">
 
 <ul class="summary">
-<li><a href="./">Methods comparison</a></li>
+<li><a href="./">Variable selection</a></li>
 
 <li class="divider"></li>
 <li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a><ul>
 <li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#packages-installation-and-loading"><i class="fa fa-check"></i><b>1.1</b> Packages installation and loading</a></li>
-<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#simulations"><i class="fa fa-check"></i><b>1.2</b> Simulations</a></li>
-<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#example-datasets"><i class="fa fa-check"></i><b>1.3</b> Example datasets</a><ul>
-<li class="chapter" data-level="1.3.1" data-path="index.html"><a href="index.html#microbiome-and-crohns-disease"><i class="fa fa-check"></i><b>1.3.1</b> Microbiome and Crohn’s disease</a></li>
-<li class="chapter" data-level="1.3.2" data-path="index.html"><a href="index.html#beme-day1-data"><i class="fa fa-check"></i><b>1.3.2</b> BEME day1 data</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#example-datasets"><i class="fa fa-check"></i><b>1.2</b> Example datasets</a><ul>
+<li class="chapter" data-level="1.2.1" data-path="index.html"><a href="index.html#crohns-disease"><i class="fa fa-check"></i><b>1.2.1</b> Crohn’s disease</a></li>
+<li class="chapter" data-level="1.2.2" data-path="index.html"><a href="index.html#high-fat-high-sugar-diet-in-mice"><i class="fa fa-check"></i><b>1.2.2</b> High fat high sugar diet in mice</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="2" data-path="coda.html"><a href="coda.html"><i class="fa fa-check"></i><b>2</b> CODA_LOGISTIC_LASSO</a><ul>
+<li class="chapter" data-level="2" data-path="coda.html"><a href="coda.html"><i class="fa fa-check"></i><b>2</b> CoDA-lasso</a><ul>
 <li class="chapter" data-level="2.1" data-path="coda.html"><a href="coda.html#cd-data"><i class="fa fa-check"></i><b>2.1</b> CD data</a></li>
-<li class="chapter" data-level="2.2" data-path="coda.html"><a href="coda.html#beme-day1-data-1"><i class="fa fa-check"></i><b>2.2</b> BEME day1 data</a></li>
+<li class="chapter" data-level="2.2" data-path="coda.html"><a href="coda.html#hfhs-day1-data"><i class="fa fa-check"></i><b>2.2</b> HFHS-Day1 data</a></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="clr.html"><a href="clr.html"><i class="fa fa-check"></i><b>3</b> CLR_LOGISTIC_LASSO</a><ul>
+<li class="chapter" data-level="3" data-path="clr.html"><a href="clr.html"><i class="fa fa-check"></i><b>3</b> CLR-lasso</a><ul>
 <li class="chapter" data-level="3.1" data-path="clr.html"><a href="clr.html#cd-data-1"><i class="fa fa-check"></i><b>3.1</b> CD data</a></li>
-<li class="chapter" data-level="3.2" data-path="clr.html"><a href="clr.html#beme-day1-data-2"><i class="fa fa-check"></i><b>3.2</b> BEME day1 data</a></li>
+<li class="chapter" data-level="3.2" data-path="clr.html"><a href="clr.html#hfhs-day1-data-1"><i class="fa fa-check"></i><b>3.2</b> HFHS-Day1 data</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="selbal.html"><a href="selbal.html"><i class="fa fa-check"></i><b>4</b> Selbal: selection of balances</a><ul>
 <li class="chapter" data-level="4.1" data-path="selbal.html"><a href="selbal.html#cd-data-2"><i class="fa fa-check"></i><b>4.1</b> CD data</a></li>
-<li class="chapter" data-level="4.2" data-path="selbal.html"><a href="selbal.html#beme-day1-data-3"><i class="fa fa-check"></i><b>4.2</b> BEME day1 data</a></li>
+<li class="chapter" data-level="4.2" data-path="selbal.html"><a href="selbal.html#hfhs-day1-data-2"><i class="fa fa-check"></i><b>4.2</b> HFHS-Day1 data</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="comparison.html"><a href="comparison.html"><i class="fa fa-check"></i><b>5</b> Concordance of variables selected by the three methods</a><ul>
-<li class="chapter" data-level="5.1" data-path="comparison.html"><a href="comparison.html#cd-data-3"><i class="fa fa-check"></i><b>5.1</b> CD data</a></li>
-<li class="chapter" data-level="5.2" data-path="comparison.html"><a href="comparison.html#beme-day1-data-4"><i class="fa fa-check"></i><b>5.2</b> BEME day1 data</a></li>
+<li class="chapter" data-level="5.1" data-path="comparison.html"><a href="comparison.html#cd-data-3"><i class="fa fa-check"></i><b>5.1</b> CD data</a><ul>
+<li class="chapter" data-level="5.1.1" data-path="comparison.html"><a href="comparison.html#upsetr"><i class="fa fa-check"></i><b>5.1.1</b> UpSetR</a></li>
+<li class="chapter" data-level="5.1.2" data-path="comparison.html"><a href="comparison.html#selbal-like-plot"><i class="fa fa-check"></i><b>5.1.2</b> Selbal-like plot</a></li>
+<li class="chapter" data-level="5.1.3" data-path="comparison.html"><a href="comparison.html#plotloadings"><i class="fa fa-check"></i><b>5.1.3</b> plotLoadings</a></li>
+<li class="chapter" data-level="5.1.4" data-path="comparison.html"><a href="comparison.html#trajectory-plots"><i class="fa fa-check"></i><b>5.1.4</b> Trajectory plots</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="comparison.html"><a href="comparison.html#hfhs-day1-data-3"><i class="fa fa-check"></i><b>5.2</b> HFHS-Day1 data</a><ul>
+<li class="chapter" data-level="5.2.1" data-path="comparison.html"><a href="comparison.html#upsetr-1"><i class="fa fa-check"></i><b>5.2.1</b> UpSetR</a></li>
+<li class="chapter" data-level="5.2.2" data-path="comparison.html"><a href="comparison.html#selbal-like-plot-1"><i class="fa fa-check"></i><b>5.2.2</b> Selbal-like plot</a></li>
+<li class="chapter" data-level="5.2.3" data-path="comparison.html"><a href="comparison.html#plotloadings-1"><i class="fa fa-check"></i><b>5.2.3</b> plotLoadings</a></li>
+<li class="chapter" data-level="5.2.4" data-path="comparison.html"><a href="comparison.html#trajectory-plots-1"><i class="fa fa-check"></i><b>5.2.4</b> Trajectory plots</a></li>
+<li class="chapter" data-level="5.2.5" data-path="comparison.html"><a href="comparison.html#graphlan"><i class="fa fa-check"></i><b>5.2.5</b> GraPhlAn</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
@@ -140,7 +150,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Methods Comparison</a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Variable selection in microbiome compositional data analysis: tutorial</a>
           </h1>
         </div>
 
@@ -149,83 +159,215 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
             <section class="normal" id="section-">
 <div id="coda" class="section level1">
-<h1><span class="header-section-number">Chapter 2</span> CODA_LOGISTIC_LASSO</h1>
-<p>First, we illustrate the method lasso with linear constraints.</p>
+<h1><span class="header-section-number">Chapter 2</span> CoDA-lasso</h1>
+<p>First, we illustrate the method <strong>CoDA-lasso</strong>, which is the penalized regression with constraint coefficients (regression coefficients sum up to zero) <span class="citation">(Lu, Shi, and Li <a href="#ref-lu2019generalized">2019</a>; Lin et al. <a href="#ref-lin2014variable">2014</a>)</span> in compositional data analysis (CoDA). This method was implemented in the function <em>coda_lasso()</em>, which was adapted from matlab. In this chapter, we are going to use function <em>rangLambda2()</em> and <em>coda_lasso()</em>. Both of them have been loaded through file <strong>functions.R</strong>.</p>
 <div id="cd-data" class="section level2">
 <h2><span class="header-section-number">2.1</span> CD data</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x &lt;-<span class="st"> </span>x_Crohn </code></pre></div>
-<p>x is the matrix of microbiome abundances, either absolute abundances (counts) or relative abundances (proportions). However, x should not be the matrix of log(counts) or log(proportions). The method itself performs the log-transformation of the abundances.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">y &lt;-<span class="st"> </span>y_Crohn 
-<span class="kw">summary</span>(y)</code></pre></div>
+<p>In CD data, the matrix of microbial absolute abundances (counts) are treated as input <strong>X</strong>. CD data have 975 samples and 48 taxa (genera). The rows of <strong>X</strong> are individuals/samples, the columns are taxa.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dim</span>(CD.x)</code></pre></div>
+<pre><code>## [1] 975  48</code></pre>
+<p>For CoDA-lasso, <strong>X</strong> can either be absolute abundances or relative abundances (proportions). However, <strong>X</strong> should not be the matrix of log(counts) or log(proportions), because the method itself performs the log-transformation of the abundances.</p>
+<p><strong>Y</strong> is a binary outcome, coded as a factor with two levels (CD vs. non-CD).</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">class</span>(CD.y)</code></pre></div>
+<pre><code>## [1] &quot;factor&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(CD.y)</code></pre></div>
 <pre><code>##  CD  no 
 ## 662 313</code></pre>
-<p>In the CD data, y is the binary outcome, can be numerical (values 0 and 1), factor (2 levels) or categorical (2 categories).</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dim</span>(x)</code></pre></div>
-<pre><code>## [1] 975  48</code></pre>
-<p>The rows of x are individuals/samples, the columns are taxa.</p>
-<p>To run the method, we need a value of <span class="math inline">\(\lambda\)</span>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rangLambda</span>(y, x,<span class="dt">numVar =</span> <span class="dv">12</span>, <span class="dt">lambdaIni =</span> <span class="fl">0.15</span>)</code></pre></div>
-<pre><code>## [1]  0.00  0.65 48.00 17.00
-## [1]  0.000  0.325 48.000  2.000
-## [1]  0.1625  0.3250 12.0000  2.0000</code></pre>
-<pre><code>## $`rang lambdas`
-## [1] 0.1625 0.3250
+<p>To run the method, we need a value of <span class="math inline">\(\lambda\)</span>. <span class="math inline">\(\lambda\)</span> is the penalization parameter: the larger the value of <span class="math inline">\(\lambda\)</span>, the fewer number of variables will be selected.</p>
+<p>The default initial <span class="math inline">\(\lambda\)</span> is <strong>lambdaIni = 1</strong>. When <span class="math inline">\(\lambda = 1\)</span>, there is no microbial variable will be selected.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rangLambda2</span>(<span class="dt">Y =</span> CD.y, <span class="dt">X =</span> CD.x, <span class="dt">numLambda =</span> <span class="dv">12</span>, <span class="dt">lambdaIni =</span> <span class="fl">0.2</span>)</code></pre></div>
+<pre><code>## $call
+## rangLambda2(Y = CD.y, X = CD.x, numLambda = 12, lambdaIni = 0.2)
 ## 
-## $`num selected variables`
-## [1] 12  2</code></pre>
-<p>It provides a rang of <span class="math inline">\(\lambda\)</span> values corresponding to a given number of variables to be selected (numVar).</p>
-<p>The default initial <span class="math inline">\(\lambda\)</span> is lambdaIni=1.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">results_codalasso &lt;-<span class="st"> </span><span class="kw">coda_logistic_lasso</span>(y, x, <span class="dt">lambda =</span> <span class="fl">0.19</span>)</code></pre></div>
-<p><span class="math inline">\(\lambda\)</span> is the penalization parameter: the larger the value of <span class="math inline">\(\lambda\)</span>, the fewer number of variables will be selected.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">results_codalasso</code></pre></div>
-<pre><code>## $`number of iterations`
-## [1] 23
-## 
-## $`number of selected taxa`
-## [1] 11
-## 
-## $`indices of taxa with non-zero coeff`
-##  [1]  0  2  5  9 19 27 31 32 33 39 40 48
-## 
-## $`taxa with non-zero coeff`
-##  [1] &quot;beta0&quot;                        &quot;g__Parabacteroides&quot;          
-##  [3] &quot;f__Peptostreptococcaceae_g__&quot; &quot;g__Eggerthella&quot;              
-##  [5] &quot;g__Dialister&quot;                 &quot;o__Lactobacillales_g__&quot;      
-##  [7] &quot;g__Prevotella&quot;                &quot;g__Roseburia&quot;                
-##  [9] &quot;g__Lachnospira&quot;               &quot;g__Streptococcus&quot;            
-## [11] &quot;g__Aggregatibacter&quot;           &quot;g__Bilophila&quot;                
-## 
-## $`beta non-zero coefficients`
-##  [1] -1.0023255478 -0.0057464016  0.0202907034 -0.0184875313 -0.0992393846
-##  [6] -0.0159418386 -0.0030842274  0.2530005235 -0.0085670215 -0.0818265310
-## [11] -0.0406982632  0.0002999724
-## 
-## $`proportion of explained deviance`
-## [1] 0.1542276
-## 
-## $betas
-##  [1] -1.0023255478  0.0000000000 -0.0057464016  0.0000000000  0.0000000000
-##  [6]  0.0202907034  0.0000000000  0.0000000000  0.0000000000 -0.0184875313
-## [11]  0.0000000000  0.0000000000  0.0000000000  0.0000000000  0.0000000000
-## [16]  0.0000000000  0.0000000000  0.0000000000  0.0000000000 -0.0992393846
-## [21]  0.0000000000  0.0000000000  0.0000000000  0.0000000000  0.0000000000
-## [26]  0.0000000000  0.0000000000 -0.0159418386  0.0000000000  0.0000000000
-## [31]  0.0000000000 -0.0030842274  0.2530005235 -0.0085670215  0.0000000000
-## [36]  0.0000000000  0.0000000000  0.0000000000  0.0000000000 -0.0818265310
-## [41] -0.0406982632  0.0000000000  0.0000000000  0.0000000000  0.0000000000
-## [46]  0.0000000000  0.0000000000  0.0000000000  0.0002999724</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">selected_codalasso &lt;-<span class="st"> </span>results_codalasso[[<span class="dv">4</span>]][<span class="op">-</span><span class="dv">1</span>]
-
-columns_selected_codalasso &lt;-<span class="st"> </span>results_codalasso[[<span class="dv">3</span>]][<span class="op">-</span><span class="dv">1</span>]
-
-<span class="kw">write.csv</span>(<span class="kw">data.frame</span>(columns_selected_codalasso,selected_codalasso),
-          <span class="st">&quot;./Generated_datasets/results_codalasso_Crohn12.csv&quot;</span>)</code></pre></div>
-<p>We extract the name of selected genera and their column indices and then save them in a csv file.</p>
+## $ranglambdas
+##           lambda numVarSelect
+##  [1,] 0.20000000            8
+##  [2,] 0.18181818           11
+##  [3,] 0.16363636           20
+##  [4,] 0.14545455           20
+##  [5,] 0.12727273           16
+##  [6,] 0.10909091           29
+##  [7,] 0.09090909           20
+##  [8,] 0.07272727           23
+##  [9,] 0.05454545           26
+## [10,] 0.03636364           31
+## [11,] 0.01818182           41
+## [12,] 0.00000000           48</code></pre>
+<p>It provides a range of <span class="math inline">\(\lambda\)</span> values (<strong>lambda</strong>) and corresponding number of microbial variables selected (<strong>numVarSelect</strong>) according to a given number of <span class="math inline">\(\lambda\)</span>s (<strong>numLambda</strong>).</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">CD.results_codalasso &lt;-<span class="st"> </span><span class="kw">coda_lasso</span>(<span class="dt">Y =</span> CD.y, <span class="dt">X =</span> CD.x, <span class="dt">lambda =</span> <span class="fl">0.19</span>)
+CD.results_codalasso<span class="op">$</span>numVarSelect</code></pre></div>
+<pre><code>## [1] 11</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">CD.results_codalasso<span class="op">$</span>varSelect</code></pre></div>
+<pre><code>##  [1] &quot;g__Roseburia&quot;                 &quot;g__Dialister&quot;                
+##  [3] &quot;g__Streptococcus&quot;             &quot;g__Aggregatibacter&quot;          
+##  [5] &quot;f__Peptostreptococcaceae_g__&quot; &quot;g__Eggerthella&quot;              
+##  [7] &quot;o__Lactobacillales_g__&quot;       &quot;g__Lachnospira&quot;              
+##  [9] &quot;g__Parabacteroides&quot;           &quot;g__Prevotella&quot;               
+## [11] &quot;g__Bilophila&quot;</code></pre>
+<p>The method selects 11 genera with <span class="math inline">\(\lambda = 0.19\)</span>.</p>
 </div>
-<div id="beme-day1-data-1" class="section level2">
-<h2><span class="header-section-number">2.2</span> BEME day1 data</h2>
-<p>content need to be added.</p>
+<div id="hfhs-day1-data" class="section level2">
+<h2><span class="header-section-number">2.2</span> HFHS-Day1 data</h2>
+<p>The analysis on HFHS-Day1 data is similar as CD data.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dim</span>(HFHS.x)</code></pre></div>
+<pre><code>## [1]  47 558</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">class</span>(HFHS.y)</code></pre></div>
+<pre><code>## [1] &quot;factor&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(HFHS.y)</code></pre></div>
+<pre><code>##   HFHS Normal 
+##     24     23</code></pre>
+<p>In HFHS-Day1 data, <strong>Y</strong> is also a factor with two levels (HFHS vs. Normal)</p>
+<p>We then test a range of <span class="math inline">\(\lambda\)</span> and estimate the number of selected OTUs for each <span class="math inline">\(\lambda\)</span>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rangLambda2</span>(<span class="dt">Y =</span> HFHS.y, <span class="dt">X =</span> HFHS.x, <span class="dt">numLambda =</span> <span class="dv">20</span>, <span class="dt">lambdaIni =</span> <span class="fl">0.3</span>)</code></pre></div>
+<pre><code>## $call
+## rangLambda2(Y = HFHS.y, X = HFHS.x, numLambda = 20, lambdaIni = 0.3)
+## 
+## $ranglambdas
+##           lambda numVarSelect
+##  [1,] 0.30000000            2
+##  [2,] 0.28421053            2
+##  [3,] 0.26842105            2
+##  [4,] 0.25263158            2
+##  [5,] 0.23684211           35
+##  [6,] 0.22105263            2
+##  [7,] 0.20526316            2
+##  [8,] 0.18947368           11
+##  [9,] 0.17368421            2
+## [10,] 0.15789474           33
+## [11,] 0.14210526            7
+## [12,] 0.12631579           10
+## [13,] 0.11052632            2
+## [14,] 0.09473684           50
+## [15,] 0.07894737            5
+## [16,] 0.06315789           17
+## [17,] 0.04736842           20
+## [18,] 0.03157895          230
+## [19,] 0.01578947          106
+## [20,] 0.00000000          558</code></pre>
+<p>We specify a <span class="math inline">\(\lambda\)</span> and run the CoDA-lasso.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">HFHS.results_codalasso &lt;-<span class="st"> </span><span class="kw">coda_lasso</span>(<span class="dt">Y =</span> HFHS.y, <span class="dt">X =</span> HFHS.x, <span class="dt">lambda =</span> <span class="fl">0.18</span>) 
+HFHS.results_codalasso<span class="op">$</span>numVarSelect</code></pre></div>
+<pre><code>## [1] 11</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">HFHS.results_codalasso<span class="op">$</span>varSelect</code></pre></div>
+<pre><code>##  [1] &quot;192222&quot;  &quot;401384&quot;  &quot;263479&quot;  &quot;348038&quot;  &quot;400599&quot;  &quot;1105860&quot; &quot;4379961&quot;
+##  [8] &quot;338796&quot;  &quot;407963&quot;  &quot;462764&quot;  &quot;175272&quot;</code></pre>
+<p>The method selects 11 OTUs with <span class="math inline">\(\lambda = 0.18\)</span>.</p>
+<p>We also extract the taxonomic information of these selected OTUs.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">HFHS.tax_codalasso &lt;-<span class="st"> </span>HFHS.taxonomy[<span class="kw">which</span>(<span class="kw">rownames</span>(HFHS.taxonomy) <span class="op">%in%</span><span class="st"> </span>
+<span class="st">                                            </span>HFHS.results_codalasso<span class="op">$</span>varSelect), ]
+<span class="kw">kable</span>(HFHS.tax_codalasso[ ,<span class="dv">2</span><span class="op">:</span><span class="dv">6</span>], <span class="dt">booktabs =</span> T)</code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th align="left">Phylum</th>
+<th align="left">Class</th>
+<th align="left">Order</th>
+<th align="left">Family</th>
+<th align="left">Genus</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>192222</td>
+<td align="left">Bacteroidetes</td>
+<td align="left">Bacteroidia</td>
+<td align="left">Bacteroidales</td>
+<td align="left">Prevotellaceae</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td>1105860</td>
+<td align="left">Firmicutes</td>
+<td align="left">Erysipelotrichi</td>
+<td align="left">Erysipelotrichales</td>
+<td align="left">Erysipelotrichaceae</td>
+<td align="left">Allobaculum</td>
+</tr>
+<tr class="odd">
+<td>4379961</td>
+<td align="left">Firmicutes</td>
+<td align="left">Erysipelotrichi</td>
+<td align="left">Erysipelotrichales</td>
+<td align="left">Erysipelotrichaceae</td>
+<td align="left">Allobaculum</td>
+</tr>
+<tr class="even">
+<td>338796</td>
+<td align="left">Firmicutes</td>
+<td align="left">Clostridia</td>
+<td align="left">Clostridiales</td>
+<td align="left">Ruminococcaceae</td>
+<td align="left">Oscillospira</td>
+</tr>
+<tr class="odd">
+<td>462764</td>
+<td align="left">Firmicutes</td>
+<td align="left">Clostridia</td>
+<td align="left">Clostridiales</td>
+<td align="left">Ruminococcaceae</td>
+<td align="left">Ruminococcus</td>
+</tr>
+<tr class="even">
+<td>263479</td>
+<td align="left">Bacteroidetes</td>
+<td align="left">Bacteroidia</td>
+<td align="left">Bacteroidales</td>
+<td align="left">S24-7</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td>400599</td>
+<td align="left">Firmicutes</td>
+<td align="left">Clostridia</td>
+<td align="left">Clostridiales</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td>407963</td>
+<td align="left">Firmicutes</td>
+<td align="left">Clostridia</td>
+<td align="left">Clostridiales</td>
+<td align="left">Ruminococcaceae</td>
+<td align="left">Oscillospira</td>
+</tr>
+<tr class="odd">
+<td>348038</td>
+<td align="left">Bacteroidetes</td>
+<td align="left">Bacteroidia</td>
+<td align="left">Bacteroidales</td>
+<td align="left">S24-7</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td>401384</td>
+<td align="left">Firmicutes</td>
+<td align="left">Clostridia</td>
+<td align="left">Clostridiales</td>
+<td align="left">Ruminococcaceae</td>
+<td align="left">Oscillospira</td>
+</tr>
+<tr class="odd">
+<td>175272</td>
+<td align="left">Bacteroidetes</td>
+<td align="left">Bacteroidia</td>
+<td align="left">Bacteroidales</td>
+<td align="left">S24-7</td>
+<td align="left"></td>
+</tr>
+</tbody>
+</table>
 
+</div>
+</div>
+<h3>References</h3>
+<div id="refs" class="references">
+<div id="ref-lu2019generalized">
+<p>Lu, Jiarui, Pixu Shi, and Hongzhe Li. 2019. “Generalized Linear Models with Linear Constraints for Microbiome Compositional Data.” <em>Biometrics</em> 75 (1). Wiley Online Library: 235–44.</p>
+</div>
+<div id="ref-lin2014variable">
+<p>Lin, Wei, Pixu Shi, Rui Feng, and Hongzhe Li. 2014. “Variable Selection in Regression with Compositional Covariates.” <em>Biometrika</em> 101 (4). Oxford University Press: 785–97.</p>
 </div>
 </div>
             </section>

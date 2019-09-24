@@ -3,7 +3,7 @@ bookdown::gitbook:
   config:
     toc:
       before: |
-        <li><a href="./">Methods comparison</a></li>
+        <li><a href="./">Variable selection</a></li>
       after: |
         <li><a href="https://github.com/EvaYiwenWang/Methods_comparison" target="blank">Source codes on github</a></li>
     download: ["pdf"]

@@ -1,0 +1,95 @@
+# CLR-lasso {#clr}
+
+Then, we illustrate **CLR-lasso**, which is the penalized regression after the centered log-ratio (CLR) transformation [@zou2005regularization; @tibshirani1996regression; @le1992ridge]. This method was applied based on function *glmnet()*. We also generated a wrapper function called *glmnet_wrapper()*. It is based on *glmnet()*, but provides additional outputs. All these functions are uploaded via **functions.R**.
+
+## CD data
+
+As mentioned in the paper, CLR transformation is each log-transformed value subtracted with the arithmetic mean of the log-transformed values.
+
+$$clr(x) = clr(x_{1},...,x_{k}) = (log(x_{1})-M,...,log(x_{k})-M)$$
+
+$$M = \frac{1}{k}\sum_{i=1}^{k}log(x_{i})$$
+
+
+Where $i=1,...,k$ microbial variables, $x_{k}$ is the counts of variable $k$, $M$ is the arithmetic mean of the log-transformed values.
+
+
+```{r}
+# CLR transformation
+CD.z <- log(CD.x)
+CD.clrx <- apply(CD.z, 2, function(x) x - rowMeans(CD.z))
+```
+
+
+```{r}
+CD.y.num <- as.numeric(CD.y)
+```
+
+Here, **Y** is converted to be numeric, because *glmnet()* requires **Y** to be numeric.
+
+Same as CoDA-lasso, we first need to choose a $\lambda$. We fit CLR transformed **X** and numeric **Y** as input of function *glmnet()*. We also need to specify the response family to be **binomial**.
+
+```{r CDlasso, fig.cap = 'Lasso plot of CD data'}
+CD.test_clrlasso <- glmnet(x = CD.clrx, y = CD.y.num, family = 'binomial')
+plot(CD.test_clrlasso, xvar = 'lambda', label = T)
+```
+
+In Figure \@ref(fig:CDlasso), each curve corresponds to a variable (e.g. genus). It shows the path of its coefficient against different $log(\lambda)$ values. At each $log(\lambda)$, the shown curves indicate the number of nonzero coefficients. In the plot command, if **label = T**, each curve will be annotated with variable index. 
+
+
+Once we have chosen the $\lambda$ value, it is input in our new wrapper function *glmnet_wrapper()*.
+
+```{r}
+CD.lambda_clr = 0.045
+CD.results_clrlasso <- glmnet_wrapper(Y = CD.y.num, X = CD.clrx, family = 'binomial', 
+                                      lambda = CD.lambda_clr)
+CD.results_clrlasso$numVarSelect
+CD.results_clrlasso$varSelect
+```
+
+The method selects 11 genera with $\lambda = 0.045$, and they are listed in the object **CD.results_clrlasso**.
+
+## HFHS-Day1 data
+
+The analysis on HFHS-Day1 data is as similar as CD data.
+
+```{r}
+# CLR transformation
+HFHS.z <- log(HFHS.x)
+HFHS.clrx <- apply(HFHS.z, 2, function(x) x-rowMeans(HFHS.z))
+```
+
+**X** is centered log-ratio (CLR) transformed. 
+
+```{r}
+HFHS.y.num <- as.numeric(HFHS.y)
+```
+
+**Y** is converted to a numeric vector.
+
+```{r HFHSlasso, fig.cap = 'Lasso plot of HFHS-Day1 data'}
+HFHS.test_clrlasso <- glmnet(x = HFHS.clrx, y = HFHS.y.num, family = 'binomial')
+plot(HFHS.test_clrlasso, xvar = 'lambda', label = T)
+```
+
+The explanation of Figure \@ref(fig:HFHSlasso) is the same as Figure \@ref(fig:CDlasso).
+
+Once we have chosen the $\lambda$ value, we use function *glmnet_wrapper()* with the same input as *glmnet()* and extra input **$\lambda$**.
+
+```{r}
+HFHS.lambda_clr = 0.03
+HFHS.results_clrlasso <- glmnet_wrapper(Y = HFHS.y.num, X = HFHS.clrx, family = 'binomial', 
+                                        lambda = HFHS.lambda_clr) 
+HFHS.results_clrlasso$numVarSelect
+HFHS.results_clrlasso$varSelect
+```
+
+The method selects 10 OTUs with $\lambda = 0.03$, and these OTUs are listed in the object **HFHS.results_clrlasso**.
+
+We also extract the taxonomic information of these selected OTUs.
+
+```{r}
+HFHS.tax_clrlasso <- HFHS.taxonomy[which(rownames(HFHS.taxonomy) %in% 
+                                           HFHS.results_clrlasso$varSelect), ]
+kable(HFHS.tax_clrlasso[ ,2:6], booktabs = T)
+```

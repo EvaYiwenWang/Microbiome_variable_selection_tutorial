@@ -1,315 +1,488 @@
-# title: Functions
-# author: Yiwen (Eva) Wang
-# date: May 13th, 2019
+#######################################################################
+#                                                                     #
+#      functions_coda_penalized_regression.R:                         #
+#                                                                     #
+#   LOGISTIC LASSO and LOGISTIC ELASTIC NET FOR COMPOSITIONAL DATA    #
+#                                                                     #
+#          WITH LINEAR CONSTRAINT: sum(beta[j]) = 0, for j > 1        #
+#                                                                     #
+#######################################################################
 
-## ---------------
-## LOGISTIC LASSO
-## ---------------
 
-# With linear constraint: $\sum \beta_{j} = 0$ (for $j>1$)
-# y: dependent variable, binary, vector of length n
-# X: matrix of k covarites (positive values, taxa abundances in counts, proportions, intensities, ...), matrix of dimension n by k
 
-coda_logistic_lasso <- function(y,X,lambda, maxiter=400, maxiter2=50, r=10, 
-                                tol=1.e-4, tol2=1.e-6){
+##----------------------------------------------------------------
+#         coda_logistic_lasso
+##----------------------------------------------------------------
+
+coda_logistic_lasso  <-  function(Y, X, lambda, maxiter = 400, maxiter2 = 50, 
+                                  r = 10, tol = 1.e-4, tol2 = 1.e-6, printTime = NULL){
   
-  library(MASS)   # for the computation of the generalized inverse ginv()
+  # Y: dependent variable, binary, vector of length n.
+  # X: matrix of k covariates (positive values, taxa abundances in counts, 
+  #    proportions, intensities, ...), matrix of dimension n by k.
+  # lambda : penalization parameter.
+  # maxiter: maximum number of iterations for the optimization loop.
+  # maxiter2: maximum number of iterations for the line search condition.
+  # r: fixed parameter used for the update step.
+  # tol: tolerance for the difference explained deviance in two consecutive steps.
+  # tol2: tolerance to fulfill the constraint sum(beta[j]) = 0, for j > 1 
+  # printTime: value to print computing time (works any value)
   
-  if (!is.numeric(y)){
-    y<-as.numeric(y)-1
+  #  library(MASS)  #only if ginv function is needed (not in our case)
+  
+  if (!is.numeric(Y)){ #Check data
+    Y  <-  as.numeric(Y) - 1
   }
   
   # Transform initial data 
-  ztransformation(X)
+  p  <-  ncol(X)   # p: number of covariates after filtering
+  n  <-  nrow(X);
+  # log transformation Z = log(X)
+  z <- log(X)
   
-  #initial values for beta
-  #   p<<-ncol(X)   # p: number of covariates after filtering
-  #   n<<-nrow(X);  # both defined on ztransformation function
-  # beta_ini<-rep(1,p+1)/(p+1)  # uniform values 
-  beta_ini<-c(log(mean(y)/(1-mean(y))),rep(1/p,p))   
-  # b0 related to mean(y) and uniform values for the other components
+  # z = matrix of covariates: add a first column of 1's for beta0
+  z <- cbind(rep(1, nrow(z)), z)
+  z <- as.matrix(z)
+  
+  # c = linear constraint sum(betas) = 0 (except beta0)
+  c <- c(0, rep(1, ncol(X)))
+  c <- c / sqrt(normSqr(c))
+  c <- as.matrix(c)
+  p_c <- c %*% t(c)
+  # p_cginv <- ginv(p_c);  #use this only if necessary
+  p_c_cginv <- p_c; #p_c%*%p_cginv; #this product in our case is = p_c
+  
+  # z transformation (centering) for improvement of optimization
+  # this transformation does not affect the estimation since the linear predictor is the same
+  z <- (z - (z %*% p_c))
+  colnames(z) <- c('beta0', colnames(X))
+  
+  
+  # initial values for beta:
+  # b0 related to mean(Y) and uniform values for the other components
+  beta_ini <- c(log(mean(Y) / (1 - mean(Y))), rep(1/p, p))   
   
   #null deviance
-  nulldev<-glm(y~1, family=binomial())[[10]]
+  nulldev <- glm(Y ~ 1, family = binomial())[[10]]
   
   
   #initialization parameters
-  k<-1
-  epsilon<-0.1
-  beta_ant<-beta_ini
-  beta<-beta_ant
-  y_ant<-beta_ant
-  y_k<-y_ant
-  d_k<-y_ant
-  dev_explained_ant<-0
+  
+  k <- 1
+  epsilon <- 0.1
+  beta_ant <- beta_ini
+  beta <- beta_ant
+  y_ant <- beta_ant
+  y_k <- y_ant
+  d_k <- y_ant
+  dev_explained_ant <- 0
   
   
   # Optimization with constraint
   start_iter = Sys.time(); 
-  while((abs(epsilon)>tol)&(k<=maxiter)){
-    #print(append("loop",k))
-    k0<-0
-    t_k<-10
-    condition<-0.1
-    while ((condition>0)&(k0<=maxiter2)){
-      k0<-k0+1
-      #print(append("k0",k0))
-      d_k<-y_ant-t_k*grad_g(y_ant, z, y, n)
+  while((abs(epsilon) > tol) & (k <= maxiter)){
+    k0 <- 0
+    t_k <- 10
+    condition <- 0.1
+    while ((condition > 0) & (k0 <= maxiter2)){
+      k0 <- k0 + 1
+      gradgyantzyn  <-  grad_g(y_ant, z, Y, n)
+      d_k  <-  y_ant - t_k * gradgyantzyn;
       
       # Soft thresholding:
-      zproxi<-c(d_k[1],soft_thres(d_k[-1],lambda*t_k))
+      zproxi <- c(d_k[1], soft_thres(d_k[-1], lambda*t_k))
       
       # Projection:
-      zproj<-projection(zproxi,p_c)
+      zproj <- projection(zproxi, p_c_cginv)
       
-      # line search condition
-      Gt<-(y_ant-zproj)/t_k
-      condition<-g(y_ant-t_k*Gt,z, y, n)-g(y_ant,z, y, n)+t_k*t(grad_g(y_ant,z, y, n))%*%Gt-t_k/2*normSqr(Gt)
-      #print(append("condition",condition))
-      #print(append("t_k",t_k))
-      t_k<-t_k/2
+      # Line search condition
+      Gt <- (y_ant - zproj)
+      condition <- g(zproj, z, Y, n) - g(y_ant, z, Y, n) + t(gradgyantzyn) %*% Gt - normSqr(Gt) / (2 * t_k)
+      
+      t_k <- t_k / 2
     }
-    beta<-zproj
-    
-    y_k<-beta+(k-1)/(k+r-1)*(beta-beta_ant)
+    beta <- zproj
     
     
-    dev_explained<-1-(nrow(X)*2*g(beta,z, y, n)/nulldev)
-    epsilon<-abs(dev_explained-dev_explained_ant)  
+    y_k <- beta + (k - 1)/(k + r - 1)*(beta - beta_ant) #updated value
     
+    dev_explained <- 1 - (nrow(X) * 2 * g(beta, z, Y, n) / nulldev)
+    epsilon <- abs(dev_explained - dev_explained_ant)  #present difference deviation value
     
-    y_ant<-y_k
-    beta_ant<-beta
-    dev_explained_ant<-dev_explained
-    k<-k+1
-    #print(append("epsilon",epsilon))
-    
+    y_ant <- y_k
+    beta_ant <- beta
+    dev_explained_ant <- dev_explained
+    k <- k + 1
   }
+  
   end_iter = Sys.time(); 
-  sprintf("iter time = %f",end_iter-start_iter)
+  if (!is.null(printTime)){
+    sprintf('iter time = %f', end_iter - start_iter)
+  }
   
-  #Projection of the optimal beta to fulfil the constraint sum(beta[j])=0, for j>1 
-  indx<-which(abs(zproxi)>tol2)
-  if (abs(zproxi[1])>0) indx<-indx[-1]
-  c0<-rep(1,(length(indx)))
-  c0<-c0/sqrt(normSqr(c0))
-  p_c0<-c0%*%t(c0)
-  #beta1<-as.numeric(projection(beta[indx],p_c0))
-  beta1<-projection(beta[indx],p_c0)
+  #Projection of the optimal beta to fulfil the constraint sum(beta[j]) = 0, for j>1 
+  indx <- which(abs(zproxi) > tol2)
+  if (abs(zproxi[1]) > 0) indx <- indx[-1]
+  c0 <- rep(1, (length(indx)))
+  c0 <- c0 / sqrt(normSqr(c0))
+  p_c0 <- c0 %*% t(c0)
+  if (ncol(p_c0) * nrow(p_c0) > 0){
+    p_c0ginv = p_c0 #ginv(p_c0); #use this only if necessary
+  }else{
+    p_c0ginv = 0;
+  }
+  p_c0_c0ginv = p_c0;
+  # p_c0_c0ginv = p_c0%*%p_c0ginv; #use this only if necessary
   #beta1
-  beta_res<-c(beta[1],rep(0,p))
-  beta_res[indx]<-beta1
-  
-  # print("beta coefficients:")
-  # beta_res
-  
-  #print("taxa with non-zero coeff:")
-  # selec<-colnames(z)[abs(beta_res)>0]
-  
-  #print("beta non-zero coefficients:")
-  # beta_res[abs(beta_res)>0]
-  
-  #print("proportion of explained deviance")
-  # dev_explained
-  #print("proportion of explained deviance beta_res")
-  
-  dev_explained_beta_res<-1-(nrow(X)*2*g(beta_res,z, y, n)/nulldev)
-  # dev_explained_beta_res
+  beta1 <- as.numeric(projection(beta[indx], p_c0_c0ginv))
+  beta_res <- c(beta[1], rep(0, p))
+  beta_res[indx] <- beta1
   
   
-  results<-list(
-    "number of iterations"=k,
-    "number of selected taxa"=
-      sum(abs(beta_res)>0)-1, 
-    "indices of taxa with non-zero coeff"=
-      which(abs(beta_res)>0)-1,
-    "taxa with non-zero coeff"=
-      colnames(z)[abs(beta_res)>0], 
-    "beta non-zero coefficients"=
-      beta_res[abs(beta_res)>0],
-    "proportion of explained deviance"=
-      dev_explained_beta_res, 
-    "betas"=
-      beta_res)
+  dev_explained_beta_res <- 1 - (nrow(X) * 2 * g(beta_res, z, Y, n)/nulldev)  
+  
+  results <- list(
+    'number of iterations' = k,
+    'number of selected taxa' = sum(abs(beta_res) > 0) - 1, 
+    'indices of taxa with non-zero coeff' = which(abs(beta_res) > 0) - 1,
+    'taxa with non-zero coeff' = colnames(z)[abs(beta_res) > 0], 
+    'beta non-zero coefficients' = beta_res[abs(beta_res) > 0],
+    'proportion of explained deviance' = dev_explained_beta_res, 
+    'betas' = beta_res)
   
   return(results)
   
 } # END function coda_logistic_lasso
 
 
+##-----------------------------------------------------------------------
+#     coda_lasso (wrapper of coda_logistic_lasso with more outputs)
+##-----------------------------------------------------------------------
 
-## ---------------------
-## LOGISTIC ELASTIC NET
-## ---------------------
+coda_lasso  <-  function(Y, X, lambda, maxiter = 400, maxiter2 = 50, 
+                         r = 10, tol = 1.e-4, tol2 = 1.e-6, printTime = NULL){
+  
+  # Y: dependent variable, binary, vector of length n.
+  # X: matrix of k covariates (positive values, taxa abundances in counts, 
+  #    proportions, intensities, ...), matrix of dimension n by k.
+  # lambda : penalization parameter.
+  # maxiter: maximum number of iterations for the optimization loop.
+  # maxiter2: maximum number of iterations for the line search condition.
+  # r: fixed parameter used for the update step.
+  # tol: tolerance for the difference explained deviance in two consecutive steps.
+  # tol2: tolerance to fulfill the constraint sum(beta[j]) = 0, for j > 1 
+  # printTime: value to print computing time (works any value)
+  
+  result <- coda_logistic_lasso(Y = Y, X = X, lambda = lambda, maxiter = maxiter, maxiter2 = maxiter2, 
+                                r = r, tol = tol, tol2 = tol2, printTime = printTime)
+  
+  coefficientsSelect <- result$`beta non-zero coefficients`[-1]
+  names(coefficientsSelect) <- result$`taxa with non-zero coeff`[-1]
+  coefficientsSelect <- coefficientsSelect[order(abs(coefficientsSelect), decreasing = T)]
+  
+  coefficients <- result$betas[-1]
+  names(coefficients) <- colnames(X)
+  
+  varSelect = names(coefficientsSelect)
+  
+  varIndex <- match(varSelect, colnames(X))
+  
+  # choose the desired output from 'result'
+  out = list(
+    call = match.call(),
+    iter = result$`number of iterations`,
+    numVarSelect = result$`number of selected taxa`,
+    varSelect = varSelect,
+    varIndex = varIndex,
+    coefficientsSelect = coefficientsSelect,
+    posCoefSelect = coefficientsSelect[which(coefficientsSelect > 0)],
+    negCoefSelect = coefficientsSelect[which(coefficientsSelect < 0)],
+    coefficients = coefficients,
+    explained_deviance_proportion = result$`proportion of explained deviance`
+  )
+  
+  return(invisible(out))
+  
+}
 
-##-----------------------------------------------------------------
 
-coda_logistic_elasticNet<-function(y,X,lambda, alpha=0.5, maxiter=1000, maxiter2=50, r=10, 
-                                   tol=1.e-4, tol2=1.e-6){
+
+##----------------------------------------------------------------
+#         coda_logistic_elasticNet
+##----------------------------------------------------------------
+
+coda_logistic_elasticNet <- function(Y, X, lambda, alpha = 0.5, maxiter = 400, maxiter2 = 50, 
+                                     r = 10, tol = 1.e-4, tol2 = 1.e-6, printTime = NULL){
   
-  library(MASS)   # for the computation of the generalized inverse ginv()
+  # Y: dependent variable, binary, vector of length n.
+  # X: matrix of k covariates (positive values, taxa abundances in counts, 
+  #    proportions, intensities, ...), matrix of dimension n by k.
+  # lambda : penalization parameter.
+  # alpha : weight value between the L0 and L1 constrains.
+  # maxiter: maximum number of iterations for the optimization loop.
+  # maxiter2: maximum number of iterations for the line search condition.
+  # r: fixed parameter used for the update step.
+  # tol: tolerance for the difference explained deviance in two consecutive steps.
+  # tol2: tolerance to fulfill the constraint sum(beta[j])=0, for j>1 
+  # printTime: value to print computing time (works any value)
   
-  # Transform initial data 
-  ztransformation(X)
+  p <- ncol(X)   # p: number of covariates after filtering
+  n <- nrow(X);
+  # log transformation Z=log(X)
+  z <- log(X)
   
-  #initial values for beta
-  #beta_ini<-rep(1,p+1)/(p+1)  # uniform values 
-  beta_ini<-c(log(mean(y)/(1-mean(y))),rep(1/p,p))   
-  # b0 related to mean(y) and uniform values for the other components
+  # z=matrix of covariates: add a first column of 1's for beta0
+  z <- cbind(rep(1, nrow(z)), z)
+  z <- as.matrix(z)
+  
+  # c=linear constraint sum(betas)=0 (except beta0)
+  c <- c(0, rep(1, ncol(X)))
+  c <- c / sqrt(normSqr(c))
+  c <- as.matrix(c)
+  p_c <- c %*% t(c)
+  #???p_cginv <- ginv(p_c); #use this only if necessary  
+  p_c_cginv <- p_c;  #p_c%*%p_cginv; 
+  
+  # z transformation (centering) for improvement of optimization
+  # this transformation does not affect the estimation since the linear predictor is the same
+  z <- (z - (z %*% p_c))
+  colnames(z) <- c('beta0', colnames(X))
+  
+  
+  
+  #initial values for beta:
+  # b0 related to mean(Y) and uniform values for the other components
+  beta_ini <- c(log(mean(Y) / (1 - mean(Y))), rep(1/p, p))   
   
   #null deviance
-  nulldev<-glm(y~1, family=binomial())[[10]]
-  
-  
-  
+  nulldev <- glm(Y ~ 1, family = binomial())[[10]]
   
   
   #initialization parameters
   
-  k<-1
-  epsilon<-0.1
-  beta_ant<-beta_ini
-  beta<-beta_ant
-  y_ant<-beta_ant
-  y_k<-y_ant
-  d_k<-y_ant
-  dev_explained_ant<-0
+  k <- 1
+  epsilon <- 0.1
+  beta_ant <- beta_ini
+  beta <- beta_ant
+  y_ant <- beta_ant
+  y_k <- y_ant
+  d_k <- y_ant
+  dev_explained_ant <- 0
   # elastic parameters
-  lambda=alpha*lambda;
-  gamma=2*(1-alpha)/alpha;
+  lambda = alpha * lambda;
+  gamma = 2 * (1 - alpha) / alpha;
   
   
   # Optimization with constraint
   start_iter = Sys.time()
-  while((abs(epsilon)>tol)&(k<=maxiter)){
-    #print(append("loop",k))
-    k0<-0
-    t_k<-10
-    condition<-0.1
-    while ((condition>0)&(k0<=maxiter2)){
-      k0<-k0+1
-      #print(append("k0",k0))
-      d_k<-y_ant-t_k*grad_g(y_ant, z, y, n)
+  while((abs(epsilon) > tol) & (k <= maxiter)){
+    k0 <- 0
+    t_k <- 10
+    condition <- 0.1
+    while ((condition > 0) & (k0 <= maxiter2)){
+      k0 <- k0 + 1
+      gradgyantzyn  <-  grad_g(y_ant, z, Y, n)
+      d_k  <-  y_ant - t_k * gradgyantzyn;
       
       # Soft thresholding:
-      # zproxi<-c(d_k[1],soft_thres(d_k[-1],lambda*t_k))
-      # zproxi = zproxi/(1+gamma*lambda);
-      zproxi<-c(d_k[1],soft_thres(d_k[-1],lambda*t_k)/(1+gamma*lambda*t_k))
-      
+      zproxi <- c(d_k[1], soft_thres(d_k[-1], lambda * t_k)/(1 + gamma * lambda * t_k))
       
       # Projection:
-      zproj<-projection(zproxi,p_c)
+      zproj <- projection(zproxi, p_c)
       
-      # line search condition
-      Gt<-(y_ant-zproj)/t_k
-      condition<-g(y_ant-t_k*Gt,z, y, n)-g(y_ant,z, y, n)+t_k*t(grad_g(y_ant,z, y, n))%*%Gt-t_k/2*normSqr(Gt)
+      # Line search condition
+      Gt <- (y_ant - zproj)
+      condition <- g(zproj, z, Y, n) - g(y_ant, z, Y, n) + t(gradgyantzyn) %*% Gt - normSqr(Gt) / (2 * t_k)
       
-      #print(append("condition",condition))
-      #print(append("t_k",t_k))
-      t_k<-t_k/2
+      # # line search condition
+      # Gt <- (y_ant - zproj) / t_k
+      # condition <- g(y_ant - t_k * Gt, z, Y, n) - g(y_ant, z, Y, n) + t_k * t(grad_g(y_ant, z, Y, n)) %*% Gt - t_k / 2 * normSqr(Gt)
+      
+      t_k <- t_k / 2
     }
-    beta<-zproj
+    beta <- zproj
     
-    y_k<-beta+(k-1)/(k+r-1)*(beta-beta_ant)
-    
-    
-    dev_explained<-1-(nrow(X)*2*g(beta,z, y, n)/nulldev)
-    epsilon<-abs(dev_explained-dev_explained_ant)  
+    y_k <- beta + (k - 1) / (k + r - 1) * (beta - beta_ant)
     
     
-    y_ant<-y_k
-    beta_ant<-beta
-    dev_explained_ant<-dev_explained
-    k<-k+1
-    #print(append("epsilon",epsilon))
+    dev_explained <- 1 - (nrow(X) * 2 * g(beta, z, Y, n) / nulldev)
+    epsilon <- abs(dev_explained - dev_explained_ant)  
     
+    
+    y_ant <- y_k
+    beta_ant <- beta
+    dev_explained_ant <- dev_explained
+    k <- k + 1    
   }
   end_iter = Sys.time()
-  sprintf("iter time = %f",end_iter - start_iter)
+  if (!is.null(printTime)){
+    sprintf('iter time = %f', end_iter - start_iter)
+  }
+  
+  # Projection of the optimal beta to fulfill the constraint sum(beta[j])=0, for j>1 
+  indx <- which(abs(zproxi) > tol2)
+  if (abs(zproxi[1]) > 0) indx <- indx[-1]
+  c0 <- rep(1, (length(indx)))
+  c0 <- c0 / sqrt(normSqr(c0))
+  # p_c0ginv = ginv(p_c0) #use this only if necessary
+  
+  beta1 <- projection(beta[indx], p_c0, p_c0ginv)
+  beta_res <- c(beta[1], rep(0,p))
+  beta_res[indx] <- beta1
+  
+  dev_explained_beta_res <- 1 - (nrow(X) * 2 * g(beta_res, z, Y, n) / nulldev)
   
   
-  #Projection of the optimal beta to fulfil the constraint sum(beta[j])=0, for j>1 
-  indx<-which(abs(zproxi)>tol2)
-  if (abs(zproxi[1])>0) indx<-indx[-1]
-  c0<-rep(1,(length(indx)))
-  c0<-c0/sqrt(normSqr(c0))
-  p_c0<-c0%*%t(c0)
-  #beta1<-as.numeric(projection(beta[indx],p_c0))
-  beta1<-projection(beta[indx],p_c0)
-  #beta1
-  beta_res<-c(beta[1],rep(0,p))
-  beta_res[indx]<-beta1
-  
-  #print("beta coefficients:")
-  # beta_res
-  
-  #print("taxa with non-zero coeff:")
-  # selec<-colnames(z)[abs(beta_res)>0]
-  #return(selec)
-  
-  #print("beta non-zero coefficients:")
-  # beta_res[abs(beta_res)>0]
-  
-  #print("proportion of explained deviance")
-  # dev_explained
-  #print("proportion of explained deviance beta_res")
-  
-  dev_explained_beta_res<-1-(nrow(X)*2*g(beta_res,z, y, n)/nulldev)
-  # dev_explained_beta_res
-  
-  
-  results<-list("number of iterations"=k,
-                "number of selected taxa"=
-                  sum(abs(beta_res)>0)-1, 
-                "indices of taxa with non-zero coeff"=
-                  which(abs(beta_res)>0)-1,
-                "name of taxa with non-zero coeff"=
-                  colnames(z)[abs(beta_res)>0], 
-                "beta non-zero coefficients"=
-                  beta_res[abs(beta_res)>0],
-                "proportion of explained deviance"=
-                  dev_explained_beta_res, 
-                "betas"=
-                  beta_res)
+  results <- list('number of iterations' = k,
+                  'number of selected taxa' = sum(abs(beta_res) > 0) - 1, 
+                  'indices of taxa with non-zero coeff' = which(abs(beta_res) > 0) - 1,
+                  'name of taxa with non-zero coeff' = colnames(z)[abs(beta_res) > 0], 
+                  'beta non-zero coefficients' = beta_res[abs(beta_res) > 0],
+                  'proportion of explained deviance' = dev_explained_beta_res, 
+                  'betas' = beta_res)
   
   return(results)
   
 } # END function coda_logistic_ElasticNet
 
-## -----------
-## rangLambda
-## -----------
 
-# It provides a rang of lambda values corresponding to a given number of variables to be selected (numVar).      
-# The default initial lambda is lambdaIni=1.
 
-rangLambda <- function(y,X,numVar, lambdaIni =1){
+##----------------------------------------------------------------
+#         glmnet_wrapper (wrapper of glmnet with more outputs)
+##----------------------------------------------------------------
+# added by Eva
+
+glmnet_wrapper  <-  function(Y, X, family = c('gaussian','binomial','poisson','multinomial','cox','mgaussian'), 
+                             weights, alpha = 1, 
+                             standardize = TRUE, lambda, 
+                             standardize.response = FALSE){
+  
+  # Y: dependent variable, binary and numeric, vector of length n.
+  # X: CLR transformed matrix of k covariates, matrix of dimension n by k.
+  # family: Response type.
+  # weights: observation weights. Can be total counts if responses are proportion matrices. Default is 1 for each observation.
+  # alpha: The elasticnet mixing parameter, alpha = 1 is the lasso penalty, and alpha = 0 the ridge penalty.
+  # standardize: Logical flag for x variable standardization, prior to fitting the model sequence. 
+  # The coefficients are always returned on the original scale. Default is standardize = TRUE. 
+  # If variables are in the same units already, you might not wish to standardize. 
+  # lambda : penalization parameter.
+  # standardize.response: This is for the family = 'mgaussian' family, and allows the user to standardize the response variables
+  
+  result <- glmnet(y = Y, x = X, family = family, 
+                   weights = weights, alpha = alpha, 
+                   standardize = standardize, lambda = lambda, 
+                   standardize.response = standardize.response)
+  
+  coefficientsSelect <- result$beta[which(result$beta[,1] != 0),]
+  coefficientsSelect <- coefficientsSelect[order(abs(coefficientsSelect), decreasing = T)]
+  
+  varSelect = names(coefficientsSelect)
+  
+  varIndex <- match(varSelect, colnames(X))
+  
+  # choose the desired output from 'result'
+  out = list(
+    call = match.call(),
+    numVarSelect = result$df,
+    varSelect = varSelect,
+    varIndex = varIndex,
+    coefficientsSelect = coefficientsSelect,
+    posCoefSelect = coefficientsSelect[which(coefficientsSelect > 0)],
+    negCoefSelect = coefficientsSelect[which(coefficientsSelect < 0)],
+    coefficients = result$beta,
+    explained_deviance_proportion = result$dev.ratio
+  )
+  
+  return(invisible(out))
+  
+}
+
+##--------------------------------------------------------------------
+#         selbal_wrapper (wrapper of selbal with more outputs)
+##--------------------------------------------------------------------
+
+selbal_wrapper  <-  function(Y, X, th.imp = 0, covar = NULL, logit.acc = 'AUC', logt = T,
+                             col = c('steelblue1', 'tomato1'), tab = T, draw = F,
+                             maxV = 1e+10, zero.rep = 'bayes'){
+  
+  # Y: the response variable, either continuous or dichotomous.
+  # X: a matrix object with the information of variables (columns) for each sample (rows).
+  # th.imp: a numeric value indicating the minimum increment required in the association parameter between two consecutive 
+  # steps in order to continue with the variable addition into the balance.
+  # covar: data.frame with the variables to adjust for (columns).
+  # logit.acc: when y is dichotomous, the measure to compute for the correlation between y and the proposed balance adjusting 
+  # for covariates. One of the following values: 'AUC' (default), 'Dev', 'Rsq' or 'Tjur'.
+  # logt: logical value determining if x needs a log-transformation. TRUE if x contains raw counts or proportions.
+  # col: vector of two colours for differentiate the variables appearing in the numerator and in the denominator of the balances.
+  # tab: logical value. It specifies if a table with the variables included in the balance (ordered) and the evolution of the association parameter is demanded.
+  # draw: logical value to concretif a plot with the balance value and the response variable is desired.
+  # maxV: numeric value defining the maximum number of variables composing the balance. Default 1e10 to give prevalence to th.imp parameter.
+  # zero.rep: a value defining the method to use for zero - replacement. 'bayes' for BM-replacement or 'one' to add one read tho each cell of the matrix.
+  
+  require(grid)
+  
+  result <- selbal(x = X, y = Y, th.imp = th.imp, covar = covar, logit.acc = logit.acc, logt = logt,
+                   col = col, tab = tab, draw = draw, maxV = maxV, zero.rep = zero.rep)
+  
+  if(draw == T){
+    grid.draw(result[[7]])
+  }
+  
+  # choose the desired output from 'result'
+  out = list(
+    call = match.call(),
+    finalBal = result[[1]],
+    posVarSelect = result[[2]],
+    negVarSelect = result[[3]],
+    numVarSelect = length(result[[4]]),
+    varSelect = result[[4]],
+    varIndex = match(result[[4]], colnames(X)),
+    steps = length(result[[5]]),
+    ACC_eachStep = result[[5]]
+  )
+  
+  return(invisible(out))
+  
+}
+
+##----------------------------------------------------------------
+#         Additional functions
+##----------------------------------------------------------------
+
+rangLambda  <-  function(Y, X, numVar, lambdaIni = 1){
+  #
+  # Find the rang of lambda penalization values in order to obtain a given number of variables to be selected
+  #
+  # Y: dependent variable, binary, vector of length n.
+  # X: matrix of k covariates (positive values, taxa abundances in counts, 
+  #    proportions, intensities, ...), matrix of dimension n by k.
+  # numVar: number of variables to be selected according to the user.
+  # lambdaIni : maximum penalization parameter used.
+  
   lambdaB = lambdaIni;
   lambdaA = 0;
-  #lambda=0.5*(lambdaB+lambdaA);
-  lambda=lambdaIni;
-  results <- coda_logistic_lasso(y,X,lambda, maxiter = 100);
+  lambda = lambdaIni;
+  results  <-  coda_logistic_lasso(Y, X, lambda, maxiter = 100);
   numVarAct = results[[2]];
   if (numVarAct > numVar){
-    lambda=lambda+0.5;
-    #lambda=lambda+1;
-    lambdaB =lambda;
+    lambda = lambda + 0.1;
+    lambdaB = lambda;
   }else{
-    lambdaB =lambda; 
+    lambdaB = lambda; 
   }
-  nIter=1;
+  nIter = 1;
   presentLambda = NULL;
   presentnumVar = NULL;
   presentLambda[nIter] = lambda;
   presentnumVar[nIter] = numVarAct;
-  numvarA=ncol(X);
-  numvarB=numVarAct;
-  print(c(lambdaA, lambdaB, numvarA, numvarB))
-  diffNvar = abs(numvarB-numvarA);
-  while ((diffNvar>1) & (abs(numVarAct-numVar)>0) & (nIter < 6)){
-    nIter=nIter+1;
-    lambda=0.5*(lambdaB+lambdaA);
-    results <- coda_logistic_lasso(y,X,lambda, maxiter = 100);
+  numvarA = ncol(X);
+  numvarB = numVarAct;
+  #print(c(lambdaA, lambdaB, numvarA, numvarB))
+  diffNvar = abs(numvarB - numvarA);
+  while ((diffNvar > 1) & (abs(numVarAct - numVar) > 0) & (nIter < 10)){
+    nIter = nIter + 1;
+    lambda = 0.5 * (lambdaB + lambdaA);
+    results  <-  coda_logistic_lasso(Y, X, lambda, maxiter = 100);
     numVarAct = results[[2]];
     if (numVarAct < numVar) {
       lambdaB = lambda;
@@ -318,146 +491,735 @@ rangLambda <- function(y,X,numVar, lambdaIni =1){
       lambdaA = lambda;
       numvarA = numVarAct;
     }
-    presentLambda[nIter] = lambda;
     presentnumVar[nIter] = numVarAct;
-    diffNvar = abs(numvarB-numvarA);
-    print(c(lambdaA, lambdaB, numvarA, numvarB))
+    diffNvar = abs(numvarB - numvarA);
+    #cat(print(c(lambdaA, lambdaB, numvarA, numvarB)));
+    if (numVarAct == numVar) {
+      lambdaA = lambda;
+      lambdaB = lambda;
+      numvarA = numVar;
+      numvarB = numVar;
+      break;
+    }
   }
-  indx=which(presentnumVar >= 0);
-  results = list( 'rang lambdas'=c(lambdaA,lambdaB), 'num selected variables'=c(numvarA,numvarB))
-  return(results);
+  
+  cl = match.call()
+  result = list(call = cl,
+                ranglambdas = c(lambdaA, lambdaB),
+                numVarSelect = c(numvarA, numvarB))
+  return(result)
+}
+
+#####################
+# updated by Eva
+rangLambda2  <-  function(Y, X, numLambda, lambdaIni = 1){
+  stepL = lambdaIni / (numLambda - 1);
+  numVarAct = NULL;
+  lambdaAll = NULL
+  for (lambda in seq(lambdaIni, 0, -stepL)){
+    res  <-  coda_logistic_lasso(Y, X, lambda, maxiter = 100);
+    numVarAct = c(numVarAct, res[[2]]);
+    lambdaAll <- c(lambdaAll, lambda)
+  }
+  lambdaAll_numVarAct = cbind(lambda = lambdaAll, numVarSelect = numVarAct)
+  
+  cl = match.call()
+  result = list(call = cl,
+                ranglambdas = lambdaAll_numVarAct)
+  return(result)
 }
 
 
-## ------------------
-## Soft thresholding
-## ------------------
+##-----------------------------------------------------------------
 
-# http://www.simonlucey.com/soft-thresholding/
+norm1 <- function(x){
+  return(sum(abs(x)))
+}
 
-soft_thres<-function(b, lambda){
-  x<-rep(0,length(b))
+normSqr <- function(x){
+  return(sum(x^2))
+}
+
+
+mu_beta <- function(x, Z){
+  zetabybeta <- Z %*% x
+  res <- rep(1, length(zetabybeta))
+  indzb <- which(zetabybeta <= 100)
+  res[indzb] <- exp(zetabybeta[indzb]) / (1 + exp(zetabybeta[indzb]))
+  return(res)
+}
+
+g <- function(x, Z, Y, n){
+  res <-  (t(Y)) %*% Z %*% x
+  aux = Z %*% x
+  res <- res - sum(log(1 + exp(aux)))
+  res <-  as.vector((-res) / n)
+  return(res)
+}
+
+grad_g <- function(x, Z, Y, n){
+  res <-  (t(Y - mu_beta(x, Z))) %*% Z
+  res <-  as.vector((-res) / n)
+  return(res)
+}
+
+# Soft thresholding   http://www.simonlucey.com/soft-thresholding/
+
+soft_thres <- function(b, lambda){
+  x <- rep(0, length(b))
   # Set the threshold
-  th = lambda/2; 
+  th = lambda / 2; 
   
   #First find elements that are larger than the threshold
-  k <- which(b > th)
-  x[k] <- b[k] - th 
+  k  <-  which(b > th)
+  x[k]  <-  b[k] - th 
   
   # Next find elements that are less than abs
-  k <-which(abs(b) <= th)
-  x[k] <- 0 
+  k  <- which(abs(b) <= th)
+  x[k]  <-  0 
   
   # Finally find elements that are less than -th
-  k <-which(b < -th)
+  k  <- which(b < -th)
   x[k] = b[k] + th
   
   return(x)
 }
 
-## ----------------
-## Other functions
-## ----------------
 
-##-----------------------------------------------------------------
+# Projection function
 
-norm1<-function(x){
-  return(sum(abs(x)))
-}
-
-normSqr<-function(x){
-  return(sum(x^2))
-}
-
-
-ztransformation<-function(X){
-  p<<-ncol(X)   # p: number of covariates after filtering
-  n<<-nrow(X);
-  # log transformation Z=log(X)
-  z<-log(X)
-  
-  # z=matrix of covariates: add a first column of 1's for beta0
-  z<-cbind(rep(1,nrow(z)),z)
-  z<-as.matrix(z)
-  
-  # c=linear constraint sum(betas)=0 (except beta0)
-  c<-c(0,rep(1,ncol(X)))
-  c<-c/sqrt(sum(c^2))
-  c<-as.matrix(c)
-  p_c<<-c%*%t(c)
-  
-  # z transformation (centering) for improvement of optimization
-  # this transformation does not affect the estimation since the linear predictor is the same
-  z<<-(z-(z%*%p_c))
-  colnames(z)<<-c("beta0",colnames(X))
-  
-  return(z)
-  
-}
-
-A<-function(x){
-  y<-log(1+exp(x))
-  return(y)
-}
-
-
-mu_beta<-function(x, Z){
-  zetabybeta<-Z%*%x
-  res<-rep(1,length(zetabybeta))
-  indzb<-which(zetabybeta<=100)
-  res[indzb]<-exp(zetabybeta[indzb])/(1+exp(zetabybeta[indzb]))
-  return(res)
-}
-
-g<-function(x,Z,Y,n){
-  res<- (t(Y))%*%Z%*%x
-  res<-res-sum(log(1+exp(Z%*%x)))
-  res<- as.vector((-res)/n)
-  return(res)
-}
-
-h<-function(x, lambda){
-  lambda*norm1(x)
-}
-
-grad_g<-function(x, Z, Y, n){
-  res<- (t(Y-mu_beta(x,Z)))%*%Z
-  res<- as.vector((-res)/n)
+projection <- function(x, M = NULL, Mginv = NULL){
+  if (ncol(M) * nrow(M) > 0){
+    # res <- x - Mginv %*% M %*% x
+    res <- x - M %*% x
+  } else {res <- rep(0, length(x))}
   return(res)
 }
 
 
-# Projection
-
-projection<-function(x, M){
-  if (ncol(M)*nrow(M)>0){
-    res<-x-ginv(M)%*%M%*%x
-  } else {res<-rep(0,length(x))}
-  return(res)
-}
-
-
-F<-function(x,t_k,d_k){
-  lambda*t_k*norm1(x[-1])+normSqr(d_k-x)/2
-}
-
-F2<-function(x,Z,Y,n,lambda){
-  g(x,Z,Y,n)+lambda*norm1(x[-1])
-}
-
-trapezInteg <- function(x,y) {
-  # Compute AUC using trapezoid numerical method 
+trapezInteg  <-  function(x, y) {
+  # Compute AUC using trapezoid numerical integration method 
   n = length(x);
   sumArea = 0;
-  for (i in 1:(n-1)){
-    h=x[i+1]-x[i];
+  for (i in 1:(n - 1)){
+    h = x[i + 1] - x[i];
     if (abs(h) > 1.e-7){
-      sumArea = sumArea + 0.5*(y[i+1]+y[i])*h;
+      sumArea = sumArea + 0.5 * (y[i + 1] + y[i]) * h;
     }else{
       sumArea = sumArea;
     }
   }
   return(sumArea)
 }
+
+
+# Functions added by Eva
+##############################
+# Transparent color
+##############################
+color <- c('#388ECC', '#F68B33', '#C2C2C2', '#009E73', '#CC79A7', '#F0E442', '#6073B1', 'black', 
+           '#D55E00', '#999999', '#E69F00', '#56B4E9', '#994F00', '#40B0A6', '#5D3A9B', '#E1BE6A', 
+           '#005AB5')
+
+t_col <- function(color, percent = 50, name = NULL) {
+  #	color = color name
+  #	percent = % transparency
+  #	name = an optional name for the color
+  
+  ## Get RGB values for named color
+  rgb.val <- col2rgb(color)
+  ## Make new color using input color as base and alpha set by transparency
+  t.col <- rgb(rgb.val[1], rgb.val[2], rgb.val[3],
+               max = 255, alpha = (100 - percent) * 255 / 100,
+               names = name)
+  ## Save the color
+  invisible(t.col)
+}
+
+##############################
+# selbal plot
+##############################
+
+selbal_like_plot <- function(pos.names, neg.names, Y, X = NULL, selbal = FALSE, FINAL.BAL = NULL, OTU = F, taxa = NULL){
+  # pos.names: the name of variables selected with positive coef # selbal: numerator 
+  # neg.names: the name of variables selected with negative coef # selbal: denominator
+  # Y: the response variable, should be binomial
+  # X: a matrix object with the information of variables (columns) for each sample (rows).
+  # selbal: logical value determining if the results are from selbal function
+  # FINAL.BAL: if selbal = TRUE, the FINAL.BAL should not be NULL.
+  # OTU: logical value determining if the input positive and negative names are OTUs
+  # taxa: rownames are OTUs. if OTU = T, taxa should not be NULL
+  
+  require(ggplot2)
+  require(gridExtra)
+  
+  #-----------------------------------------#
+  # FIRST: The names of included variables
+  #-----------------------------------------#
+  
+  if(OTU == TRUE){
+    if(is.null(taxa)){
+      stop("'taxa' should not be NULL")
+    }
+    
+    pos.names.taxa = c()
+    for(e in pos.names){
+      index = ncol(taxa)
+      taxa.name = ''
+      while(taxa.name == ''){
+        taxa.name <- taxa[e,index]
+        index <- index - 1		
+      }
+      pos.names.taxa = c(pos.names.taxa, taxa.name)
+    }
+    pos.names.print <- paste0(pos.names, ': ', pos.names.taxa)
+    
+    
+    neg.names.taxa = c()
+    for(e in neg.names){
+      index = ncol(taxa)
+      taxa.name = ''
+      while(taxa.name == ''){
+        taxa.name <- taxa[e,index]
+        index <- index - 1		
+      }
+      neg.names.taxa = c(neg.names.taxa, taxa.name)
+    }
+    neg.names.print <- paste0(neg.names, ': ', neg.names.taxa)
+    
+  }else{
+    pos.names.print <- pos.names
+    neg.names.print <- neg.names
+  }
+  
+  if(selbal == TRUE){
+    pos.var <- c('Numerator', pos.names.print)
+    neg.var <- c('Denominator', neg.names.print)
+  }else{
+    pos.var <- c('Positive', pos.names.print)
+    neg.var <- c('Negative', neg.names.print)
+  }
+  
+  # Parameter to specify the limits for writting
+  yl <- max(length(pos.var), length(neg.var)) + .5
+  
+  # Empty plot with text
+  df <- data.frame()
+  Imp.table <- ggplot(df) + xlim(0, 100) + ylim(-0.5, yl) + theme_void() +
+    annotate('text',
+             x = 75,
+             y = floor(yl):ceiling(yl - length(pos.var)),
+             label = pos.var,
+             colour = c('#0072B2', rep('black', length(pos.var) - 1)),
+             fontface = 2) +
+    annotate('text',
+             x = 25,
+             y = floor(yl):ceiling(yl - length(neg.var)),
+             label = neg.var,
+             colour = c('#0072B2', rep('black', length(neg.var) - 1)),
+             fontface = 2)
+  
+  #-----------------------------------------#
+  # SECOND: The representation of the plots
+  #-----------------------------------------#
+  
+  if(selbal == TRUE){
+    if(is.null(FINAL.BAL)){
+      stop("'FINAL.BAL' should not be NULL")
+    }
+    Final.score <- FINAL.BAL
+  }else{
+    if(is.null(X)){
+      stop("'X' should not be NULL")
+    }
+    data.log <- log(X)
+    pos.index <- match(pos.names, colnames(X))
+    neg.index <- match(neg.names, colnames(X))
+    FINAL.mean.pos <- apply(data.log, 1, FUN = function(x, pos.index){mean(x[pos.index])}, pos.index)
+    FINAL.mean.neg <- apply(data.log, 1, FUN = function(x, neg.index){mean(x[neg.index])}, neg.index)
+    Final.score <- FINAL.mean.pos - FINAL.mean.neg
+  }
+  
+  Y = as.factor(Y)
+  
+  U <- data.frame(Y, Final.score)
+  colnames(U)[ncol(U)] <- 'V1'
+  
+  # The plot depending of the class of the response variable
+  #---------------------------------------------------#
+  # The composition of the final plot
+  #---------------------------------------------------#
+  # BOXPLOT
+  col = c('#388ECC', '#F68B33')
+  if(selbal == TRUE){
+    BoxP <-  ggplot(U, aes(x = Y, y = V1, fill = Y)) +
+      geom_boxplot(color = 'black', size = 1) +
+      scale_fill_manual(values = col) +
+      theme_bw() +
+      ylab('Balance') +
+      xlab('Factor') +
+      theme(legend.position = 'none')
+  }else{
+    BoxP <-  ggplot(U, aes(x = Y, y = V1, fill = Y)) +
+      geom_boxplot(color = 'black', size = 1) +
+      scale_fill_manual(values = col) +
+      theme_bw() +
+      ylab('Log mean difference between NEG and POS variables') +
+      xlab('Factor') +
+      theme(legend.position = 'none')}
+  # Density plot for the balance
+  ydensity <- ggplot(U, aes(V1, fill = Y)) +
+    geom_density(alpha = .5, size = 1.25) +
+    scale_fill_manual(values = col) +
+    theme_bw() + xlab('') + ylab('') +
+    theme(legend.position = 'none',
+          axis.text.x = element_blank(),
+          axis.ticks.x = element_blank()) +
+    coord_flip()
+  
+  # ROC - curve
+  require(pROC)
+  f.class = 'binomial'
+  # Regression model
+  if(selbal == TRUE){
+    Uplus = U
+  }else{
+    Uplus <- data.frame(Y, data.log[, c(pos.names, neg.names)])
+  }
+  
+  FIT.final <- glm(Y~., data = Uplus, family = f.class)
+  
+  # Build ROC curve
+  A <- roc(response = Uplus$Y, predictor = FIT.final$fitted.values)
+  # Extract the sensitivity and specificiti values
+  ROC.TAB <- data.frame(x = 1 - A$specificities, y = A$sensitivities)
+  # Order them for a correct representation
+  ROC.TAB <- ROC.TAB[order(ROC.TAB$y), ]
+  # AUC value
+  auc.val <- round(logit.cor(FIT.final, y = Uplus$Y, logit.acc = 'AUC'),3)
+  # The plot
+  ROC.plot <- ggplot(data = ROC.TAB, aes(x = x, y = y)) +
+    geom_line() +
+    ggtitle('ROC curve') +
+    xlab('FPR') + ylab('TPR') +
+    geom_step() +
+    annotate('text', x = .75, y = .2,
+             label = paste('AUC-ROC \n', auc.val), size = 2.5) +
+    theme_bw() +
+    theme(plot.title = element_text(hjust = 0.5))
+  
+  grid.arrange(Imp.table, ROC.plot, BoxP, ydensity, ncol = 2, heights = c(2,5), widths = c(4,1))
+}
+
+
+##############################
+# plotLoadings
+##############################
+
+plotcoefficients <- function(coef, data, Y, method = 'mean', contrib.method = 'max', title = 'Coefficients', 
+                             cex.x = 0.8, cex.y = 0.6, cex.legend = 0.8, OTU = F, taxa = NULL){
+  # coef: the coefficients that are going to be plotted, should have variable names
+  # data: the data of variables with non-zero coefficients, samples in the row, and variables in the column
+  # Y: sample group info
+  # method: the way we calculate, can be median or mean, the default is mean
+  # contrib.method: the way we use to decide the contributing group, can be min or max, the default is max
+  # OTU: logical value determining if the input coef names are OTUs
+  # taxa: rownames are OTUs. if OTU = T, taxa should not be NULL
+  
+  color <- c('#388ECC', '#F68B33', '#C2C2C2', '#009E73', '#CC79A7', '#F0E442', '#6073B1', 'black', 
+             '#D55E00', '#999999', '#E69F00', '#56B4E9', '#994F00', '#40B0A6', '#5D3A9B', '#E1BE6A', 
+             '#005AB5')
+  
+  if(is.null(names(coef))){
+    stop('The coefficients should have variable names')
+  }
+  
+  if(OTU == TRUE){
+    if(is.null(taxa)){
+      stop("'taxa' should not be NULL")
+    }
+    
+    coef.taxa = c()
+    for(e in names(coef)){
+      index = ncol(taxa)
+      taxa.name = ''
+      while(taxa.name == ''){
+        taxa.name <- taxa[e,index]
+        index <- index - 1		
+      }
+      coef.taxa = c(coef.taxa, taxa.name)
+    }
+    coef.name.taxa <- paste0(names(coef), ': ', coef.taxa)
+  }else{
+    coef.name.taxa <- names(coef)
+  }
+  
+  coef <- coef[order(abs(coef), decreasing = T)]
+  data <- data[ ,as.character(names(coef))]
+  
+  Y = as.factor(Y)
+  which.contrib = data.frame(matrix(FALSE, ncol = nlevels(Y) + 1, nrow = length(coef), 
+                                    dimnames = list(names(coef), c(paste0('Contrib.', levels(Y)), 'GroupContrib'))))
+  
+  method.group <- list()
+  for(k in 1:ncol(data))
+  {
+    method.group[[k]] = tapply(data[, k], Y, method, na.rm = TRUE) # method is either mean or median
+    # determine which group has the highest mean/median
+    which.contrib[k, 1:nlevels(Y)] = (method.group[[k]]) == get(contrib.method)(method.group[[k]]) # contrib.method is either min or max
+  }
+  
+  col.ties = 'white'
+  
+  which.contrib$color = apply(which.contrib, 1, function(x)
+  {
+    if (length(which(x)) > 1)
+    {
+      return(col.ties)
+    } else { # otherwise we use legend color provided
+      return(color[1:nlevels(Y)][which(x)])
+    }
+  })
+  
+  
+  which.contrib$GroupContrib = apply(which.contrib[ ,1:(nlevels(Y))], 1, function(x)
+  {
+    if (length(which(x)) > 1)
+    {
+      return('tie')
+    } else {
+      return(levels(Y)[which(x)])
+    }
+  })
+  
+  par(mar=c(5.1, 8.1, 4.1, 8.1), xpd=TRUE)
+  p <- barplot(coef, horiz = T, col = which.contrib$color, yaxt = 'n',main = title, 
+               cex.axis = cex.x, xlim = c(round((min(coef) * 1.2),3), round((max(coef) * 1.3),3)))  
+  axis(side = 2, at = p, labels = coef.name.taxa, las = 2, tick = F, cex.axis = cex.y)
+  legend('right', inset = c(-0.3,0), legend = levels(Y), pch = 16, title = 'Outcome', col = color[1:nlevels(Y)], cex = cex.legend)
+  par(mar = c(5.1,4.1,4.1,2.1))
+  
+  results <- data.frame(coef, which.contrib)
+  return(invisible(results))
+}
+
+
+##############################
+# Trajectory plot
+##############################
+
+TRAJ_plot <- function(selectVar_coef_method1, selectVar_coef_method2, selectMethods, OTU = F, taxa = NULL){
+  # selectVar_coef_method1: the vector of coefs with variable names as the vector names selected by the first method
+  # selectVar_coef_method2: the vector of coefs with variable names as the vector names selected by the second method
+  # selectMethods: methods used to select variables
+  # OTU: logical value determining if the input coef names are OTUs
+  # taxa: rownames are OTUs. if OTU = T, taxa should not be NULL
+  
+  require(ggplot2)
+  require(ggforce)
+  
+  # order the absolute coefs of the first method
+  selectVar_coef_method1 <- selectVar_coef_method1[order(abs(selectVar_coef_method1), decreasing = T)]
+  
+  selectVar_method1 <- names(selectVar_coef_method1)
+  selectVar_method2 <- names(selectVar_coef_method2)
+  unionVar <- union(selectVar_method1, selectVar_method2)
+  
+  plot.matrix <- matrix(0, nrow = length(unionVar), ncol = 2, dimnames = list(unionVar, selectMethods))
+  plot.matrix[match(selectVar_method1, unionVar),1] <- selectVar_coef_method1
+  plot.matrix[match(selectVar_method2, unionVar),2] <- selectVar_coef_method2
+  
+  # abs
+  plot.matrix.abs <- abs(plot.matrix)
+  
+  # proportion
+  plot.matrix.prop <- apply(plot.matrix.abs, 2, function(x){x / sum(x)})
+  
+  # rank
+  plot.matrix.rank <- apply(plot.matrix.abs, 2, rank, ties.method = 'max')
+  
+  # increase the diff between variables
+  plot.matrix.rank <- plot.matrix.rank * 5
+  
+  matrix.names <- paste0(rep(rownames(plot.matrix.rank), each = 2), 1:2)
+  plot.matrix.rank_prop <- data.frame(matrix(0, nrow = 2 * nrow(plot.matrix.rank), ncol = 2, 
+                                             dimnames = list(matrix.names, selectMethods)))
+  
+  for(i in 1:nrow(plot.matrix.rank)){
+    plot.matrix.rank_prop[(2 * i-1), ] <- plot.matrix.rank[i, ] + plot.matrix.prop[i, ] * 5 # * 10 / 2
+    plot.matrix.rank_prop[2 * i, ] <- plot.matrix.rank[i, ] - plot.matrix.prop[i, ] * 5
+  }
+  
+  # same dist between each two sequential variables
+  plot.matrix.rank_prop.nospace <- plot.matrix.rank_prop
+  plot.matrix.rank_prop.nospace$methodVar2 <- plot.matrix.rank_prop.nospace$methodVar1 <- rep(rownames(plot.matrix.rank), each = 2)
+  method1.null <- setdiff(selectVar_method2, selectVar_method1)
+  method2.null <- setdiff(selectVar_method1, selectVar_method2)
+  
+  plot.matrix.rank_prop.nospace$methodVar1[c(match(method1.null, plot.matrix.rank_prop.nospace$methodVar1),
+                                             match(method1.null, plot.matrix.rank_prop.nospace$methodVar1) + 1)] = 'Not selected'
+  
+  plot.matrix.rank_prop.nospace$methodVar2[c(match(method2.null, plot.matrix.rank_prop.nospace$methodVar2),
+                                             match(method2.null, plot.matrix.rank_prop.nospace$methodVar2) + 1)] = 'Not selected'
+  
+  for(j in 1:2){
+    data <- plot.matrix.rank_prop.nospace[ ,j]
+    names(data) <- rownames(plot.matrix.rank_prop.nospace)
+    data.order <- sort(data, decreasing = T)
+    
+    p <- length(data.order)
+    data.res <- data.order
+    for(i in 2:nrow(plot.matrix.rank)){
+      data.res[(2 * i-1):p] <- data.res[(2 * i-1):p] + data.res[2 * (i-1)] - data.res[(2 * i-1)] - 0.2
+    }
+    plot.matrix.rank_prop.nospace[names(data.res),j] = data.res
+  }
+  
+  method1.index.null <- which(plot.matrix.rank_prop.nospace$methodVar1 == 'Not selected')
+  plot.matrix.rank_prop.nospace[method1.index.null,1] = plot.matrix.rank_prop.nospace[method1.index.null[1],1]
+  
+  method2.index.null <- which(plot.matrix.rank_prop.nospace$methodVar2 == 'Not selected')
+  plot.matrix.rank_prop.nospace[method2.index.null,2] = plot.matrix.rank_prop.nospace[method2.index.null[1],2]
+  
+  
+  method1.loc <- tapply(plot.matrix.rank_prop.nospace[,1], plot.matrix.rank_prop.nospace$methodVar1, mean)
+  
+  method2.loc <- tapply(plot.matrix.rank_prop.nospace[,2], plot.matrix.rank_prop.nospace$methodVar2, mean)
+  
+  # plot
+  color <- c('#388ECC', '#F68B33', '#C2C2C2', '#009E73', '#CC79A7', '#F0E442', '#6073B1', 'black', 
+             '#D55E00', '#999999', '#E69F00', '#56B4E9', '#994F00', '#40B0A6', '#5D3A9B', '#E1BE6A', 
+             '#005AB5')
+  
+  more_color = c()
+  percent = 30
+  for(k in 1:2){
+    for(c in color){
+      new.color <- t_col(color = c, percent = percent)
+      more_color <- c(more_color, new.color)
+    }
+    percent = percent + 30
+  }
+  
+  color <- c(color, more_color) # in case the color is run out of
+  
+  y = c()
+  for(i in 1:nrow(plot.matrix.rank)){
+    y = c(y, unlist(plot.matrix.rank_prop.nospace[(2 * i-1),1:2]),
+          unlist(plot.matrix.rank_prop.nospace[2 * i,2:1]))
+    
+  }
+  data <- data.frame(x = rep(c(1, 6, 6, 1), nrow(plot.matrix.rank)), 
+                     y = y, group = rep(1:nrow(plot.matrix.rank), each = 4))
+  
+  
+  
+  if(OTU == TRUE){
+    if(is.null(taxa)){
+      stop("'taxa' should not be NULL")
+    }
+    
+    method1.taxa = c()
+    for(e in names(method1.loc)){
+      if(e != 'Not selected'){
+        index = ncol(taxa)
+        taxa.name = ''
+        while(taxa.name == ''){
+          taxa.name <- taxa[e,index]
+          index <- index - 1		
+        }
+        taxa.name <- paste0(e, ': ', taxa.name)
+        method1.taxa = c(method1.taxa, taxa.name)
+      }else{
+        taxa.name = e
+        method1.taxa = c(method1.taxa, taxa.name)
+      }}
+    
+    method2.taxa = c()
+    for(e in names(method2.loc)){
+      if(e != 'Not selected'){
+        index = ncol(taxa)
+        taxa.name = ''
+        while(taxa.name == ''){
+          taxa.name <- taxa[e,index]
+          index <- index - 1		
+        }
+        taxa.name <- paste0(e, ': ', taxa.name)
+        method2.taxa = c(method2.taxa, taxa.name)
+      }else{
+        taxa.name = e
+        method2.taxa = c(method2.taxa, taxa.name)
+      }}
+    
+  }else{
+    method1.taxa <- names(method1.loc)
+    method2.taxa <- names(method2.loc)
+  }      
+  
+  
+  
+  
+  
+  ggplot(data) + geom_diagonal_wide(aes(data$x, data$y, group = data$group, 
+                                        fill = as.factor(data$group)), alpha = 0.8) + 
+    theme_bw() + theme(panel.border = element_blank(), panel.grid = element_blank(), 
+                       axis.title = element_blank(), axis.ticks.x = element_blank()) + 
+    scale_fill_manual(values = color) + 
+    scale_y_continuous(breaks = method1.loc, labels = method1.taxa, 
+                       sec.axis = sec_axis(~ . , breaks = method2.loc, 
+                                           labels = method2.taxa)) + 
+    theme(legend.position = 'none') + scale_x_continuous(breaks = c(1,6), 
+                                                         labels = selectMethods)
+  
+}
+
+
+################
+graphlan_annot_generation <- function(taxa_list, save_folder){
+  # taxa_list: a list of taxa info selected by different methods. The list should have names for each element
+  # save_folder: where to save your generated txt files
+  
+  # checking
+  if(is.null(names(taxa_list))){
+    stop('The taxa list should have names for each element.')
+  }
+  
+  #---------------------------
+  # generate taxa.txt file
+  #---------------------------
+  for(i in 1:length(taxa_list)){
+    taxa_list[[i]] <- as.data.frame(taxa_list[[i]])
+    taxa_list[[i]]$OTUs <- rownames(taxa_list[[i]])
+    rownames(taxa_list[[i]]) <- NULL
+  }
+  
+  tax.df <- do.call(rbind, taxa_list)
+  tax.df.unique <- tax.df[match(unique(tax.df$OTUs),tax.df$OTUs),]
+  
+  # make each column to be character
+  for(i in 1:ncol(tax.df.unique)){
+    tax.df.unique[,i] = as.character(tax.df.unique[,i])
+  }
+  
+  # save the taxa.txt file
+  write.table(tax.df.unique, file = paste0(save_folder, '/taxa.txt'), sep = '.', 
+              quote = FALSE, col.names = F, row.names = F)
+  
+  #----------------------------
+  # generate annot.txt file
+  #----------------------------
+  color.vector <- c('#388ECC', '#F68B33', '#C2C2C2', '#009E73', '#CC79A7', '#F0E442', '#6073B1', 'black', 
+                    '#D55E00', '#999999', '#E69F00', '#56B4E9', '#994F00', '#40B0A6', '#5D3A9B', '#E1BE6A', 
+                    '#005AB5')
+  
+  ################################################################
+  # We characterise each taxa with background color
+  # except Kingdom (1st column) and OTUs (last column) 
+  branch.each_taxa <- c()
+  for(i in 2:(ncol(tax.df.unique) - 1)){
+    branch.each_taxa <- c(branch.each_taxa, unique(tax.df.unique[ ,i]))
+  }
+  branch.each_taxa <- branch.each_taxa[branch.each_taxa != '']
+  
+  # The background color is blocks of colors according to Phylum 
+  Phylum.color.list <- list()
+  for(i in 1:length(unique(tax.df.unique[ ,2]))){
+    phy.inx <- which(tax.df.unique[ ,2] == tax.df.unique[ ,2][i])
+    Phylum.color <- c()
+    for(j in 2:(ncol(tax.df.unique) - 1)){
+      Phylum.color <- c(Phylum.color, unique(tax.df.unique[phy.inx,j]))
+    }
+    Phylum.color <- Phylum.color[Phylum.color != '']
+    Phylum.color.list[[i]] <- Phylum.color 
+  }
+  names(Phylum.color.list) = unique(tax.df.unique[,2])
+  
+  # build the background color matrix
+  background.color <- data.frame(matrix(NA, nrow = 3 * length(branch.each_taxa), ncol = 3))
+  background.color[ ,1] <- rep(branch.each_taxa, each = 3)
+  background.color[ ,2] <- c('annotation', 'annotation_background_color', 'annotation_font_size')
+  background.color[ ,3] <- ifelse(background.color[,2] == 'annotation', background.color[ ,1], 5)
+  color.b.index <- which(background.color[,2] == 'annotation_background_color')
+  background.color.vector <- c(NA, length = length(branch.each_taxa))
+  for(i in 1:length(Phylum.color.list)){
+    index <- match(Phylum.color.list[[i]], branch.each_taxa)
+    background.color.vector[index] <- color.vector[i + length(taxa_list)]
+  }
+  
+  background.color[color.b.index,3] <- background.color.vector
+  
+  
+  # make it able to merge with the later matrix
+  background.color.four_column <- cbind(background.color, NA)
+  colnames(background.color.four_column) <- paste0('c', 1:4)
+  
+  ####################################
+  # build the rings outside
+  # each ring represents one method
+  outside.ring.global <- data.frame(matrix(NA, nrow = 2, ncol = 4))
+  outside.ring.global[1, ] <- c('total_plotted_degrees', 340, NA, NA)
+  outside.ring.global[2, ] <- c('start_rotation', 270, NA, NA)
+  
+  n_rings <- length(taxa_list) + 1
+  outside.shape.all <- data.frame(matrix(NA, nrow = n_rings * 4, ncol = 4))
+  outside.shape.all[ ,1] <- c('ring_internal_separator_thickness', 'ring_label',
+                              'ring_label_color', 'ring_label_font_size')
+  outside.shape.all[ ,2] <- rep(1:n_rings, each = 4)
+  outside.shape.all[ ,3] <- ifelse(outside.shape.all[ ,1] == 'ring_internal_separator_thickness', 0.5, 7)
+  ring_label_index <- which(outside.shape.all[ ,1] == 'ring_label')
+  outside.shape.all[ring_label_index,3] <- c(names(taxa_list), 'outside')
+  ring_label_col.index <- which(outside.shape.all[ ,1] == 'ring_label_color')
+  outside.shape.all[ring_label_col.index,3] <- c(color.vector[1:length(taxa_list)], 'w')
+  outside.shape.all[ ,4] <- NA
+  
+  tax.name.list <- read.table(file = paste0(save_folder, '/taxa.txt'))
+  outside.ring.shape <- data.frame(matrix(NA, nrow = n_rings*nrow(tax.name.list), ncol = 4))
+  outside.ring.shape[,1] <- tax.name.list[ ,1]
+  outside.ring.shape[,2] <- 'ring_color'
+  outside.ring.shape[,3] <- rep(1:n_rings, each = nrow(tax.name.list))
+  outside.ring.shape[,4] <- rep(c(color.vector[1:length(taxa_list)], 'w'), each =  nrow(tax.name.list))
+  
+  outside.ring.alpha <- outside.ring.shape
+  outside.ring.alpha[ ,2] <- 'ring_alpha'
+  outside.ring.alpha[ ,4] <- 0
+  alpha.index <- c()
+  for(i in 1:length(taxa_list)){
+    index <- match(taxa_list[[i]]$OTUs, tax.df.unique$OTUs) + nrow(tax.name.list) * (i-1)
+    alpha.index <- c(alpha.index, index) 
+  }
+  outside.ring.alpha[alpha.index,4] <- 1
+  
+  
+  # The OTUs that are selected only by one method will be enlarged
+  OTU.size <- data.frame(matrix(NA, nrow = nrow(tax.df.unique), ncol = 4))
+  OTU.size[ ,1] <- tax.name.list[ ,1]
+  OTU.size[ ,2] <- 'clade_marker_size'
+  OTU.sizes <- c()
+  for(i in 1:nrow(tax.df.unique)){
+    OTU.sizes[i] <- length(which(tax.df$OTUs == tax.df.unique$OTUs[i]))
+  }
+  OTU.size[ ,3] <- OTU.sizes * 25
+  OTU.size[ ,4] <- NA
+  
+  
+  label_index <- which(OTU.sizes == min(OTU.sizes))
+  OTU.clade <- data.frame(matrix(NA, nrow = length(label_index), ncol = 4))
+  OTU.clade[ ,1] <- tax.df.unique$OTUs[label_index]
+  OTU.clade[ ,2] <- 'clade_marker_color'
+  OTU.clade[ ,3] <- '#555555'
+  OTU.clade[ ,4] <- NA
+  
+  four_column <- rbind(outside.ring.global, outside.shape.all, outside.ring.shape, 
+                       outside.ring.alpha, OTU.size, OTU.clade)
+  colnames(four_column) <- paste0('c', 1:4)
+  annot_file <- rbind(background.color.four_column, four_column)
+  
+  # save the annot file
+  write.table(annot_file, file = paste0(save_folder, '/annot_all.txt'), sep = '\t', quote = FALSE, col.names = F, row.names = F, na = '')
+  
+}
+
+
+
 
 

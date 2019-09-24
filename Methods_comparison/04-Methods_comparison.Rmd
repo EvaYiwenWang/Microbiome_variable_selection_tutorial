@@ -1,36 +1,239 @@
 # Concordance of variables selected by the three methods {#comparison}
 
+In this chapter, we are going to use different visualisation approaches to display the variables selected by the three methods:
+
+* __UpSet plot:__ highlights overlap of the variables selected by the three methods. 
+* __Selbal-like plot:__ lists the selected variables and displays their discriminating ability with respect to sample groups. 
+* __plotLoadings:__ visualises the variable coefficients and sample groups each variable contributes to.
+* __Trajectory plot:__ represents the rank of the variables selected by CoDA-lasso and CLR-lasso, and their corresponding regression coefficients
+* __GraPhlAn:__ displays the taxonomic tree of selected variables (HFHS-Day1 data only).
+
+
 ## CD data
 
-```{r, fig.pos = 'H'}
-d_selbal <- read.csv("./Generated_datasets/results_selbal_Crohn12.csv", header = T)
-d_clrlasso <- read.csv("./Generated_datasets/results_clrlasso_Crohn12.csv", header = T)
-d_codalasso <- read.csv("./Generated_datasets/results_codalasso_Crohn12.csv", header = T)
-  
-taxa_selected <- list(d_clrlasso[,2], d_codalasso[,2], d_selbal[,2])
-taxa.id_selected <- list(d_clrlasso[,3], d_codalasso[,3], d_selbal[,3])
+### UpSetR
+
+UpSet is a visualisation technique for the quantitative analysis of sets and their intersections [@lex2014upset]. Before we apply *upset()*, we take the list of variable vectors selected with the three methods and convert them into a data frame compatible with *upset()* using *fromList()*. We then assign different color shcemes for each variable selection.
+     
+```{r upsetCD, fig.cap = 'UpSet plot showing overlap between variables selected with different methods.'}
+CD.select <- list(CoDA_lasso = CD.results_codalasso$varSelect, 
+                  CLR_lasso = CD.results_clrlasso$varSelect, 
+                  selbal = CD.results_selbal$varSelect)
 
 
-venn.plot <- venn.diagram(taxa_selected, NULL, fill = c("magenta", "blue", "lightblue"), 
-                          alpha=c(0.5,0.5,0.5), cex = 2, cat.fontface=4, 
-                          category.names = c("clr+lasso", "coda-lasso", "selbal"),
-                          main = "Concordance of selected taxa for Crohn data")
-grid.draw(venn.plot)
+CD.select.upsetR <- fromList(CD.select)
 
-taxa.id <- venn(taxa.id_selected, show.plot=FALSE)
-taxa <- venn(taxa_selected, show.plot=FALSE)
+upset(as.data.frame(CD.select.upsetR), main.bar.color = 'gray36', 
+      sets.bar.color = color[c(1:2,5)], matrix.color = 'gray36', 
+      order.by = 'freq', empty.intersections = 'on', 
+      queries = list(list(query = intersects, params = list('CoDA_lasso'), 
+                          color = color[5], active = T), 
+                     list(query = intersects, params = list('CLR_lasso'), 
+                          color = color[2], active = T),
+                     list(query = intersects, params = list('selbal'), 
+                          color = color[1], active = T)))
+```
 
-inters_taxa.id <- attr(taxa.id, "intersections")
-inters_taxa <- attr(taxa, "intersections")
+In Figure \@ref(fig:upsetCD), the left bars show the number of variables selected by each method. The right bar plot combined with the scatterplot show different intersection situations and their aggregates. For example, in the first column, three points are linked with one line, and the intersection size of the bar is 6. This means that 6 variables are selected by all these three methods. While in the second column, 3 variables are only selected by the method CoDA-lasso.
 
-lapply(inters_taxa, head) 
+### Selbal-like plot
 
-lapply(inters_taxa.id, head) 
+Selbal-like plot is an extension of the plot proposed by @rivera2018balances.
+
+```{r codaCD, fig.height = 5, fig.width = 7, fig.cap = 'Selbal-like plot showing variables selected with method CoDA-lasso and the ability of these variables to discriminate CD and non-CD individuals.'}
+# CoDA_lasso
+CD.coda_pos <- CD.results_codalasso$posCoefSelect
+CD.coda_neg <- CD.results_codalasso$negCoefSelect
+selbal_like_plot(pos.names = names(CD.coda_pos), neg.names = names(CD.coda_neg), 
+                 Y = CD.y, X = CD.x)
+```
+
+In Figure \@ref(fig:codaCD), the top left panel lists the selected variable names with either negative or positive coefficients. The names are ordered according to their importance (absolute coefficient values). The top right panel is the Receiver Operating Characteristic (ROC) curve based on generalised linear model: $g(E(Y)) = \beta_{0} + \beta_{1}logX_{1}+...+\beta_{p}logX_{p}$ with $p$ selected variables. The Area Under the Curve (AUC) is 0.822, which indicates the ability to discriminate the sample groups. The bottom left boxplot is based on the log mean difference between negative and positive variables: $\frac{1}{p_{+}}\sum_{i=1}^{p_{+}}logX_{i} - \frac{1}{p_{-}}\sum_{j=1}^{p_{-}}logX_{j}$. This log mean difference is calculated for each sample as a balance score, because it is proportionally equal to the balance mentioned in [@rivera2018balances]. The bottom right density plots represent the distributions of the log mean difference scores for CD and non-CD individuals. 
+
+
+```{r clrCD, fig.height = 5, fig.width = 7, fig.cap = 'Selbal-like plot showing variables selected with method CLR-lasso and the ability of these variables to discriminate CD and non-CD individuals.'}
+# CLR_lasso
+CD.clr_pos <- CD.results_clrlasso$posCoefSelect
+CD.clr_neg <- CD.results_clrlasso$negCoefSelect
+selbal_like_plot(pos.names = names(CD.clr_pos), neg.names = names(CD.clr_neg), 
+                 Y = CD.y, X = CD.x)
+```
+
+The interpretation of Figure \@ref(fig:clrCD) is the same as Figure \@ref(fig:codaCD), but with variables selected with method CLR-lasso.
+
+```{r selbalCD, fig.height = 5, fig.width = 7, fig.cap = 'Selbal plot showing variables selected with method selbal and the ability of these variables to discriminate CD and non-CD individuals.'}
+# selbal
+CD.selbal_pos <- CD.results_selbal$posVarSelect
+CD.selbal_neg <- CD.results_selbal$negVarSelect
+selbal_like_plot(pos.names = CD.selbal_pos, neg.names = CD.selbal_neg, Y = CD.y, 
+                 selbal = TRUE, FINAL.BAL = CD.results_selbal$finalBal)
+```
+
+In Figure \@ref(fig:selbalCD), for the selbal method, the two groups of variables that form the global balance are specified at the top of the plot. They are equally important. The box plot represents the distribution of the balance scores for CD and non-CD individuals. The right part of the figure contains the ROC curve ($g(E(Y)) = \beta_{0} + \beta_{1}B(Den,Num)$) with its AUC value (0.841, higher than other methods) and the density curve for each group. 
+
+### plotLoadings
+
+As all these above plots do not visualise the coefficients of the selected variables, we then apply a modified plotLoadings [@rohart2017mint] to display the coefficients. 
+
+```{r loadcodaCD, fig.cap = 'The plotLoadings of selected variables with CoDA-lasso.'}
+# CoDA_lasso
+CD.coda_coef <- CD.results_codalasso$coefficientsSelect
+CD.coda_data <- CD.x[ ,CD.results_codalasso$varSelect]
+
+CD.coda.plotloadings <- plotcoefficients(coef = CD.coda_coef, 
+                                         data = CD.coda_data, 
+                                         Y = CD.y, 
+                                         title = 'Coefficients of CoDA-lasso on CD data')
+```
+
+Figure \@ref(fig:loadcodaCD) shows that the taxa colored in orange are more abundant in non-CD samples relative to CD samples (e.g. *Roseburia*), while the blue ones are more abundant in CD samples relative to non-CD samples (e.g. *Dialister*). It is based on their mean per group (CD vs. non-CDs). The bar indicates the coefficient. As we can see, several taxa are more abundant in non-CD group, but with a negative coefficient. It means this model is not optimal at some extent.
+
+
+```{r loadclrCD, fig.cap = 'The plotLoadings of selected variables with CLR-lasso.'}
+# CLR_lasso
+CD.clr_coef <- CD.results_clrlasso$coefficientsSelect
+CD.clr_data <- CD.x[ ,CD.results_clrlasso$varSelect]
+CD.clr.plotloadings <- plotcoefficients(coef = CD.clr_coef, 
+                                        data = CD.clr_data, 
+                                        Y = CD.y, 
+                                        title = 'Coefficients of clr-lasso on CD data')
+```
+
+The interpretation of Figure \@ref(fig:loadclrCD) is the same as Figure \@ref(fig:loadcodaCD). From Figure \@ref(fig:loadclrCD), all the selected variables that more abundant in non-CD samples are assigned with positive coefficients. It means CLR-lasso seems more optimal than CoDA-lasso. Both *Roseburia* and *Peptostreptococcaceae* are selected by CoDA-lasso and CLR-lasso that are more abundant in non-CD group. Although both *Eggerthella* and *Dialister* are also selected by two methods, but with very different coefficient rank. 
+
+
+### Trajectory plots
+
+To visualise the change of variable coefficients and their ranks in the selection between different methods, we introduce trajectory plots.
+
+```{r trajCD, fig.height = 8, fig.width = 11, fig.cap = 'Trajectory plots of selected variables from both CoDA-lasso and CLR-lasso in CD data.'}
+TRAJ_plot(selectVar_coef_method1 = CD.coda_coef, selectVar_coef_method2 = CD.clr_coef, 
+          selectMethods = c('CoDA-lasso', 'CLR-lasso'))
+```
+
+Figure \@ref(fig:trajCD) shows the selected variables ordered by their rank in the selection (according to their coefficient absolute values) between CoDA-lasso and CLR-lasso, with the thickness of the lines representing the coefficient absolute values. 
+
+In this plot, it is easy to visualise the rank change of each selected variable between CoDA-lasso and CLR-lasso selection. For example, the rank of *Dialister* is lower in CLR-lasso compared to CoDA-lasso. Moreover, it is also easy to detect the variables (e.g. *Bacteroides*) that are selected by one method (e.g. CLR-lasso) with high coefficient rank, but not selected by the other method (e.g. CoDA-lasso).  
+
+## HFHS-Day1 data
+
+### UpSetR
+
+```{r upsetHFHS, fig.cap = 'UpSet plot showing overlap between variables selected with different methods.'}
+HFHS.select <- list(CoDA_lasso = HFHS.results_codalasso$varSelect, 
+                  CLR_lasso = HFHS.results_clrlasso$varSelect, 
+                  selbal = HFHS.results_selbal$varSelect)
+
+HFHS.select.upsetR <- fromList(HFHS.select)
+
+upset(as.data.frame(HFHS.select.upsetR), main.bar.color = 'gray36', 
+      sets.bar.color = color[c(5,2,1)], matrix.color = 'gray36', 
+      order.by = 'freq', empty.intersections = 'on', 
+      queries = list(list(query = intersects, params = list('CoDA_lasso'), 
+                          color = color[5], active = T), 
+                     list(query = intersects, params = list('CLR_lasso'), 
+                          color = color[2], active = T),
+                     list(query = intersects, params = list('selbal'), 
+                          color = color[1], active = T)))
 
 ```
 
-need more explanation of the venn diagram.
+Figure \@ref(fig:upsetHFHS) shows that 5 OTUs are only selected with CoDA-lasso, 5 OTUs are selected both with CoDA-lasso and CLR-lasso, 4 OTUs are only selected with CLR-lasso, 1 OTUs is selected with both CLR-lasso and selbal, and 1 is selected both with CoDA-lasso and selbal. Among three methods, CoDA-lasso selected the most OTUs and selbal the least.
 
-## BEME day1 data
+### Selbal-like plot
 
-content need to be added.
+```{r, fig.height = 5, fig.width = 7, fig.cap = 'Selbal-like plot showing variables selected with method CoDA-lasso and the ability of these variables to discriminate HFHS and normal individuals.'}
+# CoDA_lasso
+HFHS.coda_pos <- HFHS.results_codalasso$posCoefSelect
+HFHS.coda_neg <- HFHS.results_codalasso$negCoefSelect
+selbal_like_plot(pos.names = names(HFHS.coda_pos), neg.names = names(HFHS.coda_neg), 
+                 Y = HFHS.y, X = HFHS.x, OTU = T, taxa = HFHS.taxonomy)
+```
+
+**Note:** *S24-7* is a family from order *Bacteroidales*.
+
+```{r, fig.height = 5, fig.width = 7, fig.cap = 'Selbal-like plot showing variables selected with method CLR-lasso and the ability of these variables to discriminate HFHS and normal individuals.'}
+# CLR_lasso
+HFHS.clr_pos <- HFHS.results_clrlasso$posCoefSelect
+HFHS.clr_neg <- HFHS.results_clrlasso$negCoefSelect
+selbal_like_plot(pos.names = names(HFHS.clr_pos), neg.names = names(HFHS.clr_neg), 
+                 Y = HFHS.y, X = HFHS.x, OTU = T, taxa = HFHS.taxonomy)
+```
+
+```{r, fig.height = 5, fig.width = 7, fig.cap = 'Selbal plot showing variables selected with methd selbal and the ability of these variables to discriminate HFHS and normal individuals.'}
+# selbal
+HFHS.selbal_pos <- HFHS.results_selbal$posVarSelect
+HFHS.selbal_neg <- HFHS.results_selbal$negVarSelect
+selbal_like_plot(pos.names = HFHS.selbal_pos, neg.names = HFHS.selbal_neg, Y = HFHS.y, 
+                 selbal = TRUE, FINAL.BAL = HFHS.results_selbal$finalBal, 
+                 OTU = T, taxa = HFHS.taxonomy)
+```
+
+These plots show that the variables selected from three different methods all have a maximum discrimination (AUC = 1) between HFHS samples and normal ones. Among these methods, selbal only needs two OTUs to build a balance, it also means the association between microbiome composition and diet is very strong.
+
+### plotLoadings
+
+```{r, loadcodaHFHS, fig.cap = 'The plotLoadings of selected variables with CoDA-lasso.'}
+# CoDA_lasso
+HFHS.coda_coef <- HFHS.results_codalasso$coefficientsSelect
+HFHS.coda_data <- HFHS.x[ ,HFHS.results_codalasso$varSelect]
+
+HFHS.coda.plotloadings <- plotcoefficients(coef = HFHS.coda_coef, 
+                                           data = HFHS.coda_data, 
+                                           Y = HFHS.y, 
+                                           title = 'Coefficients of CoDA-lasso on HFHS-Day1 data',
+                                           OTU = T,
+                                           taxa = HFHS.taxonomy)
+```
+
+In Figure \@ref(fig:loadcodaHFHS), two OTUs **1105860: Allobaculum** and **175272: S24-7** are more abundant in HFHS group but are assigned with positive coefficients. 
+
+```{r, loadclrHFHS, fig.cap = 'The plotLoadings of selected variables with CLR-lasso.'}
+# CLR_lasso
+HFHS.clr_coef <- HFHS.results_clrlasso$coefficientsSelect
+HFHS.clr_data <- HFHS.x[ ,HFHS.results_clrlasso$varSelect]
+HFHS.clr.plotloadings <- plotcoefficients(coef = HFHS.clr_coef, 
+                                          data = HFHS.clr_data, 
+                                          Y = HFHS.y, 
+                                          title = 'Coefficients of clr-lasso on HFHS-Day1 data',
+                                          OTU = T,
+                                          taxa = HFHS.taxonomy)
+```
+
+
+
+### Trajectory plots
+
+```{r trajHFHS, fig.height = 8, fig.width = 11, fig.cap = 'Trajectory plots of selected variables with both CoDA-lasso and CLR-lasso in HFHS-Day1 data.'}
+TRAJ_plot(selectVar_coef_method1 = HFHS.coda_coef, selectVar_coef_method2 = HFHS.clr_coef, 
+          selectMethods = c('CoDA-lasso', 'CLR-lasso'), OTU = T, taxa = HFHS.taxonomy)
+```
+
+In Figure \@ref(fig:trajHFHS), top four OTUs selected with CLR-lasso are also selected as top OTUs from CoDA-lasso but with different order. The other OTUs are either selected by CoDA-lasso or CLR-lasso (except OTU 462764: Ruminococcus).
+
+
+### GraPhlAn
+
+As we also have the taxonomic information of HFHS-Day1 data, we use GraPhlAn to visualise the taxonomic information of the selected OTUs. GraPhlAn is a software tool for producing high-quality circular representations of taxonomic and phylogenetic trees (https://huttenhower.sph.harvard.edu/graphlan). It is coded in Python. 
+
+We first remove empty taxa (e.g. species) and aggregate all these selected variables into a list. Then we use function *graphlan_annot_generation()* to generate the input files that graphlan python codes require. In the **save_folder**, there are two existing files: **annot_0.txt** and **graphlan_all.sh**. After we generate our input files **taxa.txt** and **annot_all.txt**, we only need to run the **graphlan_all.sh** in the bash command line to generate the plot.
+
+```{r}
+# remove empty columns
+HFHS.tax_codalasso <- HFHS.tax_codalasso[,-7] 
+HFHS.tax_clrlasso <- HFHS.tax_clrlasso[,-7]
+HFHS.tax_selbal <- HFHS.tax_selbal[,-7]
+
+HFHS.select.tax <- list(CoDA_lasso = HFHS.tax_codalasso, 
+                        CLR_lasso = HFHS.tax_clrlasso, 
+                        selbal = HFHS.tax_selbal)
+
+graphlan_annot_generation(taxa_list = HFHS.select.tax, 
+save_folder = '/Users/yiwenw5/Documents/GitHub/Methods_comparison/Methods_comparison/graphlan')
+```
+
+```{r graphlanHFHS, echo = F, fig.cap = 'GraPhlAn of selected taxa from different methods in HFHS-Day1 data.'}
+knitr::include_graphics('./graphlan/taxa.png')
+```
+
+In Figure \@ref(fig:graphlanHFHS), the inner circle is a taxonomic tree of selected OTUs. The outside circles indicate different selection methods. If a proportion of a circle is coloured, it means that the corresponding OTU is selected by the method labeled on the circle. If the bottom nodes are coloured in gray, it indicates the OTUs are only selected by one method.
