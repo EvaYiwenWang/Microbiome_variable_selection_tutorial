@@ -24,7 +24,7 @@
 
 
 
-<meta name="date" content="2019-09-25">
+<meta name="date" content="2019-10-14">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -139,7 +139,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
-<li><a href="https://github.com/EvaYiwenWang/Methods_comparison" target="blank">Source codes on github</a></li>
+<li><a href="https://github.com/EvaYiwenWang/Microbiome_variable_selection_tutorial" target="blank">Source codes on github</a></li>
 
 </ul>
 
@@ -239,7 +239,7 @@ Figure 5.4: Selbal plot showing variables selected with method selbal and the ab
 </div>
 <div id="plotloadings" class="section level3">
 <h3><span class="header-section-number">5.1.3</span> plotLoadings</h3>
-<p>As all these above plots do not visualise the coefficients of the selected variables, we then apply a modified plotLoadings <span class="citation">(Rohart et al. <a href="#ref-rohart2017mint">2017</a>)</span> to display the coefficients.</p>
+<p>An easier way to visualise the coefficients of the selected variables is to plot them in a barplot, as proposed by <span class="citation">Rohart et al. (<a href="#ref-rohart2017mint">2017</a>)</span>. We have amended the <em>plotLoadings()</em> function from the package <em>mixOmics</em> to do so. The argument <strong>Y</strong> specified the sample class, so that the color assigened to each variable represents the class that has maximum CLR mean value (<strong>method = ‘mean’</strong> and <strong>contrib.method = ‘max’</strong>).</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># CoDA_lasso</span>
 CD.coda_coef &lt;-<span class="st"> </span>CD.results_codalasso<span class="op">$</span>coefficientsSelect
 CD.coda_data &lt;-<span class="st"> </span>CD.x[ ,CD.results_codalasso<span class="op">$</span>varSelect]
@@ -247,6 +247,8 @@ CD.coda_data &lt;-<span class="st"> </span>CD.x[ ,CD.results_codalasso<span clas
 CD.coda.plotloadings &lt;-<span class="st"> </span><span class="kw">plotcoefficients</span>(<span class="dt">coef =</span> CD.coda_coef, 
                                          <span class="dt">data =</span> CD.coda_data, 
                                          <span class="dt">Y =</span> CD.y, 
+                                         <span class="dt">method =</span> <span class="st">&#39;mean&#39;</span>, 
+                                         <span class="dt">contrib.method =</span> <span class="st">&#39;max&#39;</span>,
                                          <span class="dt">title =</span> <span class="st">&#39;Coefficients of CoDA-lasso on CD data&#39;</span>)</code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:loadcodaCD"></span>
 <img src="Generated_plots/loadcodaCD-1.png" alt="The plotLoadings of selected variables with CoDA-lasso." width="100%" />
@@ -254,13 +256,15 @@ CD.coda.plotloadings &lt;-<span class="st"> </span><span class="kw">plotcoeffici
 Figure 5.5: The plotLoadings of selected variables with CoDA-lasso.
 </p>
 </div>
-<p>Figure <a href="comparison.html#fig:loadcodaCD">5.5</a> shows that the taxa colored in orange are more abundant in non-CD samples relative to CD samples (e.g. <em>Roseburia</em>), while the blue ones are more abundant in CD samples relative to non-CD samples (e.g. <em>Dialister</em>). It is based on their mean per group (CD vs. non-CDs). The bar indicates the coefficient. As we can see, several taxa are more abundant in non-CD group, but with a negative coefficient. It means this model is not optimal at some extent.</p>
+<p>Figure <a href="comparison.html#fig:loadcodaCD">5.5</a> shows that the taxa colored in orange have a CLR abundance greater in non-CD samples relative to CD samples (e.g. <em>Roseburia</em>), while the blue ones have a greater CLR abundance in CD samples relative to non-CD samples (e.g. <em>Dialister</em>). It is based on their mean per group (CD vs. non-CDs). The bar indicates the coefficient. As we can see, several taxa have a greater CLR abundance in non-CD group, but with a negative coefficient. It means this model is not optimal at some extent.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># CLR_lasso</span>
 CD.clr_coef &lt;-<span class="st"> </span>CD.results_clrlasso<span class="op">$</span>coefficientsSelect
 CD.clr_data &lt;-<span class="st"> </span>CD.x[ ,CD.results_clrlasso<span class="op">$</span>varSelect]
 CD.clr.plotloadings &lt;-<span class="st"> </span><span class="kw">plotcoefficients</span>(<span class="dt">coef =</span> CD.clr_coef, 
                                         <span class="dt">data =</span> CD.clr_data, 
                                         <span class="dt">Y =</span> CD.y, 
+                                        <span class="dt">method =</span> <span class="st">&#39;mean&#39;</span>, 
+                                        <span class="dt">contrib.method =</span> <span class="st">&#39;max&#39;</span>,
                                         <span class="dt">title =</span> <span class="st">&#39;Coefficients of clr-lasso on CD data&#39;</span>)</code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:loadclrCD"></span>
 <img src="Generated_plots/loadclrCD-1.png" alt="The plotLoadings of selected variables with CLR-lasso." width="100%" />
@@ -268,11 +272,11 @@ CD.clr.plotloadings &lt;-<span class="st"> </span><span class="kw">plotcoefficie
 Figure 5.6: The plotLoadings of selected variables with CLR-lasso.
 </p>
 </div>
-<p>The interpretation of Figure <a href="comparison.html#fig:loadclrCD">5.6</a> is the same as Figure <a href="comparison.html#fig:loadcodaCD">5.5</a>. From Figure <a href="comparison.html#fig:loadclrCD">5.6</a>, all the selected variables that more abundant in non-CD samples are assigned with positive coefficients. It means CLR-lasso seems more optimal than CoDA-lasso. Both <em>Roseburia</em> and <em>Peptostreptococcaceae</em> are selected by CoDA-lasso and CLR-lasso that are more abundant in non-CD group. Although both <em>Eggerthella</em> and <em>Dialister</em> are also selected by two methods, but with very different coefficient rank.</p>
+<p>Same as Figure <a href="comparison.html#fig:loadcodaCD">5.5</a>, we can interpret Figure <a href="comparison.html#fig:loadclrCD">5.6</a> as follows. All selected variables with a greater CLR abundance in non-CD samples have been assigned a positive coefficient. Compared to Figure <a href="comparison.html#fig:loadcodaCD">5.5</a>, where the sign of the coefficients is not consisitent across the sample class, this may suggest the CLR-lasso is better at identifying discriminative variables than CODA-lasso. Both <em>Roseburia</em> and <em>Peptostreptococcaceae</em> selected by CoDA-lasso and CLR-lasso have a greater CLR abundance in non-CD group and were assigned with the same coeffcient rank. But both <em>Eggerthella</em> and <em>Dialister</em> selected by two methods were assigned with very different coefficient rank.</p>
 </div>
 <div id="trajectory-plots" class="section level3">
 <h3><span class="header-section-number">5.1.4</span> Trajectory plots</h3>
-<p>To visualise the change of variable coefficients and their ranks in the selection between different methods, we introduce trajectory plots.</p>
+<p>To visualise the change of variable coefficients and their ranks in the selection between different methods, we use trajectory plots.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">TRAJ_plot</span>(<span class="dt">selectVar_coef_method1 =</span> CD.coda_coef, <span class="dt">selectVar_coef_method2 =</span> CD.clr_coef, 
           <span class="dt">selectMethods =</span> <span class="kw">c</span>(<span class="st">&#39;CoDA-lasso&#39;</span>, <span class="st">&#39;CLR-lasso&#39;</span>))</code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:trajCD"></span>
@@ -282,11 +286,12 @@ Figure 5.7: Trajectory plots of selected variables from both CoDA-lasso and CLR-
 </p>
 </div>
 <p>Figure <a href="comparison.html#fig:trajCD">5.7</a> shows the selected variables ordered by their rank in the selection (according to their coefficient absolute values) between CoDA-lasso and CLR-lasso, with the thickness of the lines representing the coefficient absolute values.</p>
-<p>In this plot, it is easy to visualise the rank change of each selected variable between CoDA-lasso and CLR-lasso selection. For example, the rank of <em>Dialister</em> is lower in CLR-lasso compared to CoDA-lasso. Moreover, it is also easy to detect the variables (e.g. <em>Bacteroides</em>) that are selected by one method (e.g. CLR-lasso) with high coefficient rank, but not selected by the other method (e.g. CoDA-lasso).</p>
+<p>In this plot, we can visualise the rank change of each selected variable between CoDA-lasso and CLR-lasso selection. For example, the rank of <em>Dialister</em> is lower in CLR-lasso compared to CoDA-lasso. Moreover, we can detect the variables (e.g. <em>Bacteroides</em>) that are selected by one method (e.g. CLR-lasso) with high coefficient rank, but not selected by the other method (e.g. CoDA-lasso).</p>
 </div>
 </div>
 <div id="hfhs-day1-data-3" class="section level2">
 <h2><span class="header-section-number">5.2</span> HFHS-Day1 data</h2>
+<p>Guidance on how to interpret the following plots is detailed in previous <strong>section: CD data</strong>.</p>
 <div id="upsetr-1" class="section level3">
 <h3><span class="header-section-number">5.2.1</span> UpSetR</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">HFHS.select &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">CoDA_lasso =</span> HFHS.results_codalasso<span class="op">$</span>varSelect, 
@@ -360,6 +365,8 @@ HFHS.coda_data &lt;-<span class="st"> </span>HFHS.x[ ,HFHS.results_codalasso<spa
 HFHS.coda.plotloadings &lt;-<span class="st"> </span><span class="kw">plotcoefficients</span>(<span class="dt">coef =</span> HFHS.coda_coef, 
                                            <span class="dt">data =</span> HFHS.coda_data, 
                                            <span class="dt">Y =</span> HFHS.y, 
+                                           <span class="dt">method =</span> <span class="st">&#39;mean&#39;</span>, 
+                                           <span class="dt">contrib.method =</span> <span class="st">&#39;max&#39;</span>,
                                            <span class="dt">title =</span> <span class="st">&#39;Coefficients of CoDA-lasso on HFHS-Day1 data&#39;</span>,
                                            <span class="dt">OTU =</span> T,
                                            <span class="dt">taxa =</span> HFHS.taxonomy)</code></pre></div>
@@ -369,7 +376,7 @@ HFHS.coda.plotloadings &lt;-<span class="st"> </span><span class="kw">plotcoeffi
 Figure 5.12: The plotLoadings of selected variables with CoDA-lasso.
 </p>
 </div>
-<p>In Figure <a href="comparison.html#fig:loadcodaHFHS">5.12</a>, two OTUs <strong>1105860: Allobaculum</strong> and <strong>175272: S24-7</strong> are more abundant in HFHS group but are assigned with positive coefficients.</p>
+<p>In Figure <a href="comparison.html#fig:loadcodaHFHS">5.12</a>, two OTUs <strong>1105860: Allobaculum</strong> and <strong>175272: S24-7</strong> have a greater CLR abundance in HFHS group but were assigned with positive coefficients.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># CLR_lasso</span>
 HFHS.clr_coef &lt;-<span class="st"> </span>HFHS.results_clrlasso<span class="op">$</span>coefficientsSelect
 HFHS.clr_data &lt;-<span class="st"> </span>HFHS.x[ ,HFHS.results_clrlasso<span class="op">$</span>varSelect]
@@ -377,6 +384,8 @@ HFHS.clr.plotloadings &lt;-<span class="st"> </span><span class="kw">plotcoeffic
                                           <span class="dt">data =</span> HFHS.clr_data, 
                                           <span class="dt">Y =</span> HFHS.y, 
                                           <span class="dt">title =</span> <span class="st">&#39;Coefficients of clr-lasso on HFHS-Day1 data&#39;</span>,
+                                          <span class="dt">method =</span> <span class="st">&#39;mean&#39;</span>, 
+                                          <span class="dt">contrib.method =</span> <span class="st">&#39;max&#39;</span>,
                                           <span class="dt">OTU =</span> T,
                                           <span class="dt">taxa =</span> HFHS.taxonomy)</code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:loadclrHFHS"></span>
@@ -412,7 +421,7 @@ HFHS.select.tax &lt;-<span class="st"> </span><span class="kw">list</span>(<span
                         <span class="dt">selbal =</span> HFHS.tax_selbal)
 
 <span class="kw">graphlan_annot_generation</span>(<span class="dt">taxa_list =</span> HFHS.select.tax, 
-<span class="dt">save_folder =</span> <span class="st">&#39;/Users/yiwenw5/Documents/GitHub/Methods_comparison/Methods_comparison/graphlan&#39;</span>)</code></pre></div>
+<span class="dt">save_folder =</span> <span class="st">&#39;/Users/yiwenw5/Documents/GitHub/Microbiome_variable_selection_tutorial/Microbiome_variable_selection_tutorial/graphlan/&#39;</span>)</code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:graphlanHFHS"></span>
 <img src="graphlan/taxa.png" alt="GraPhlAn of selected taxa from different methods in HFHS-Day1 data." width="100%" />
 <p class="caption">
@@ -479,7 +488,7 @@ gitbook.start({
 "link": null,
 "text": null
 },
-"download": ["Methods_comparison.pdf"],
+"download": ["Microbiome_variable_selection_tutorial.pdf"],
 "toc": {
 "collapse": "subsection"
 }

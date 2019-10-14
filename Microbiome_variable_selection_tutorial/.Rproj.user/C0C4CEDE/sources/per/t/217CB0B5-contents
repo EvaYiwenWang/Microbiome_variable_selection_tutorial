@@ -1,0 +1,87 @@
+--- 
+title: 'Variable selection in microbiome compositional data analysis: tutorial'
+author: |
+  | Antoni Susin, Yiwen Wang, Kim-Anh Lê Cao, M.Luz Calle
+date: "`r Sys.Date()`"
+output: pdf_document
+bibliography: book.bib
+description: Methods comparison
+documentclass: book
+link-citations: yes
+classoption: openany
+site: bookdown::bookdown_site
+biblio-style: apalike
+---
+
+```{r global_options, include = FALSE}
+library(knitr)
+knitr::opts_chunk$set(dpi = 100, warning = FALSE, message = FALSE, error = FALSE, 
+                      eval = TRUE, fig.show = TRUE, fig.width = 6, 
+                      fig.height = 4, fig.align = 'center', out.width = '100%', 
+                      fig.path = './Generated_plots/')
+
+```
+
+# Introduction 
+
+This vignette provides a comparison of three multivariate methods for microbiome variable selection that consider the compositional structure of microbiome data:    
+
+* CoDA-lasso: penalized regression with constraint coefficients (regression coefficients sum up to zero) [@lu2019generalized; @lin2014variable]; 
+* CLR-lasso: penalized regression after the centered log-ratio (CLR) transformation [@zou2005regularization; @tibshirani1996regression; @le1992ridge]; 
+* selbal: forward selection to identify the balance between two groups of taxa that is more associated with the response variable [@rivera2018balances].
+
+## Packages installation and loading
+
+Install then load the following packages:
+
+```{r}
+# cran.packages <- c('knitr', 'glmnet', 'ggplot2', 'gridExtra',
+#                    'UpSetR', 'ggforce', 'pROC')
+# install.packages(cran.packages)
+# devtools::install_github(repo = 'UVic-omics/selbal')
+
+library(knitr) # rbookdown, kable
+library(glmnet) # glmnet
+library(selbal) # selbal
+library(ggplot2) # draw selbal
+library(gridExtra) # grid.arrange
+library(UpSetR) # upset
+library(ggforce) # selbal-like plot
+library(pROC) # ROC curve
+
+# build in functions
+source(file = 'functions.R')
+```
+
+## Example datasets
+
+### Crohn's disease
+
+Crohn's disease (CD) is an inflammatory bowel disease that has been linked to microbial alterations in the gut [@gevers2014treatment; @oyri2015dysbiotic]. We used data from a large pediatric CD cohort study [@gevers2014treatment] to compare the proposed methodologies for identification of microbial signatures. 
+
+The microbiome data were generated using 16S rRNA gene sequencing with QIIME 1.7.0 bioinformatics processing, and the processed data were downloaded from Qiita [@rivera2018balances]. Only patients with Crohn's disease (n = 662) and those without any symptoms (n = 313) were analyzed. The OTU table was agglomerated to the genus level, resulting in a matrix with 48 genera and 975 samples (see Table \@ref(tab:summary)).
+
+Load the data as follows:
+
+```{r}
+load('./datasets/CD_data.RData')
+```
+
+### High fat high sugar diet in mice
+
+The study was conducted by Dr Lê Cao at the University of Queensland Diamantina Institute that investigated the effect of diet in mice. C57/B6 female black mice were housed in cages (3 animals per cage and fed with a high fat high sugar diet (HFHS) or a normal diet). Stool sampling was performed at Day 0, 1, 4 and 7. Illumina MiSeq sequencing was used to obtain the 16S rRNA sequencing data. The sequencing data were then processed with QIIME 1.9.0. For our analysis, we considered Day 1 only (HFHS-Day1). The OTU (Operational Taxonomy Units) table after OTU filtering included 558 taxa and 47 samples (24 HFHS diet and 23 normal diet) (see Table \@ref(tab:summary)). Taxonomy information from Family, Genus, and Species are also available and reported here.
+
+```{r}
+load('./datasets/HFHS_data.RData')
+```
+
+| CD data          || HFHS-Day1 data        ||
+|:-------:|:-------:|:-------:|:-------:|
+| No. of genera | 48 | No. of OTUs | 558 |
+| No. of samples | 975 | No. of samples | 47 |
+| No. of patients with CD | 662 | No. of mice with HFHS diet | 24 |
+| No. of healthy patients | 313 | No. of mice with normal diet | 23 |
+Table: (\#tab:summary) **Summary of case studies**
+
+
+
