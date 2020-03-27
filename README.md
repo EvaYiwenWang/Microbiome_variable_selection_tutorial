@@ -3,13 +3,13 @@ This repository supports the paper:
 
 # Variable selection in microbiome compositional data analysis
 
-Antoni Susin$^1$, Yiwen Wang$^2$, Kim-Anh Lê Cao$^2$, M.Luz Calle$^3$
+Antoni Susin<sup>1</sup>, Yiwen Wang<sup>2</sup>, Kim-Anh Lê Cao<sup>2</sup>, M.Luz Calle<sup>3</sup>
 
-$^1$Mathematical Department, UPC-Barcelona Tech, Barcelona, Spain
+<sup>1</sup>Mathematical Department, UPC-Barcelona Tech, Barcelona, Spain
 
-$^2$Melbourne Integrative Genomics, School of Mathematics and Statistics, The University of Melbourne, Parkville VIC 3010, Australia
+<sup>2</sup>Melbourne Integrative Genomics, School of Mathematics and Statistics, The University of Melbourne, Parkville VIC 3010, Australia
 
-$^3$Biosciences Department, Faculty of Sciences and Technology, University of Vic - Central University of Catalonia, Vic, Spain
+<sup>3</sup>Biosciences Department, Faculty of Sciences and Technology, University of Vic - Central University of Catalonia, Vic, Spain
 
 **Abstract**:
 
