@@ -23,11 +23,7 @@
 
 
 
-<<<<<<< HEAD
 <meta name="date" content="2020-03-28" />
-=======
-<meta name="date" content="2020-03-26" />
->>>>>>> ffadf25b7e7732cc63f7cc894c60900a7c14fb94
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -201,11 +197,7 @@ Crohn.select.upsetR &lt;-<span class="st"> </span><span class="kw">fromList</spa
 Figure 5.1: UpSet plot showing overlap between variables selected with different methods.
 </p>
 </div>
-<<<<<<< HEAD
 <p>In Figure <a href="comparison.html#fig:upsetCD">5.1</a>, the left bars show the number of variables selected by each method. The right bar plot combined with the scatterplot show different intersection and their aggregates. For example, in the first column, three points are linked with one line, and the intersection size of the bar is 6. This means that 6 variables are selected by all these three methods. While in the second column, 3 variables are only selected by the method <em>selbal</em> and <em>clr-lasso</em>.</p>
-=======
-<p>In Figure <a href="comparison.html#fig:upsetCD">5.1</a>, the left bars show the number of variables selected by each method. The right bar plot combined with the scatterplot show different intersection situations and their aggregates. For example, in the first column, three points are linked with one line, and the intersection size of the bar is 6. This means that 6 variables are selected by all these three methods. While in the second column, 3 variables are only selected by the method <em>selbal</em> and <em>clr-lasso</em>.</p>
->>>>>>> ffadf25b7e7732cc63f7cc894c60900a7c14fb94
 </div>
 <div id="selbal-like-plot" class="section level3">
 <h3><span class="header-section-number">5.1.2</span> Selbal-like plot</h3>
@@ -254,11 +246,7 @@ Figure 5.4: Selbal-like plot showing variables selected with method coda-lasso a
 </div>
 <div id="plotloadings" class="section level3">
 <h3><span class="header-section-number">5.1.3</span> plotLoadings</h3>
-<<<<<<< HEAD
 <p>An easy way to visualise the coefficients of the selected variables is to plot them in a barplot in <em>mixMC</em> <span class="citation">(Rohart et al. <a href="#ref-rohart2017mint">2017</a>)</span>. We have amended the <em>plotLoadings()</em> function from the package <em>mixOmics</em> to do so. The argument <strong>Y</strong> specified the sample class, so that the color assigened to each variable represents the class that has the larger mean value (<strong>method = ‘mean’</strong> and <strong>contrib.method = ‘max’</strong>).</p>
-=======
-<p>An easier way to visualise the coefficients of the selected variables is to plot them in a barplot, as proposed by <span class="citation">Rohart et al. (<a href="#ref-rohart2017mint">2017</a>)</span>. We have amended the <em>plotLoadings()</em> function from the package <em>mixOmics</em> to do so. The argument <strong>Y</strong> specified the sample class, so that the color assigened to each variable represents the class that has the larger mean value (<strong>method = ‘mean’</strong> and <strong>contrib.method = ‘max’</strong>).</p>
->>>>>>> ffadf25b7e7732cc63f7cc894c60900a7c14fb94
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># clr_lasso</span>
 Crohn.clr_coef &lt;-<span class="st"> </span>Crohn.results_clrlasso<span class="op">$</span>coefficientsSelect
 Crohn.clr_data &lt;-<span class="st"> </span>x_Crohn[ ,Crohn.results_clrlasso<span class="op">$</span>varSelect]

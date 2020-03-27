@@ -18,11 +18,9 @@ devtools::install_url(url="https://github.com/UVic-omics/selbal/archive/master.z
 For a detailed description of *selbal* see the vignette: 
 https://htmlpreview.github.io/?https://github.com/UVic-omics/selbal/blob/master/vignettes/vignette.html
 
-<<<<<<< HEAD
+
 We generated a wrapper function called *selbal_wrapper()* that will help us to handle the output of *selbal*. *selbal_wrapper()* will call *selbal()* function within the wrapper. The *selbal_wrapper()* function is uploaded via **functions.R**.
-=======
-We generated a wrapper function called *selbal_wrapper()* that will help us to handle the output of *selbal*. The *selbal_wrapper()* function is uploaded via **functions.R**.
->>>>>>> ffadf25b7e7732cc63f7cc894c60900a7c14fb94
+
 
 ## Crohn case study
 
@@ -50,11 +48,9 @@ To visualise the results of *selbal*, we recommend the new balance representatio
 grid.draw(selbal_Crohn$global.plot2) 
 ```
 
-<<<<<<< HEAD
+
 *selbal()* is the original *selbal* function. To improve the readability of codes and to compare more easily with the other two methods, we use *selbal_wrapper()* with the same input as *selbal()*. *selbal_wrapper()* will call *selbal()* function within the wrapper. Thus in this tutorial, we use *selbal_wrapper()* instead of the original *selbal()* function:
-=======
-To improve the readability of codes and to easier compare with the other two methods, we use *selbal_wrapper()* with the same input as *selbal()*: 
->>>>>>> ffadf25b7e7732cc63f7cc894c60900a7c14fb94
+
 
 ```{r}
 Crohn.results_selbal <- selbal_wrapper(X = x_Crohn, Y = y_Crohn, 

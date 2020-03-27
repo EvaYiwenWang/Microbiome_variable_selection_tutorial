@@ -34,11 +34,7 @@ upset(as.data.frame(Crohn.select.upsetR), main.bar.color = 'gray36',
                           color = color[1], active = T)))
 ```
 
-<<<<<<< HEAD
 In Figure \@ref(fig:upsetCD), the left bars show the number of variables selected by each method. The right bar plot combined with the scatterplot show different intersection and their aggregates. For example, in the first column, three points are linked with one line, and the intersection size of the bar is 6. This means that 6 variables are selected by all these three methods. While in the second column, 3 variables are only selected by the method *selbal* and *clr-lasso*.
-=======
-In Figure \@ref(fig:upsetCD), the left bars show the number of variables selected by each method. The right bar plot combined with the scatterplot show different intersection situations and their aggregates. For example, in the first column, three points are linked with one line, and the intersection size of the bar is 6. This means that 6 variables are selected by all these three methods. While in the second column, 3 variables are only selected by the method *selbal* and *clr-lasso*.
->>>>>>> ffadf25b7e7732cc63f7cc894c60900a7c14fb94
 
 ### Selbal-like plot
 
@@ -83,11 +79,8 @@ The interpretation of Figure \@ref(fig:codaCD) is the same as Figure \@ref(fig:c
 
 ### plotLoadings
 
-<<<<<<< HEAD
 An easy way to visualise the coefficients of the selected variables is to plot them in a barplot in *mixMC* [@rohart2017mint]. We have amended the *plotLoadings()* function from the package *mixOmics* to do so. The argument **Y** specified the sample class, so that the color assigened to each variable represents the class that has the larger mean value (**method = 'mean'** and **contrib.method = 'max'**). 
-=======
-An easier way to visualise the coefficients of the selected variables is to plot them in a barplot, as proposed by @rohart2017mint. We have amended the *plotLoadings()* function from the package *mixOmics* to do so. The argument **Y** specified the sample class, so that the color assigened to each variable represents the class that has the larger mean value (**method = 'mean'** and **contrib.method = 'max'**). 
->>>>>>> ffadf25b7e7732cc63f7cc894c60900a7c14fb94
+
 
 ```{r loadclrCD, fig.cap = 'The plotLoadings of selected variables with clr-lasso.'}
 # clr_lasso

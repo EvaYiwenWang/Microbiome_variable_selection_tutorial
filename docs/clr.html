@@ -23,11 +23,7 @@
 
 
 
-<<<<<<< HEAD
 <meta name="date" content="2020-03-28" />
-=======
-<meta name="date" content="2020-03-26" />
->>>>>>> ffadf25b7e7732cc63f7cc894c60900a7c14fb94
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -171,17 +167,10 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p><span class="math display">\[clr(x) = clr(x_{1},...,x_{k}) = (log(x_{1})-M,...,log(x_{k})-M)\]</span></p>
 <p>Where <span class="math inline">\(i=1,...,k\)</span> microbial variables, <span class="math inline">\(x_{k}\)</span> is the counts of variable <span class="math inline">\(k\)</span>, <span class="math inline">\(M\)</span> is the arithmetic mean of the log-transformed values.</p>
 <p><span class="math display">\[M = \frac{1}{k}\sum_{i=1}^{k}log(x_{i})\]</span></p>
-<<<<<<< HEAD
 <p>We also generated a wrapper function called <em>glmnet_wrapper()</em> that will call <em>glmnet()</em> function within the wrapper and help us to handle the output of <em>glmnet</em>. The <em>glmnet_wrapper()</em> function is uploaded via <strong>functions.R</strong>.</p>
 <div id="crohn-case-study-1" class="section level2">
 <h2><span class="header-section-number">3.1</span> Crohn case study</h2>
 <p>First we perform the clr transformation of the abundance table <strong>x_Crohn</strong> as follows (the log-transformation requires a matrix of positive values and thus the zeros have been previously added with an offset of 1):</p>
-=======
-<p>We also generated a wrapper function called <em>glmnet_wrapper()</em> that will help us to handle the output of <em>glmnet</em>. The <em>glmnet_wrapper()</em> function is uploaded via <strong>functions.R</strong>.</p>
-<div id="crohn-case-study-1" class="section level2">
-<h2><span class="header-section-number">3.1</span> Crohn case study</h2>
-<p>First we perform the clr transformation of the abundance table <strong>x_Crohn</strong> as follows (the log-transformation requires a matrix of positive values and thus the zeros have been previously imputed):</p>
->>>>>>> ffadf25b7e7732cc63f7cc894c60900a7c14fb94
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">z_Crohn &lt;-<span class="st"> </span><span class="kw">log</span>(x_Crohn)
 clrx_Crohn &lt;-<span class="st"> </span><span class="kw">apply</span>(z_Crohn, <span class="dv">2</span>, <span class="cf">function</span>(x) x <span class="op">-</span><span class="st"> </span><span class="kw">rowMeans</span>(z_Crohn))</code></pre></div>
 <p>We implement penalised regression with function <em>glmnet()</em>. This function requires the outcome <strong>Y</strong> to be numeric. The file “Crohn_data.RData” contains <strong>y_Crohn_numeric</strong>, a numerical vector of disease status with values 1 (CD) and 0 (not CD).</p>
@@ -260,11 +249,7 @@ Crohn.test2_clrlasso</code></pre></div>
 <p>According to this result, we select <span class="math inline">\(\lambda = 0.043\)</span> and implement <em>glmnet()</em>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">clrlasso_Crohn &lt;-<span class="st"> </span><span class="kw">glmnet</span>(<span class="dt">x =</span> clrx_Crohn, <span class="dt">y =</span> y_Crohn_numeric, 
                          <span class="dt">family =</span> <span class="st">&#39;binomial&#39;</span>, <span class="dt">lambda =</span> <span class="fl">0.043</span>)</code></pre></div>
-<<<<<<< HEAD
 <p>The same as <em>selbal</em>, instead of using the original <em>glmnet()</em> function, we use function <em>glmnet_wrapper()</em> that calls <em>glmnet()</em> function within the wrapper to handle the results of <em>clr-lasso</em> with the same input as <em>glmnet()</em>:</p>
-=======
-<p>The same as <em>selbal</em>, we use function <em>glmnet_wrapper()</em> to handle the results of <em>clr-lasso</em> with the same input as <em>glmnet()</em>:</p>
->>>>>>> ffadf25b7e7732cc63f7cc894c60900a7c14fb94
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Crohn.results_clrlasso &lt;-<span class="st"> </span><span class="kw">glmnet_wrapper</span>(<span class="dt">X =</span> clrx_Crohn, <span class="dt">Y =</span> y_Crohn_numeric, 
                                          <span class="dt">family =</span> <span class="st">&#39;binomial&#39;</span>, <span class="dt">lambda =</span> <span class="fl">0.043</span>)</code></pre></div>
 <p>We can get the number of selected variables:</p>

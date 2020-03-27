@@ -138,19 +138,14 @@
 \setmainfont{Times New Roman}
 
 \title{Variable selection in microbiome compositional data analysis: tutorial}
-<<<<<<< HEAD
 \author{Antoni Susin\(^1\), Yiwen Wang\(^2\), Kim-Anh Lê Cao\(^2\), M.Luz
-Calle\(^3\)\\
-\(^1\)Mathematical Department, UPC-Barcelona Tech, Barcelona, Spain\\
+Calle\(^3\)\\[2\baselineskip]\(^1\)Mathematical Department,
+UPC-Barcelona Tech, Barcelona, Spain\\
 \(^2\)Melbourne Integrative Genomics, School of Mathematics\\
 and Statistics, The University of Melbourne, Parkville VIC, Australia\\
 \(^3\)Biosciences Department, Faculty of Sciences and Technology,\\
 University of Vic - Central University of Catalonia, Vic, Spain}
 \date{2020-03-28}
-=======
-\author{Antoni Susin, Yiwen Wang, Kim-Anh Lê Cao, M.Luz Calle}
-\date{2020-03-26}
->>>>>>> ffadf25b7e7732cc63f7cc894c60900a7c14fb94
 
 \begin{document}
 \maketitle
@@ -262,8 +257,6 @@ rows (individuals) and 48 columns (genera)
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{class}\NormalTok{(x_Crohn)}
-<<<<<<< HEAD
-=======
 \end{Highlighting}
 \end{Shaded}
 
@@ -297,47 +290,10 @@ vs.~not CD)
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{summary}\NormalTok{(y_Crohn)}
->>>>>>> ffadf25b7e7732cc63f7cc894c60900a7c14fb94
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
-<<<<<<< HEAD
-## [1] "data.frame"
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{dim}\NormalTok{(x_Crohn)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## [1] 975  48
-\end{verbatim}
-
-\textbf{y\_Crohn}: a factor variable, indicator of disease status (CD
-vs.~not CD)
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{class}\NormalTok{(y_Crohn)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## [1] "factor"
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{summary}\NormalTok{(y_Crohn)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-=======
->>>>>>> ffadf25b7e7732cc63f7cc894c60900a7c14fb94
 ##  CD  no 
 ## 662 313
 \end{verbatim}
@@ -469,7 +425,6 @@ No. of healthy patients & 313 & No. of mice with normal diet &
 
 \chapter{\texorpdfstring{\emph{Selbal}: selection of
 balances}{Selbal: selection of balances}}\label{selbal}
-<<<<<<< HEAD
 
 \emph{Selbal} is a forward selection algorithm for the identification of
 two groups of variables whose balance is most associated with the
@@ -477,15 +432,6 @@ response variable \citep{rivera2018balances}. \emph{Selbal} R package is
 available on GitHub (\url{https://github.com/UVic-omics/selbal}) and can
 be installed with \emph{devtools}:
 
-=======
-
-\emph{Selbal} is a forward selection algorithm for the identification of
-two groups of variables whose balance is most associated with the
-response variable \citep{rivera2018balances}. \emph{Selbal} R package is
-available on GitHub (\url{https://github.com/UVic-omics/selbal}) and can
-be installed with \emph{devtools}:
-
->>>>>>> ffadf25b7e7732cc63f7cc894c60900a7c14fb94
 for non-Windows users:
 
 \begin{Shaded}
@@ -505,7 +451,6 @@ for Windows users:
 
 For a detailed description of \emph{selbal} see the vignette:
 \url{https://htmlpreview.github.io/?https://github.com/UVic-omics/selbal/blob/master/vignettes/vignette.html}
-<<<<<<< HEAD
 
 We generated a wrapper function called \emph{selbal\_wrapper()} that
 will help us to handle the output of \emph{selbal}.
@@ -519,19 +464,6 @@ For binary outcomes, \emph{selbal()} requires that dependent variable
 \textbf{Y} is given as a factor and it implements logistic regression.
 If \textbf{Y} is numeric, \emph{selbal()} implements linear regression.
 
-=======
-
-We generated a wrapper function called \emph{selbal\_wrapper()} that
-will help us to handle the output of \emph{selbal}. The
-\emph{selbal\_wrapper()} function is uploaded via \textbf{functions.R}.
-
-\section{Crohn case study}\label{crohn-case-study}
-
-For binary outcomes, \emph{selbal()} requires that dependent variable
-\textbf{Y} is given as a factor and it implements logistic regression.
-If \textbf{Y} is numeric, \emph{selbal()} implements linear regression.
-
->>>>>>> ffadf25b7e7732cc63f7cc894c60900a7c14fb94
 The dependent variable in Crohn dataset is a factor:
 
 \begin{Shaded}
@@ -570,7 +502,6 @@ representation (\textbf{global.plot2}):
 \end{Highlighting}
 \end{Shaded}
 
-<<<<<<< HEAD
 \emph{selbal()} is the original \emph{selbal} function. To improve the
 readability of codes and to compare more easily with the other two
 methods, we use \emph{selbal\_wrapper()} with the same input as
@@ -578,11 +509,6 @@ methods, we use \emph{selbal\_wrapper()} with the same input as
 function within the wrapper. Thus in this tutorial, we use
 \emph{selbal\_wrapper()} instead of the original \emph{selbal()}
 function:
-=======
-To improve the readability of codes and to easier compare with the other
-two methods, we use \emph{selbal\_wrapper()} with the same input as
-\emph{selbal()}:
->>>>>>> ffadf25b7e7732cc63f7cc894c60900a7c14fb94
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -743,25 +669,16 @@ values.
 \[M = \frac{1}{k}\sum_{i=1}^{k}log(x_{i})\]
 
 We also generated a wrapper function called \emph{glmnet\_wrapper()}
-<<<<<<< HEAD
 that will call \emph{glmnet()} function within the wrapper and help us
 to handle the output of \emph{glmnet}. The \emph{glmnet\_wrapper()}
 function is uploaded via \textbf{functions.R}.
-=======
-that will help us to handle the output of \emph{glmnet}. The
-\emph{glmnet\_wrapper()} function is uploaded via \textbf{functions.R}.
->>>>>>> ffadf25b7e7732cc63f7cc894c60900a7c14fb94
 
 \section{Crohn case study}\label{crohn-case-study-1}
 
 First we perform the clr transformation of the abundance table
 \textbf{x\_Crohn} as follows (the log-transformation requires a matrix
-<<<<<<< HEAD
 of positive values and thus the zeros have been previously added with an
 offset of 1):
-=======
-of positive values and thus the zeros have been previously imputed):
->>>>>>> ffadf25b7e7732cc63f7cc894c60900a7c14fb94
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -911,16 +828,10 @@ According to this result, we select \(\lambda = 0.043\) and implement
 \end{Highlighting}
 \end{Shaded}
 
-<<<<<<< HEAD
 The same as \emph{selbal}, instead of using the original \emph{glmnet()}
 function, we use function \emph{glmnet\_wrapper()} that calls
 \emph{glmnet()} function within the wrapper to handle the results of
 \emph{clr-lasso} with the same input as \emph{glmnet()}:
-=======
-The same as \emph{selbal}, we use function \emph{glmnet\_wrapper()} to
-handle the results of \emph{clr-lasso} with the same input as
-\emph{glmnet()}:
->>>>>>> ffadf25b7e7732cc63f7cc894c60900a7c14fb94
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1132,7 +1043,6 @@ penalisation on a logistic regression model for a binary outcome.
 
 Details of function
 \emph{coda\_logistic\_lasso}(\textbf{y},\textbf{X},\textbf{lambda}):
-<<<<<<< HEAD
 
 \textbf{y} is the binary outcome, can be numerical (values 0 and 1),
 factor (2 levels) or categorical (2 categories).
@@ -1144,32 +1054,14 @@ abundances (counts) or relative abundances (proportions), the rows of
 \textbf{lambda} is the penalisation parameter, the larger the value of
 \textbf{lambda} the smaller the number of variables selected.
 
-=======
-
-\textbf{y} is the binary outcome, can be numerical (values 0 and 1),
-factor (2 levels) or categorical (2 categories).
-
-\textbf{X} is the matrix of microbiome abundances, either absolute
-abundances (counts) or relative abundances (proportions), the rows of
-\textbf{X} are individuals/samples, the columns are taxa.
-
-\textbf{lambda} is the penalisation parameter, the larger the value of
-\textbf{lambda} the less variables will be selected.
-
->>>>>>> ffadf25b7e7732cc63f7cc894c60900a7c14fb94
 \emph{Notes}:
 
 \begin{itemize}
 \tightlist
 \item
   Imputation of zeros: The user should provide a matrix \textbf{X} of
-<<<<<<< HEAD
   positive values without zeros. Zeros should be previously added with
   an offset of 1 by the user.
-=======
-  positive values without zeros. Zeros should be previously imputed by
-  the user.
->>>>>>> ffadf25b7e7732cc63f7cc894c60900a7c14fb94
 \item
   Log-transformation: \textbf{X} should not be the matrix of log(counts)
   or log(proportions). The method itself performs the log-transformation
@@ -1185,17 +1077,11 @@ abundances (counts) or relative abundances (proportions), the rows of
 
 Bellow, we illustrate the use of \emph{coda\_logistic\_lasso()} on the
 Crohn and HFHS-Day1 case studies. We also generated a wrapper function
-<<<<<<< HEAD
 called \emph{coda\_lasso\_wrapper()} that will call
 \emph{coda\_logistic\_lasso()} function within the wrapper and help us
 to handle the output of \emph{coda-lasso}. The
 \emph{coda\_lasso\_wrapper()} function is uploaded via
 \textbf{functions.R}.
-=======
-called \emph{coda\_lasso\_wrapper()} that will help us to handle the
-output of \emph{coda-lasso}. The \emph{coda\_lasso\_wrapper()} function
-is uploaded via \textbf{functions.R}.
->>>>>>> ffadf25b7e7732cc63f7cc894c60900a7c14fb94
 
 \section{Crohn case study}\label{crohn-case-study-2}
 
@@ -1213,11 +1099,7 @@ increment of 0.01, but you can start from a broader range:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-<<<<<<< HEAD
 \KeywordTok{lambdaRange_codalasso}\NormalTok{(}\DataTypeTok{X =}\NormalTok{ x_Crohn, }\DataTypeTok{y =}\NormalTok{ y_Crohn, }\DataTypeTok{lambdaSeq =} \KeywordTok{seq}\NormalTok{(}\FloatTok{0.1}\NormalTok{, }\FloatTok{0.2}\NormalTok{, }\FloatTok{0.01}\NormalTok{))}
-=======
-\KeywordTok{lambdaRange_codalasso}\NormalTok{(}\DataTypeTok{y =}\NormalTok{ y_Crohn, }\DataTypeTok{X =}\NormalTok{ x_Crohn, }\DataTypeTok{lambdaSeq =} \KeywordTok{seq}\NormalTok{(}\FloatTok{0.1}\NormalTok{, }\FloatTok{0.2}\NormalTok{, }\FloatTok{0.01}\NormalTok{))}
->>>>>>> ffadf25b7e7732cc63f7cc894c60900a7c14fb94
 \end{Highlighting}
 \end{Shaded}
 
@@ -1240,7 +1122,6 @@ In this output, the first column is the value of \(\lambda\), the second
 column is the number of selected variables and the third column is the
 proportion of deviance explained. According to this results, we will
 take \(\lambda = 0.15\).
-<<<<<<< HEAD
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1261,26 +1142,6 @@ same input as \emph{coda\_logistic\_lasso()}.
 \end{Highlighting}
 \end{Shaded}
 
-=======
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{codalasso_Crohn <-}\StringTok{ }\KeywordTok{coda_logistic_lasso}\NormalTok{(}\DataTypeTok{y =}\NormalTok{ y_Crohn, }\DataTypeTok{X =}\NormalTok{ x_Crohn, }\DataTypeTok{lambda =} \FloatTok{0.15}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-The same as the previous two methods, we also use a wrapper function
-called \emph{coda\_lasso\_wrapper()} with the same input as
-\emph{coda\_logistic\_lasso()}.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{Crohn.results_codalasso <-}\StringTok{ }\KeywordTok{coda_lasso_wrapper}\NormalTok{(}\DataTypeTok{Y =}\NormalTok{ y_Crohn, }\DataTypeTok{X =}\NormalTok{ x_Crohn, }
-                                              \DataTypeTok{lambda =} \FloatTok{0.15}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
->>>>>>> ffadf25b7e7732cc63f7cc894c60900a7c14fb94
 Then we get the number of selected variables:
 
 \begin{Shaded}
@@ -1322,11 +1183,7 @@ from a broader range:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-<<<<<<< HEAD
 \KeywordTok{lambdaRange_codalasso}\NormalTok{(}\DataTypeTok{X =}\NormalTok{ x_HFHSday1, }\DataTypeTok{y =}\NormalTok{ y_HFHSday1, }\DataTypeTok{lambdaSeq =} \KeywordTok{seq}\NormalTok{(}\FloatTok{1.3}\NormalTok{, }\FloatTok{1.8}\NormalTok{, }\FloatTok{0.01}\NormalTok{))}
-=======
-\KeywordTok{lambdaRange_codalasso}\NormalTok{(}\DataTypeTok{y =}\NormalTok{ y_HFHSday1, }\DataTypeTok{X =}\NormalTok{ x_HFHSday1, }\DataTypeTok{lambdaSeq =} \KeywordTok{seq}\NormalTok{(}\FloatTok{1.3}\NormalTok{, }\FloatTok{1.8}\NormalTok{, }\FloatTok{0.01}\NormalTok{))}
->>>>>>> ffadf25b7e7732cc63f7cc894c60900a7c14fb94
 \end{Highlighting}
 \end{Shaded}
 
@@ -1393,11 +1250,7 @@ In HFHSday1 data, we use \emph{coda\_lasso\_wrapper()} directly.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-<<<<<<< HEAD
 \NormalTok{HFHS.results_codalasso <-}\StringTok{ }\KeywordTok{coda_lasso_wrapper}\NormalTok{(}\DataTypeTok{X =}\NormalTok{ x_HFHSday1, }\DataTypeTok{Y =}\NormalTok{ y_HFHSday1, }\DataTypeTok{lambda =} \FloatTok{1.47}\NormalTok{) }
-=======
-\NormalTok{HFHS.results_codalasso <-}\StringTok{ }\KeywordTok{coda_lasso_wrapper}\NormalTok{(}\DataTypeTok{Y =}\NormalTok{ y_HFHSday1, }\DataTypeTok{X =}\NormalTok{ x_HFHSday1, }\DataTypeTok{lambda =} \FloatTok{1.47}\NormalTok{) }
->>>>>>> ffadf25b7e7732cc63f7cc894c60900a7c14fb94
 \end{Highlighting}
 \end{Shaded}
 
@@ -1533,17 +1386,10 @@ shcemes for each variable selection.
 
 In Figure \ref{fig:upsetCD}, the left bars show the number of variables
 selected by each method. The right bar plot combined with the
-<<<<<<< HEAD
 scatterplot show different intersection and their aggregates. For
 example, in the first column, three points are linked with one line, and
 the intersection size of the bar is 6. This means that 6 variables are
 selected by all these three methods. While in the second column, 3
-=======
-scatterplot show different intersection situations and their aggregates.
-For example, in the first column, three points are linked with one line,
-and the intersection size of the bar is 6. This means that 6 variables
-are selected by all these three methods. While in the second column, 3
->>>>>>> ffadf25b7e7732cc63f7cc894c60900a7c14fb94
 variables are only selected by the method \emph{selbal} and
 \emph{clr-lasso}.
 

@@ -2,6 +2,7 @@
 title: 'Variable selection in microbiome compositional data analysis: tutorial'
 author: |
   | Antoni Susin$^1$, Yiwen Wang$^2$, Kim-Anh Lê Cao$^2$, M.Luz Calle$^3$
+  |        
   | $^1$Mathematical Department, UPC-Barcelona Tech, Barcelona, Spain
   | $^2$Melbourne Integrative Genomics, School of Mathematics
   | and Statistics, The University of Melbourne, Parkville VIC, Australia

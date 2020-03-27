@@ -10,20 +10,13 @@ Where $i=1,...,k$ microbial variables, $x_{k}$ is the counts of variable $k$, $M
 
 $$M = \frac{1}{k}\sum_{i=1}^{k}log(x_{i})$$
 
-<<<<<<< HEAD
+
 We also generated a wrapper function called *glmnet_wrapper()* that will call *glmnet()* function within the wrapper and help us to handle the output of *glmnet*. The *glmnet_wrapper()* function is uploaded via **functions.R**.
-=======
-We also generated a wrapper function called *glmnet_wrapper()* that will help us to handle the output of *glmnet*. The *glmnet_wrapper()* function is uploaded via **functions.R**.
->>>>>>> ffadf25b7e7732cc63f7cc894c60900a7c14fb94
 
 
 ## Crohn case study
 
-<<<<<<< HEAD
 First we perform the clr transformation of the abundance table **x_Crohn** as follows (the log-transformation requires a matrix of positive values and thus the zeros have been previously added with an offset of 1):  
-=======
-First we perform the clr transformation of the abundance table **x_Crohn** as follows (the log-transformation requires a matrix of positive values and thus the zeros have been previously imputed):  
->>>>>>> ffadf25b7e7732cc63f7cc894c60900a7c14fb94
 
 
 ```{r}
@@ -72,11 +65,9 @@ clrlasso_Crohn <- glmnet(x = clrx_Crohn, y = y_Crohn_numeric,
                          family = 'binomial', lambda = 0.043)
 ```
 
-<<<<<<< HEAD
+
 The same as *selbal*, instead of using the original *glmnet()* function, we use function *glmnet_wrapper()* that calls *glmnet()* function within the wrapper to handle the results of *clr-lasso* with the same input as *glmnet()*:
-=======
-The same as *selbal*, we use function *glmnet_wrapper()* to handle the results of *clr-lasso* with the same input as *glmnet()*:
->>>>>>> ffadf25b7e7732cc63f7cc894c60900a7c14fb94
+
 
 
 ```{r}

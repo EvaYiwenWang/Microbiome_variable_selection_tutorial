@@ -23,11 +23,7 @@
 
 
 
-<<<<<<< HEAD
 <meta name="date" content="2020-03-28" />
-=======
-<meta name="date" content="2020-03-26" />
->>>>>>> ffadf25b7e7732cc63f7cc894c60900a7c14fb94
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -173,11 +169,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools<span class="op">::</span><span class="kw">install_url</span>(<span class="dt">url=</span><span class="st">&quot;https://github.com/UVic-omics/selbal/archive/master.zip&quot;</span>, 
                       <span class="dt">INSTALL_opt=</span> <span class="st">&quot;--no-multiarch&quot;</span>)</code></pre></div>
 <p>For a detailed description of <em>selbal</em> see the vignette: <a href="https://htmlpreview.github.io/?https://github.com/UVic-omics/selbal/blob/master/vignettes/vignette.html" class="uri">https://htmlpreview.github.io/?https://github.com/UVic-omics/selbal/blob/master/vignettes/vignette.html</a></p>
-<<<<<<< HEAD
 <p>We generated a wrapper function called <em>selbal_wrapper()</em> that will help us to handle the output of <em>selbal</em>. <em>selbal_wrapper()</em> will call <em>selbal()</em> function within the wrapper. The <em>selbal_wrapper()</em> function is uploaded via <strong>functions.R</strong>.</p>
-=======
-<p>We generated a wrapper function called <em>selbal_wrapper()</em> that will help us to handle the output of <em>selbal</em>. The <em>selbal_wrapper()</em> function is uploaded via <strong>functions.R</strong>.</p>
->>>>>>> ffadf25b7e7732cc63f7cc894c60900a7c14fb94
 <div id="crohn-case-study" class="section level2">
 <h2><span class="header-section-number">2.1</span> Crohn case study</h2>
 <p>For binary outcomes, <em>selbal()</em> requires that dependent variable <strong>Y</strong> is given as a factor and it implements logistic regression. If <strong>Y</strong> is numeric, <em>selbal()</em> implements linear regression.</p>
@@ -191,11 +183,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>To visualise the results of <em>selbal</em>, we recommend the new balance representation (<strong>global.plot2</strong>):</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># dev.off() # clean plots window when you run in Console</span>
 <span class="kw">grid.draw</span>(selbal_Crohn<span class="op">$</span>global.plot2) </code></pre></div>
-<<<<<<< HEAD
 <p><em>selbal()</em> is the original <em>selbal</em> function. To improve the readability of codes and to compare more easily with the other two methods, we use <em>selbal_wrapper()</em> with the same input as <em>selbal()</em>. <em>selbal_wrapper()</em> will call <em>selbal()</em> function within the wrapper. Thus in this tutorial, we use <em>selbal_wrapper()</em> instead of the original <em>selbal()</em> function:</p>
-=======
-<p>To improve the readability of codes and to easier compare with the other two methods, we use <em>selbal_wrapper()</em> with the same input as <em>selbal()</em>:</p>
->>>>>>> ffadf25b7e7732cc63f7cc894c60900a7c14fb94
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Crohn.results_selbal &lt;-<span class="st"> </span><span class="kw">selbal_wrapper</span>(<span class="dt">X =</span> x_Crohn, <span class="dt">Y =</span> y_Crohn, 
                                        <span class="dt">maxV =</span> <span class="dv">12</span>, <span class="dt">logit.acc =</span> <span class="st">&#39;Dev&#39;</span>) </code></pre></div>
 <p>The number of selected variables:</p>
