@@ -18,7 +18,7 @@ Details of function *coda_logistic_lasso*(**y**,**X**,**lambda**):
 * Log-transformation: **X** should not be the matrix of log(counts) or log(proportions). The method itself performs the log-transformation of the abundances.
 * Selection of $\lambda$: Functions *lambdaRange_codalasso()* and *lambdaRange_elasticnet()* are useful to find the optimum value of the penalisation parameter $\lambda$. Function *lambdaRange_codalasso*(**y**,**X**) provides the number of selected variables and the proportion of explained deviance for a sequence of values for the penalised parameter $\lambda$.
 
-Bellow, we illustrate the use of *coda_logistic_lasso()* on the Crohn and HFHS-Day1 case studies. We also generated a wrapper function called *coda_lasso_wrapper()* that will call *coda_logistic_lasso()* function within the wrapper and help us to handle the output of *coda-lasso*. The *coda_lasso_wrapper()* function is uploaded via **functions.R**.
+Bellow, we illustrate the use of *coda_logistic_lasso()* on the Crohn and HFHS-Day1 case studies. We also generated a wrapper function called *coda_lasso_wrapper()* that will help us to handle the output of *coda-lasso*. The *coda_lasso_wrapper()* function is uploaded via **functions.R**.
 
 
 ## Crohn case study
@@ -29,17 +29,16 @@ To run *coda-lasso*, we must specify a value of $\lambda$, the penalisation para
 lambdaRange_codalasso(X = x_Crohn, y = y_Crohn, lambdaSeq = seq(0.1, 0.2, 0.01))
 ```
 
-In this output, the first column is the value of $\lambda$, the second column is the number of selected variables and the third column is the proportion of deviance explained.  According to this results, we will take $\lambda = 0.15$. 
+In this output, the first column is the value of $\lambda$, the second column is the number of selected variables and the third column is the proportion of deviance explained. According to this results, we will take $\lambda = 0.15$. 
 
 ```{r}
 codalasso_Crohn <- coda_logistic_lasso(X = x_Crohn, y = y_Crohn, lambda = 0.15)
 ```
 
-The same as the previous two methods, we also use a wrapper function called *coda_lasso_wrapper()* instead of the original *coda_logistic_lasso()* function. This wrapper function calls *coda_logistic_lasso()* function within the wrapper and with the same input as *coda_logistic_lasso()*.
+The same as the previous two methods, we also use a wrapper function called *coda_lasso_wrapper()* with the output from *coda_logistic_lasso()*.
 
 ```{r}
-Crohn.results_codalasso <- coda_lasso_wrapper(X = x_Crohn, Y = y_Crohn, 
-                                              lambda = 0.15)
+Crohn.results_codalasso <- coda_lasso_wrapper(result = codalasso_Crohn, X = x_Crohn)
 ```
 
 Then we get the number of selected variables:
@@ -67,11 +66,15 @@ lambdaRange_codalasso(X = x_HFHSday1, y = y_HFHSday1, lambdaSeq = seq(1.3, 1.8, 
 
 The largest $\lambda$ that provides maximum proportion of explained deviance is $\lambda = 1.47$. Thus, we implement *coda-lasso* with this value of $\lambda$. 
 
-In HFHSday1 data, we use *coda_lasso_wrapper()* directly.
+```{r}
+codalasso_HFHSday1 <- coda_logistic_lasso(X = x_HFHSday1, y = y_HFHSday1, lambda = 1.47)
+```
+
+We then use *coda_lasso_wrapper()* to handle the results.
 
 
 ```{r}
-HFHS.results_codalasso <- coda_lasso_wrapper(X = x_HFHSday1, Y = y_HFHSday1, lambda = 1.47) 
+HFHS.results_codalasso <- coda_lasso_wrapper(result = codalasso_HFHSday1, X = x_HFHSday1) 
 ```
 
 The number of selected variables is 7: 

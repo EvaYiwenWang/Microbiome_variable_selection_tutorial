@@ -11,7 +11,7 @@ Where $i=1,...,k$ microbial variables, $x_{k}$ is the counts of variable $k$, $M
 $$M = \frac{1}{k}\sum_{i=1}^{k}log(x_{i})$$
 
 
-We also generated a wrapper function called *glmnet_wrapper()* that will call *glmnet()* function within the wrapper and help us to handle the output of *glmnet*. The *glmnet_wrapper()* function is uploaded via **functions.R**.
+We also generated a wrapper function called *glmnet_wrapper()* that will help us to handle the output of *glmnet*. The *glmnet_wrapper()* function is uploaded via **functions.R**.
 
 
 ## Crohn case study
@@ -66,13 +66,11 @@ clrlasso_Crohn <- glmnet(x = clrx_Crohn, y = y_Crohn_numeric,
 ```
 
 
-The same as *selbal*, instead of using the original *glmnet()* function, we use function *glmnet_wrapper()* that calls *glmnet()* function within the wrapper to handle the results of *clr-lasso* with the same input as *glmnet()*:
-
+The same as *selbal*, we use function *glmnet_wrapper()* to handle the results of *clr-lasso* with the output from *glmnet()*:
 
 
 ```{r}
-Crohn.results_clrlasso <- glmnet_wrapper(X = clrx_Crohn, Y = y_Crohn_numeric, 
-                                         family = 'binomial', lambda = 0.043)
+Crohn.results_clrlasso <- glmnet_wrapper(clrlasso_Crohn, X = clrx_Crohn)
 ```
 
 We can get the number of selected variables:
@@ -110,7 +108,7 @@ HFHS.test_clrlasso <- glmnet(x = clrx_HFHSday1, y = y_HFHSday1_numeric,
                              family = 'binomial', nlambda = 30)
 ```
 
-```{r HFHSlasso, fig.cap = 'Lasso plot of HFHS-Day1 data'}
+```{r HFHSlasso, fig.cap = 'Lasso plot of HFHSday1 data'}
 plot(HFHS.test_clrlasso, xvar = 'lambda', label = T)
 ```
 
@@ -122,11 +120,17 @@ The numerical output of *glmnet()* will help us to decide the penalty term $\lam
 HFHS.test_clrlasso
 ```
 
-For comparison purposes we set the penalty term $\lambda$ equal to 0.03 that results in the selection of 10 OTUs. In HFHSday1 data, we use *glmnet_wrapper()* directly and set the extra input **$\lambda = 0.03$**:
+For comparison purposes we set the penalty term $\lambda$ equal to 0.03 (**lambda = 0.03**) that results in the selection of 10 OTUs. 
 
 ```{r}
-HFHS.results_clrlasso <- glmnet_wrapper(X = clrx_HFHSday1, Y = y_HFHSday1_numeric, 
-                                        family = 'binomial', lambda = 0.03) 
+clrlasso_HFHSday1 <- glmnet(x = clrx_HFHSday1, y = y_HFHSday1_numeric, 
+                         family = 'binomial', lambda = 0.03)
+```
+
+We then use function *glmnet_wrapper()* to handle the results:
+
+```{r}
+HFHS.results_clrlasso <- glmnet_wrapper(result = clrlasso_HFHSday1, X = clrx_HFHSday1) 
 ```
 
 Then we get the number of selected variables:

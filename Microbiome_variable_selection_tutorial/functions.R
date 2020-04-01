@@ -22,21 +22,11 @@ source(file = 'CoDA-Penalized-Regression/R/functions_coda_penalized_regression.R
 #                         coda_lasso_wrapper
 #######################################################################
 
-coda_lasso_wrapper  <-  function(Y, X, lambda, maxiter = 400, maxiter2 = 50, 
-                         r = 10, tol = 1.e-4, tol2 = 1.e-6){
+coda_lasso_wrapper  <-  function(result, X){
   
-  # Y: dependent variable, binary, vector of length n.
+  # result: result from coda_logistic_lasso()
   # X: matrix of k covariates (positive values, taxa abundances in counts, 
   #    proportions, intensities, ...), matrix of dimension n by k.
-  # lambda : penalization parameter.
-  # maxiter: maximum number of iterations for the optimization loop.
-  # maxiter2: maximum number of iterations for the line search condition.
-  # r: fixed parameter used for the update step.
-  # tol: tolerance for the difference explained deviance in two consecutive steps.
-  # tol2: tolerance to fulfill the constraint sum(beta[j]) = 0, for j > 1 
-  
-  result <- coda_logistic_lasso(y = Y, X = X, lambda = lambda, maxiter = maxiter, maxiter2 = maxiter2, 
-                                r = r, tol = tol, tol2 = tol2, printTime = NULL)
   
   coefficientsSelect <- result$`beta non-zero coefficients`[-1]
   names(coefficientsSelect) <- result$`name of selected variables`
@@ -72,28 +62,10 @@ coda_lasso_wrapper  <-  function(Y, X, lambda, maxiter = 400, maxiter2 = 50,
 #                           glmnet_wrapper 
 #######################################################################
 
-glmnet_wrapper  <-  function(Y, X, family = c('gaussian','binomial','poisson','multinomial','cox','mgaussian'), 
-                             weights, alpha = 1, 
-                             standardize = TRUE, lambda, 
-                             standardize.response = FALSE){
+glmnet_wrapper  <-  function(result, X){
   
-  # Y: dependent variable, binary and numeric, vector of length n.
+  # result: result from glmnet()
   # X: clr transformed matrix of k covariates, matrix of dimension n by k.
-  # family: Response type.
-  # weights: observation weights. Can be total counts if responses are proportion matrices. Default is 1 for each observation.
-  # alpha: The elasticnet mixing parameter, alpha = 1 is the lasso penalty, and alpha = 0 the ridge penalty.
-  # standardize: Logical flag for x variable standardization, prior to fitting the model sequence. 
-  # The coefficients are always returned on the original scale. Default is standardize = TRUE. 
-  # If variables are in the same units already, you might not wish to standardize. 
-  # lambda : penalization parameter.
-  # standardize.response: This is for the family = 'mgaussian' family, and allows the user to standardize the response variables
-  
-  require(glmnet)
-  
-  result <- glmnet(y = Y, x = X, family = family, 
-                   weights = weights, alpha = alpha, 
-                   standardize = standardize, lambda = lambda, 
-                   standardize.response = standardize.response)
   
   coefficientsSelect <- result$beta[which(result$beta[,1] != 0),]
   coefficientsSelect <- coefficientsSelect[order(abs(coefficientsSelect), decreasing = T)]
@@ -123,33 +95,10 @@ glmnet_wrapper  <-  function(Y, X, family = c('gaussian','binomial','poisson','m
 #                           selbal_wrapper
 #######################################################################
 
-selbal_wrapper  <-  function(Y, X, th.imp = 0, covar = NULL, logit.acc = 'AUC', logt = T,
-                             col = c('steelblue1', 'tomato1'), tab = T, draw = F,
-                             maxV = 1e+10, zero.rep = 'bayes'){
+selbal_wrapper  <-  function(result, X){
   
-  # Y: the response variable, either continuous or dichotomous.
+  # result: result from selbal()
   # X: a matrix object with the information of variables (columns) for each sample (rows).
-  # th.imp: a numeric value indicating the minimum increment required in the association parameter between two consecutive 
-  # steps in order to continue with the variable addition into the balance.
-  # covar: data.frame with the variables to adjust for (columns).
-  # logit.acc: when y is dichotomous, the measure to compute for the correlation between y and the proposed balance adjusting 
-  # for covariates. One of the following values: 'AUC' (default), 'Dev', 'Rsq' or 'Tjur'.
-  # logt: logical value determining if x needs a log-transformation. TRUE if x contains raw counts or proportions.
-  # col: vector of two colours for differentiate the variables appearing in the numerator and in the denominator of the balances.
-  # tab: logical value. It specifies if a table with the variables included in the balance (ordered) and the evolution of the association parameter is demanded.
-  # draw: logical value to concretif a plot with the balance value and the response variable is desired.
-  # maxV: numeric value defining the maximum number of variables composing the balance. Default 1e10 to give prevalence to th.imp parameter.
-  # zero.rep: a value defining the method to use for zero - replacement. 'bayes' for BM-replacement or 'one' to add one read tho each cell of the matrix.
-  
-  require(grid)
-  require(selbal)
-  
-  result <- selbal(x = X, y = Y, th.imp = th.imp, covar = covar, logit.acc = logit.acc, logt = logt,
-                   col = col, tab = tab, draw = draw, maxV = maxV, zero.rep = zero.rep)
-  
-  if(draw == T){
-    grid.draw(result[[7]])
-  }
   
   # choose the desired output from 'result'
   out = list(
@@ -640,8 +589,7 @@ graphlan_annot_generation <- function(taxa_list, save_folder){
   }
   
   # save the taxa.txt file
-  complete_dir <- getwd()
-  write.table(tax.df.unique, file = paste0(complete_dir, '/', save_folder, 'taxa.txt'), sep = '.', 
+  write.table(tax.df.unique, file = paste0(save_folder, '/taxa.txt'), sep = '.', 
               quote = FALSE, col.names = F, row.names = F)
   
   #----------------------------
@@ -711,7 +659,7 @@ graphlan_annot_generation <- function(taxa_list, save_folder){
   outside.shape.all[ring_label_col.index,3] <- c(color.vector[1:length(taxa_list)], 'w')
   outside.shape.all[ ,4] <- NA
   
-  tax.name.list <- read.table(file = paste0(complete_dir, '/', save_folder, 'taxa.txt'))
+  tax.name.list <- read.table(file = paste0(save_folder, '/taxa.txt'))
   outside.ring.shape <- data.frame(matrix(NA, nrow = n_rings*nrow(tax.name.list), ncol = 4))
   outside.ring.shape[,1] <- tax.name.list[ ,1]
   outside.ring.shape[,2] <- 'ring_color'
@@ -754,7 +702,8 @@ graphlan_annot_generation <- function(taxa_list, save_folder){
   annot_file <- rbind(background.color.four_column, four_column)
   
   # save the annot file
-  write.table(annot_file, file = paste0(complete_dir, '/', save_folder, '/annot_all.txt'), sep = '\t', quote = FALSE, col.names = F, row.names = F, na = '')
+  write.table(annot_file, file = paste0(save_folder, '/annot_all.txt'), sep = '\t', quote = FALSE, col.names = F, row.names = F, na = '')
+  
 }
 
 

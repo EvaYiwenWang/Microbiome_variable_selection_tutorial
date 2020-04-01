@@ -145,7 +145,7 @@ UPC-Barcelona Tech, Barcelona, Spain\\
 and Statistics, The University of Melbourne, Parkville VIC, Australia\\
 \(^3\)Biosciences Department, Faculty of Sciences and Technology,\\
 University of Vic - Central University of Catalonia, Vic, Spain}
-\date{2020-03-28}
+\date{2020-04-01}
 
 \begin{document}
 \maketitle
@@ -453,10 +453,8 @@ For a detailed description of \emph{selbal} see the vignette:
 \url{https://htmlpreview.github.io/?https://github.com/UVic-omics/selbal/blob/master/vignettes/vignette.html}
 
 We generated a wrapper function called \emph{selbal\_wrapper()} that
-will help us to handle the output of \emph{selbal}.
-\emph{selbal\_wrapper()} will call \emph{selbal()} function within the
-wrapper. The \emph{selbal\_wrapper()} function is uploaded via
-\textbf{functions.R}.
+will help us to handle the output of \emph{selbal}. The
+\emph{selbal\_wrapper()} function is uploaded via \textbf{functions.R}.
 
 \section{Crohn case study}\label{crohn-case-study}
 
@@ -502,18 +500,13 @@ representation (\textbf{global.plot2}):
 \end{Highlighting}
 \end{Shaded}
 
-\emph{selbal()} is the original \emph{selbal} function. To improve the
-readability of codes and to compare more easily with the other two
-methods, we use \emph{selbal\_wrapper()} with the same input as
-\emph{selbal()}. \emph{selbal\_wrapper()} will call \emph{selbal()}
-function within the wrapper. Thus in this tutorial, we use
-\emph{selbal\_wrapper()} instead of the original \emph{selbal()}
-function:
+To improve the readability of codes and to compare more easily with the
+other two methods, we use \emph{selbal\_wrapper()} to handle the output
+from \emph{selbal()}:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{Crohn.results_selbal <-}\StringTok{ }\KeywordTok{selbal_wrapper}\NormalTok{(}\DataTypeTok{X =}\NormalTok{ x_Crohn, }\DataTypeTok{Y =}\NormalTok{ y_Crohn, }
-                                       \DataTypeTok{maxV =} \DecValTok{12}\NormalTok{, }\DataTypeTok{logit.acc =} \StringTok{'Dev'}\NormalTok{) }
+\NormalTok{Crohn.results_selbal <-}\StringTok{ }\KeywordTok{selbal_wrapper}\NormalTok{(}\DataTypeTok{result =}\NormalTok{ selbal_Crohn, }\DataTypeTok{X =}\NormalTok{ x_Crohn) }
 \end{Highlighting}
 \end{Shaded}
 
@@ -578,14 +571,22 @@ factor.
 ## [1] "factor"
 \end{verbatim}
 
-In HFHSday1 data, we use \emph{selbal\_wrapper()} directly and set the
-maximum number of variables to be selected equal to 2 (\textbf{maxV =
-2}):
+We set the maximum number of variables to be selected equal to 2
+(\textbf{maxV = 2}) according to tuning function \emph{selbal.cv()} (not
+shown here) \citep{rivera2018balances}:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{HFHS.results_selbal <-}\StringTok{ }\KeywordTok{selbal_wrapper}\NormalTok{(}\DataTypeTok{X =}\NormalTok{ x_HFHSday1, }\DataTypeTok{Y =}\NormalTok{ y_HFHSday1, }
-                                      \DataTypeTok{maxV =} \DecValTok{2}\NormalTok{, }\DataTypeTok{logit.acc =} \StringTok{'Dev'}\NormalTok{) }
+\NormalTok{selbal_HFHSday1 <-}\StringTok{ }\KeywordTok{selbal}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ x_HFHSday1, }\DataTypeTok{y =}\NormalTok{ y_HFHSday1, }\DataTypeTok{maxV =} \DecValTok{2}\NormalTok{, }
+                          \DataTypeTok{logit.acc =} \StringTok{'Dev'}\NormalTok{, }\DataTypeTok{draw =}\NormalTok{ F)}
+\end{Highlighting}
+\end{Shaded}
+
+We then use \emph{selbal\_wrapper()} to handle the results:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{HFHS.results_selbal <-}\StringTok{ }\KeywordTok{selbal_wrapper}\NormalTok{(}\DataTypeTok{result =}\NormalTok{ selbal_HFHSday1, }\DataTypeTok{X =}\NormalTok{ x_HFHSday1) }
 \end{Highlighting}
 \end{Shaded}
 
@@ -626,7 +627,7 @@ For visualisation, we then use \emph{selbal\_like\_plot()}.
 \end{Highlighting}
 \end{Shaded}
 
-\begin{center}\includegraphics[width=1\linewidth]{./Generated_plots/unnamed-chunk-23-1} \end{center}
+\begin{center}\includegraphics[width=1\linewidth]{./Generated_plots/unnamed-chunk-24-1} \end{center}
 
 We also extract the taxonomic information of these selected OTUs.
 
@@ -669,9 +670,8 @@ values.
 \[M = \frac{1}{k}\sum_{i=1}^{k}log(x_{i})\]
 
 We also generated a wrapper function called \emph{glmnet\_wrapper()}
-that will call \emph{glmnet()} function within the wrapper and help us
-to handle the output of \emph{glmnet}. The \emph{glmnet\_wrapper()}
-function is uploaded via \textbf{functions.R}.
+that will help us to handle the output of \emph{glmnet}. The
+\emph{glmnet\_wrapper()} function is uploaded via \textbf{functions.R}.
 
 \section{Crohn case study}\label{crohn-case-study-1}
 
@@ -828,15 +828,13 @@ According to this result, we select \(\lambda = 0.043\) and implement
 \end{Highlighting}
 \end{Shaded}
 
-The same as \emph{selbal}, instead of using the original \emph{glmnet()}
-function, we use function \emph{glmnet\_wrapper()} that calls
-\emph{glmnet()} function within the wrapper to handle the results of
-\emph{clr-lasso} with the same input as \emph{glmnet()}:
+The same as \emph{selbal}, we use function \emph{glmnet\_wrapper()} to
+handle the results of \emph{clr-lasso} with the output from
+\emph{glmnet()}:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{Crohn.results_clrlasso <-}\StringTok{ }\KeywordTok{glmnet_wrapper}\NormalTok{(}\DataTypeTok{X =}\NormalTok{ clrx_Crohn, }\DataTypeTok{Y =}\NormalTok{ y_Crohn_numeric, }
-                                         \DataTypeTok{family =} \StringTok{'binomial'}\NormalTok{, }\DataTypeTok{lambda =} \FloatTok{0.043}\NormalTok{)}
+\NormalTok{Crohn.results_clrlasso <-}\StringTok{ }\KeywordTok{glmnet_wrapper}\NormalTok{(clrlasso_Crohn, }\DataTypeTok{X =}\NormalTok{ clrx_Crohn)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -911,7 +909,7 @@ We implement \emph{glmnet()} and visualise the results (Figure
 
 }
 
-\caption{Lasso plot of HFHS-Day1 data}\label{fig:HFHSlasso}
+\caption{Lasso plot of HFHSday1 data}\label{fig:HFHSlasso}
 \end{figure}
 
 The explanation of Figure \ref{fig:HFHSlasso} is the same as Figure
@@ -964,14 +962,20 @@ penalty term \(\lambda\):
 \end{verbatim}
 
 For comparison purposes we set the penalty term \(\lambda\) equal to
-0.03 that results in the selection of 10 OTUs. In HFHSday1 data, we use
-\emph{glmnet\_wrapper()} directly and set the extra input
-\textbf{\(\lambda = 0.03\)}:
+0.03 (\textbf{lambda = 0.03}) that results in the selection of 10 OTUs.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{HFHS.results_clrlasso <-}\StringTok{ }\KeywordTok{glmnet_wrapper}\NormalTok{(}\DataTypeTok{X =}\NormalTok{ clrx_HFHSday1, }\DataTypeTok{Y =}\NormalTok{ y_HFHSday1_numeric, }
-                                        \DataTypeTok{family =} \StringTok{'binomial'}\NormalTok{, }\DataTypeTok{lambda =} \FloatTok{0.03}\NormalTok{) }
+\NormalTok{clrlasso_HFHSday1 <-}\StringTok{ }\KeywordTok{glmnet}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ clrx_HFHSday1, }\DataTypeTok{y =}\NormalTok{ y_HFHSday1_numeric, }
+                         \DataTypeTok{family =} \StringTok{'binomial'}\NormalTok{, }\DataTypeTok{lambda =} \FloatTok{0.03}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+We then use function \emph{glmnet\_wrapper()} to handle the results:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{HFHS.results_clrlasso <-}\StringTok{ }\KeywordTok{glmnet_wrapper}\NormalTok{(}\DataTypeTok{result =}\NormalTok{ clrlasso_HFHSday1, }\DataTypeTok{X =}\NormalTok{ clrx_HFHSday1) }
 \end{Highlighting}
 \end{Shaded}
 
@@ -1077,11 +1081,9 @@ abundances (counts) or relative abundances (proportions), the rows of
 
 Bellow, we illustrate the use of \emph{coda\_logistic\_lasso()} on the
 Crohn and HFHS-Day1 case studies. We also generated a wrapper function
-called \emph{coda\_lasso\_wrapper()} that will call
-\emph{coda\_logistic\_lasso()} function within the wrapper and help us
-to handle the output of \emph{coda-lasso}. The
-\emph{coda\_lasso\_wrapper()} function is uploaded via
-\textbf{functions.R}.
+called \emph{coda\_lasso\_wrapper()} that will help us to handle the
+output of \emph{coda-lasso}. The \emph{coda\_lasso\_wrapper()} function
+is uploaded via \textbf{functions.R}.
 
 \section{Crohn case study}\label{crohn-case-study-2}
 
@@ -1130,15 +1132,12 @@ take \(\lambda = 0.15\).
 \end{Shaded}
 
 The same as the previous two methods, we also use a wrapper function
-called \emph{coda\_lasso\_wrapper()} instead of the original
-\emph{coda\_logistic\_lasso()} function. This wrapper function calls
-\emph{coda\_logistic\_lasso()} function within the wrapper and with the
-same input as \emph{coda\_logistic\_lasso()}.
+called \emph{coda\_lasso\_wrapper()} with the output from
+\emph{coda\_logistic\_lasso()}.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{Crohn.results_codalasso <-}\StringTok{ }\KeywordTok{coda_lasso_wrapper}\NormalTok{(}\DataTypeTok{X =}\NormalTok{ x_Crohn, }\DataTypeTok{Y =}\NormalTok{ y_Crohn, }
-                                              \DataTypeTok{lambda =} \FloatTok{0.15}\NormalTok{)}
+\NormalTok{Crohn.results_codalasso <-}\StringTok{ }\KeywordTok{coda_lasso_wrapper}\NormalTok{(}\DataTypeTok{result =}\NormalTok{ codalasso_Crohn, }\DataTypeTok{X =}\NormalTok{ x_Crohn)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1246,11 +1245,17 @@ The largest \(\lambda\) that provides maximum proportion of explained
 deviance is \(\lambda = 1.47\). Thus, we implement \emph{coda-lasso}
 with this value of \(\lambda\).
 
-In HFHSday1 data, we use \emph{coda\_lasso\_wrapper()} directly.
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{codalasso_HFHSday1 <-}\StringTok{ }\KeywordTok{coda_logistic_lasso}\NormalTok{(}\DataTypeTok{X =}\NormalTok{ x_HFHSday1, }\DataTypeTok{y =}\NormalTok{ y_HFHSday1, }\DataTypeTok{lambda =} \FloatTok{1.47}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+We then use \emph{coda\_lasso\_wrapper()} to handle the results.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{HFHS.results_codalasso <-}\StringTok{ }\KeywordTok{coda_lasso_wrapper}\NormalTok{(}\DataTypeTok{X =}\NormalTok{ x_HFHSday1, }\DataTypeTok{Y =}\NormalTok{ y_HFHSday1, }\DataTypeTok{lambda =} \FloatTok{1.47}\NormalTok{) }
+\NormalTok{HFHS.results_codalasso <-}\StringTok{ }\KeywordTok{coda_lasso_wrapper}\NormalTok{(}\DataTypeTok{result =}\NormalTok{ codalasso_HFHSday1, }\DataTypeTok{X =}\NormalTok{ x_HFHSday1) }
 \end{Highlighting}
 \end{Shaded}
 
@@ -1661,11 +1666,11 @@ methods, \emph{clr-lasso} selected the largest number of OTUs and
 
 \begin{figure}
 
-{\centering \includegraphics[width=1\linewidth]{./Generated_plots/unnamed-chunk-52-1} 
+{\centering \includegraphics[width=1\linewidth]{./Generated_plots/unnamed-chunk-55-1} 
 
 }
 
-\caption{Selbal plot showing variables selected with methd selbal and the ability of these variables to discriminate HFHS and normal individuals.}\label{fig:unnamed-chunk-52}
+\caption{Selbal plot showing variables selected with methd selbal and the ability of these variables to discriminate HFHS and normal individuals.}\label{fig:unnamed-chunk-55}
 \end{figure}
 
 \begin{Shaded}
@@ -1682,11 +1687,11 @@ methods, \emph{clr-lasso} selected the largest number of OTUs and
 
 \begin{figure}
 
-{\centering \includegraphics[width=1\linewidth]{./Generated_plots/unnamed-chunk-53-1} 
+{\centering \includegraphics[width=1\linewidth]{./Generated_plots/unnamed-chunk-56-1} 
 
 }
 
-\caption{Selbal-like plot showing variables selected with method clr-lasso and the ability of these variables to discriminate HFHS and normal individuals.}\label{fig:unnamed-chunk-53}
+\caption{Selbal-like plot showing variables selected with method clr-lasso and the ability of these variables to discriminate HFHS and normal individuals.}\label{fig:unnamed-chunk-56}
 \end{figure}
 
 \begin{Shaded}
@@ -1703,11 +1708,11 @@ methods, \emph{clr-lasso} selected the largest number of OTUs and
 
 \begin{figure}
 
-{\centering \includegraphics[width=1\linewidth]{./Generated_plots/unnamed-chunk-54-1} 
+{\centering \includegraphics[width=1\linewidth]{./Generated_plots/unnamed-chunk-57-1} 
 
 }
 
-\caption{Selbal-like plot showing variables selected with method coda-lasso and the ability of these variables to discriminate HFHS and normal individuals.}\label{fig:unnamed-chunk-54}
+\caption{Selbal-like plot showing variables selected with method coda-lasso and the ability of these variables to discriminate HFHS and normal individuals.}\label{fig:unnamed-chunk-57}
 \end{figure}
 
 \emph{Note}: \emph{S24-7} is a family from order \emph{Bacteroidales}.
@@ -1726,7 +1731,7 @@ and diet is very strong.
 \NormalTok{HFHS.clr.plotloadings <-}\StringTok{ }\KeywordTok{plotcoefficients}\NormalTok{(}\DataTypeTok{coef =}\NormalTok{ HFHS.clr_coef, }
                               \DataTypeTok{data =}\NormalTok{ HFHS.clr_data, }
                               \DataTypeTok{Y =}\NormalTok{ y_HFHSday1, }
-                              \DataTypeTok{title =} \StringTok{'Coefficients of clr-lasso on HFHS-Day1 data'}\NormalTok{,}
+                              \DataTypeTok{title =} \StringTok{'Coefficients of clr-lasso on HFHSday1 data'}\NormalTok{,}
                               \DataTypeTok{method =} \StringTok{'mean'}\NormalTok{, }
                               \DataTypeTok{contrib.method =} \StringTok{'max'}\NormalTok{,}
                               \DataTypeTok{OTU =}\NormalTok{ T,}
@@ -1754,7 +1759,7 @@ and diet is very strong.
                             \DataTypeTok{Y =}\NormalTok{ y_HFHSday1, }
                             \DataTypeTok{method =} \StringTok{'mean'}\NormalTok{, }
                             \DataTypeTok{contrib.method =} \StringTok{'max'}\NormalTok{,}
-                            \DataTypeTok{title =} \StringTok{'Coefficients of coda-lasso on HFHS-Day1 data'}\NormalTok{,}
+                            \DataTypeTok{title =} \StringTok{'Coefficients of coda-lasso on HFHSday1 data'}\NormalTok{,}
                             \DataTypeTok{OTU =}\NormalTok{ T,}
                             \DataTypeTok{taxa =}\NormalTok{ taxonomy_HFHS)}
 \end{Highlighting}
@@ -1837,7 +1842,7 @@ After we generate our input files \textbf{taxa.txt} and
 
 }
 
-\caption{GraPhlAn of selected taxa from different methods in HFHS-Day1 data.}\label{fig:graphlanHFHS}
+\caption{GraPhlAn of selected taxa from different methods in HFHSday1 data.}\label{fig:graphlanHFHS}
 \end{figure}
 
 In Figure \ref{fig:graphlanHFHS}, the inner circle is a taxonomic tree

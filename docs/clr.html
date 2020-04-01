@@ -23,7 +23,7 @@
 
 
 
-<meta name="date" content="2020-03-28" />
+<meta name="date" content="2020-04-01" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -167,7 +167,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p><span class="math display">\[clr(x) = clr(x_{1},...,x_{k}) = (log(x_{1})-M,...,log(x_{k})-M)\]</span></p>
 <p>Where <span class="math inline">\(i=1,...,k\)</span> microbial variables, <span class="math inline">\(x_{k}\)</span> is the counts of variable <span class="math inline">\(k\)</span>, <span class="math inline">\(M\)</span> is the arithmetic mean of the log-transformed values.</p>
 <p><span class="math display">\[M = \frac{1}{k}\sum_{i=1}^{k}log(x_{i})\]</span></p>
-<p>We also generated a wrapper function called <em>glmnet_wrapper()</em> that will call <em>glmnet()</em> function within the wrapper and help us to handle the output of <em>glmnet</em>. The <em>glmnet_wrapper()</em> function is uploaded via <strong>functions.R</strong>.</p>
+<p>We also generated a wrapper function called <em>glmnet_wrapper()</em> that will help us to handle the output of <em>glmnet</em>. The <em>glmnet_wrapper()</em> function is uploaded via <strong>functions.R</strong>.</p>
 <div id="crohn-case-study-1" class="section level2">
 <h2><span class="header-section-number">3.1</span> Crohn case study</h2>
 <p>First we perform the clr transformation of the abundance table <strong>x_Crohn</strong> as follows (the log-transformation requires a matrix of positive values and thus the zeros have been previously added with an offset of 1):</p>
@@ -249,9 +249,8 @@ Crohn.test2_clrlasso</code></pre></div>
 <p>According to this result, we select <span class="math inline">\(\lambda = 0.043\)</span> and implement <em>glmnet()</em>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">clrlasso_Crohn &lt;-<span class="st"> </span><span class="kw">glmnet</span>(<span class="dt">x =</span> clrx_Crohn, <span class="dt">y =</span> y_Crohn_numeric, 
                          <span class="dt">family =</span> <span class="st">&#39;binomial&#39;</span>, <span class="dt">lambda =</span> <span class="fl">0.043</span>)</code></pre></div>
-<p>The same as <em>selbal</em>, instead of using the original <em>glmnet()</em> function, we use function <em>glmnet_wrapper()</em> that calls <em>glmnet()</em> function within the wrapper to handle the results of <em>clr-lasso</em> with the same input as <em>glmnet()</em>:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Crohn.results_clrlasso &lt;-<span class="st"> </span><span class="kw">glmnet_wrapper</span>(<span class="dt">X =</span> clrx_Crohn, <span class="dt">Y =</span> y_Crohn_numeric, 
-                                         <span class="dt">family =</span> <span class="st">&#39;binomial&#39;</span>, <span class="dt">lambda =</span> <span class="fl">0.043</span>)</code></pre></div>
+<p>The same as <em>selbal</em>, we use function <em>glmnet_wrapper()</em> to handle the results of <em>clr-lasso</em> with the output from <em>glmnet()</em>:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Crohn.results_clrlasso &lt;-<span class="st"> </span><span class="kw">glmnet_wrapper</span>(clrlasso_Crohn, <span class="dt">X =</span> clrx_Crohn)</code></pre></div>
 <p>We can get the number of selected variables:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Crohn.results_clrlasso<span class="op">$</span>numVarSelect</code></pre></div>
 <pre><code>## [1] 12</code></pre>
@@ -276,9 +275,9 @@ clrx_HFHSday1 &lt;-<span class="st"> </span><span class="kw">apply</span>(z_HFHS
                              <span class="dt">family =</span> <span class="st">&#39;binomial&#39;</span>, <span class="dt">nlambda =</span> <span class="dv">30</span>)</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(HFHS.test_clrlasso, <span class="dt">xvar =</span> <span class="st">&#39;lambda&#39;</span>, <span class="dt">label =</span> T)</code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:HFHSlasso"></span>
-<img src="Generated_plots/HFHSlasso-1.png" alt="Lasso plot of HFHS-Day1 data" width="100%" />
+<img src="Generated_plots/HFHSlasso-1.png" alt="Lasso plot of HFHSday1 data" width="100%" />
 <p class="caption">
-Figure 3.2: Lasso plot of HFHS-Day1 data
+Figure 3.2: Lasso plot of HFHSday1 data
 </p>
 </div>
 <p>The explanation of Figure <a href="clr.html#fig:HFHSlasso">3.2</a> is the same as Figure <a href="clr.html#fig:CDlasso">3.1</a>.</p>
@@ -318,9 +317,11 @@ Figure 3.2: Lasso plot of HFHS-Day1 data
 ## 28 12 0.9886 0.00651
 ## 29 12 0.9903 0.00555
 ## 30 13 0.9917 0.00474</code></pre>
-<p>For comparison purposes we set the penalty term <span class="math inline">\(\lambda\)</span> equal to 0.03 that results in the selection of 10 OTUs. In HFHSday1 data, we use <em>glmnet_wrapper()</em> directly and set the extra input <strong><span class="math inline">\(\lambda = 0.03\)</span></strong>:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">HFHS.results_clrlasso &lt;-<span class="st"> </span><span class="kw">glmnet_wrapper</span>(<span class="dt">X =</span> clrx_HFHSday1, <span class="dt">Y =</span> y_HFHSday1_numeric, 
-                                        <span class="dt">family =</span> <span class="st">&#39;binomial&#39;</span>, <span class="dt">lambda =</span> <span class="fl">0.03</span>) </code></pre></div>
+<p>For comparison purposes we set the penalty term <span class="math inline">\(\lambda\)</span> equal to 0.03 (<strong>lambda = 0.03</strong>) that results in the selection of 10 OTUs.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">clrlasso_HFHSday1 &lt;-<span class="st"> </span><span class="kw">glmnet</span>(<span class="dt">x =</span> clrx_HFHSday1, <span class="dt">y =</span> y_HFHSday1_numeric, 
+                         <span class="dt">family =</span> <span class="st">&#39;binomial&#39;</span>, <span class="dt">lambda =</span> <span class="fl">0.03</span>)</code></pre></div>
+<p>We then use function <em>glmnet_wrapper()</em> to handle the results:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">HFHS.results_clrlasso &lt;-<span class="st"> </span><span class="kw">glmnet_wrapper</span>(<span class="dt">result =</span> clrlasso_HFHSday1, <span class="dt">X =</span> clrx_HFHSday1) </code></pre></div>
 <p>Then we get the number of selected variables:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">HFHS.results_clrlasso<span class="op">$</span>numVarSelect</code></pre></div>
 <pre><code>## [1] 10</code></pre>

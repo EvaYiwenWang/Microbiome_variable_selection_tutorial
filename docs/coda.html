@@ -23,7 +23,7 @@
 
 
 
-<meta name="date" content="2020-03-28" />
+<meta name="date" content="2020-04-01" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -174,7 +174,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li>Log-transformation: <strong>X</strong> should not be the matrix of log(counts) or log(proportions). The method itself performs the log-transformation of the abundances.</li>
 <li>Selection of <span class="math inline">\(\lambda\)</span>: Functions <em>lambdaRange_codalasso()</em> and <em>lambdaRange_elasticnet()</em> are useful to find the optimum value of the penalisation parameter <span class="math inline">\(\lambda\)</span>. Function <em>lambdaRange_codalasso</em>(<strong>y</strong>,<strong>X</strong>) provides the number of selected variables and the proportion of explained deviance for a sequence of values for the penalised parameter <span class="math inline">\(\lambda\)</span>.</li>
 </ul>
-<p>Bellow, we illustrate the use of <em>coda_logistic_lasso()</em> on the Crohn and HFHS-Day1 case studies. We also generated a wrapper function called <em>coda_lasso_wrapper()</em> that will call <em>coda_logistic_lasso()</em> function within the wrapper and help us to handle the output of <em>coda-lasso</em>. The <em>coda_lasso_wrapper()</em> function is uploaded via <strong>functions.R</strong>.</p>
+<p>Bellow, we illustrate the use of <em>coda_logistic_lasso()</em> on the Crohn and HFHS-Day1 case studies. We also generated a wrapper function called <em>coda_lasso_wrapper()</em> that will help us to handle the output of <em>coda-lasso</em>. The <em>coda_lasso_wrapper()</em> function is uploaded via <strong>functions.R</strong>.</p>
 <div id="crohn-case-study-2" class="section level2">
 <h2><span class="header-section-number">4.1</span> Crohn case study</h2>
 <p>To run <em>coda-lasso</em>, we must specify a value of <span class="math inline">\(\lambda\)</span>, the penalisation parameter: the larger the value of <span class="math inline">\(\lambda\)</span>, the less variables will be selected. In previous analysis of this dataset with <em>selbal</em>, a balance with 12 variables was determined optimal to discriminate the CD status <span class="citation">(Rivera-Pinto et al. <a href="#ref-rivera2018balances">2018</a>)</span>. For ease of comparison, we will specify the penalised parameter that results in the selection of 12 variables for <em>coda-lasso</em>. Function <em>lambdaRange_codalasso()</em> helps us to identify the value of <span class="math inline">\(\lambda\)</span> that corresponds to 12 variables selected. To save space, we only consider a sequence of <span class="math inline">\(\lambda\)</span> from 0.1 to 0.2 with an increment of 0.01, but you can start from a broader range:</p>
@@ -193,9 +193,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 ## 0.2000  8  0.1775</code></pre>
 <p>In this output, the first column is the value of <span class="math inline">\(\lambda\)</span>, the second column is the number of selected variables and the third column is the proportion of deviance explained. According to this results, we will take <span class="math inline">\(\lambda = 0.15\)</span>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">codalasso_Crohn &lt;-<span class="st"> </span><span class="kw">coda_logistic_lasso</span>(<span class="dt">X =</span> x_Crohn, <span class="dt">y =</span> y_Crohn, <span class="dt">lambda =</span> <span class="fl">0.15</span>)</code></pre></div>
-<p>The same as the previous two methods, we also use a wrapper function called <em>coda_lasso_wrapper()</em> instead of the original <em>coda_logistic_lasso()</em> function. This wrapper function calls <em>coda_logistic_lasso()</em> function within the wrapper and with the same input as <em>coda_logistic_lasso()</em>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Crohn.results_codalasso &lt;-<span class="st"> </span><span class="kw">coda_lasso_wrapper</span>(<span class="dt">X =</span> x_Crohn, <span class="dt">Y =</span> y_Crohn, 
-                                              <span class="dt">lambda =</span> <span class="fl">0.15</span>)</code></pre></div>
+<p>The same as the previous two methods, we also use a wrapper function called <em>coda_lasso_wrapper()</em> with the output from <em>coda_logistic_lasso()</em>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Crohn.results_codalasso &lt;-<span class="st"> </span><span class="kw">coda_lasso_wrapper</span>(<span class="dt">result =</span> codalasso_Crohn, <span class="dt">X =</span> x_Crohn)</code></pre></div>
 <p>Then we get the number of selected variables:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Crohn.results_codalasso<span class="op">$</span>numVarSelect</code></pre></div>
 <pre><code>## [1] 12</code></pre>
@@ -266,8 +265,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 ## 1.7900  3  0.0890
 ## 1.8000  3  0.0895</code></pre>
 <p>The largest <span class="math inline">\(\lambda\)</span> that provides maximum proportion of explained deviance is <span class="math inline">\(\lambda = 1.47\)</span>. Thus, we implement <em>coda-lasso</em> with this value of <span class="math inline">\(\lambda\)</span>.</p>
-<p>In HFHSday1 data, we use <em>coda_lasso_wrapper()</em> directly.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">HFHS.results_codalasso &lt;-<span class="st"> </span><span class="kw">coda_lasso_wrapper</span>(<span class="dt">X =</span> x_HFHSday1, <span class="dt">Y =</span> y_HFHSday1, <span class="dt">lambda =</span> <span class="fl">1.47</span>) </code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">codalasso_HFHSday1 &lt;-<span class="st"> </span><span class="kw">coda_logistic_lasso</span>(<span class="dt">X =</span> x_HFHSday1, <span class="dt">y =</span> y_HFHSday1, <span class="dt">lambda =</span> <span class="fl">1.47</span>)</code></pre></div>
+<p>We then use <em>coda_lasso_wrapper()</em> to handle the results.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">HFHS.results_codalasso &lt;-<span class="st"> </span><span class="kw">coda_lasso_wrapper</span>(<span class="dt">result =</span> codalasso_HFHSday1, <span class="dt">X =</span> x_HFHSday1) </code></pre></div>
 <p>The number of selected variables is 7:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">HFHS.results_codalasso<span class="op">$</span>numVarSelect</code></pre></div>
 <pre><code>## [1] 7</code></pre>

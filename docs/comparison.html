@@ -23,7 +23,7 @@
 
 
 
-<meta name="date" content="2020-03-28" />
+<meta name="date" content="2020-04-01" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -335,8 +335,8 @@ HFHS.selbal_neg &lt;-<span class="st"> </span>HFHS.results_selbal<span class="op
                  <span class="dt">Y =</span> y_HFHSday1, <span class="dt">selbal =</span> <span class="ot">TRUE</span>, 
                  <span class="dt">FINAL.BAL =</span> HFHS.results_selbal<span class="op">$</span>finalBal, 
                  <span class="dt">OTU =</span> T, <span class="dt">taxa =</span> taxonomy_HFHS)</code></pre></div>
-<div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-52"></span>
-<img src="Generated_plots/unnamed-chunk-52-1.png" alt="Selbal plot showing variables selected with methd selbal and the ability of these variables to discriminate HFHS and normal individuals." width="100%" />
+<div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-55"></span>
+<img src="Generated_plots/unnamed-chunk-55-1.png" alt="Selbal plot showing variables selected with methd selbal and the ability of these variables to discriminate HFHS and normal individuals." width="100%" />
 <p class="caption">
 Figure 5.9: Selbal plot showing variables selected with methd selbal and the ability of these variables to discriminate HFHS and normal individuals.
 </p>
@@ -348,8 +348,8 @@ HFHS.clr_neg &lt;-<span class="st"> </span>HFHS.results_clrlasso<span class="op"
                  <span class="dt">neg.names =</span> <span class="kw">names</span>(HFHS.clr_neg), 
                  <span class="dt">Y =</span> y_HFHSday1, <span class="dt">X =</span> x_HFHSday1, <span class="dt">OTU =</span> T, 
                  <span class="dt">taxa =</span> taxonomy_HFHS)</code></pre></div>
-<div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-53"></span>
-<img src="Generated_plots/unnamed-chunk-53-1.png" alt="Selbal-like plot showing variables selected with method clr-lasso and the ability of these variables to discriminate HFHS and normal individuals." width="100%" />
+<div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-56"></span>
+<img src="Generated_plots/unnamed-chunk-56-1.png" alt="Selbal-like plot showing variables selected with method clr-lasso and the ability of these variables to discriminate HFHS and normal individuals." width="100%" />
 <p class="caption">
 Figure 5.10: Selbal-like plot showing variables selected with method clr-lasso and the ability of these variables to discriminate HFHS and normal individuals.
 </p>
@@ -361,8 +361,8 @@ HFHS.coda_neg &lt;-<span class="st"> </span>HFHS.results_codalasso<span class="o
                  <span class="dt">neg.names =</span> <span class="kw">names</span>(HFHS.coda_neg), 
                  <span class="dt">Y =</span> y_HFHSday1, <span class="dt">X =</span> x_HFHSday1, 
                  <span class="dt">OTU =</span> T, <span class="dt">taxa =</span> taxonomy_HFHS)</code></pre></div>
-<div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-54"></span>
-<img src="Generated_plots/unnamed-chunk-54-1.png" alt="Selbal-like plot showing variables selected with method coda-lasso and the ability of these variables to discriminate HFHS and normal individuals." width="100%" />
+<div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-57"></span>
+<img src="Generated_plots/unnamed-chunk-57-1.png" alt="Selbal-like plot showing variables selected with method coda-lasso and the ability of these variables to discriminate HFHS and normal individuals." width="100%" />
 <p class="caption">
 Figure 5.11: Selbal-like plot showing variables selected with method coda-lasso and the ability of these variables to discriminate HFHS and normal individuals.
 </p>
@@ -378,7 +378,7 @@ HFHS.clr_data &lt;-<span class="st"> </span>x_HFHSday1[ ,HFHS.results_clrlasso<s
 HFHS.clr.plotloadings &lt;-<span class="st"> </span><span class="kw">plotcoefficients</span>(<span class="dt">coef =</span> HFHS.clr_coef, 
                               <span class="dt">data =</span> HFHS.clr_data, 
                               <span class="dt">Y =</span> y_HFHSday1, 
-                              <span class="dt">title =</span> <span class="st">&#39;Coefficients of clr-lasso on HFHS-Day1 data&#39;</span>,
+                              <span class="dt">title =</span> <span class="st">&#39;Coefficients of clr-lasso on HFHSday1 data&#39;</span>,
                               <span class="dt">method =</span> <span class="st">&#39;mean&#39;</span>, 
                               <span class="dt">contrib.method =</span> <span class="st">&#39;max&#39;</span>,
                               <span class="dt">OTU =</span> T,
@@ -398,7 +398,7 @@ HFHS.coda.plotloadings &lt;-<span class="st"> </span><span class="kw">plotcoeffi
                             <span class="dt">Y =</span> y_HFHSday1, 
                             <span class="dt">method =</span> <span class="st">&#39;mean&#39;</span>, 
                             <span class="dt">contrib.method =</span> <span class="st">&#39;max&#39;</span>,
-                            <span class="dt">title =</span> <span class="st">&#39;Coefficients of coda-lasso on HFHS-Day1 data&#39;</span>,
+                            <span class="dt">title =</span> <span class="st">&#39;Coefficients of coda-lasso on HFHSday1 data&#39;</span>,
                             <span class="dt">OTU =</span> T,
                             <span class="dt">taxa =</span> taxonomy_HFHS)</code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:loadcodaHFHS"></span>
@@ -438,9 +438,9 @@ HFHS.select.tax &lt;-<span class="st"> </span><span class="kw">list</span>(<span
 
 <span class="kw">graphlan_annot_generation</span>(<span class="dt">taxa_list =</span> HFHS.select.tax, <span class="dt">save_folder =</span> <span class="st">&#39;graphlan/&#39;</span>)</code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:graphlanHFHS"></span>
-<img src="graphlan/taxa.png" alt="GraPhlAn of selected taxa from different methods in HFHS-Day1 data." width="100%" />
+<img src="graphlan/taxa.png" alt="GraPhlAn of selected taxa from different methods in HFHSday1 data." width="100%" />
 <p class="caption">
-Figure 5.15: GraPhlAn of selected taxa from different methods in HFHS-Day1 data.
+Figure 5.15: GraPhlAn of selected taxa from different methods in HFHSday1 data.
 </p>
 </div>
 <p>In Figure <a href="comparison.html#fig:graphlanHFHS">5.15</a>, the inner circle is a taxonomic tree of selected OTUs. The outside circles indicate different selection methods. If a proportion of a circle is coloured, it means that the corresponding OTU is selected by the method labeled on the circle. If the bottom nodes are coloured in gray, it indicates the OTUs are only selected by one method.</p>

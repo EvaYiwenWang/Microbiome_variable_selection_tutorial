@@ -202,7 +202,7 @@ HFHS.clr_data <- x_HFHSday1[ ,HFHS.results_clrlasso$varSelect]
 HFHS.clr.plotloadings <- plotcoefficients(coef = HFHS.clr_coef, 
                               data = HFHS.clr_data, 
                               Y = y_HFHSday1, 
-                              title = 'Coefficients of clr-lasso on HFHS-Day1 data',
+                              title = 'Coefficients of clr-lasso on HFHSday1 data',
                               method = 'mean', 
                               contrib.method = 'max',
                               OTU = T,
@@ -220,7 +220,7 @@ HFHS.coda.plotloadings <- plotcoefficients(coef = HFHS.coda_coef,
                             Y = y_HFHSday1, 
                             method = 'mean', 
                             contrib.method = 'max',
-                            title = 'Coefficients of coda-lasso on HFHS-Day1 data',
+                            title = 'Coefficients of coda-lasso on HFHSday1 data',
                             OTU = T,
                             taxa = taxonomy_HFHS)
 ```
@@ -261,7 +261,7 @@ HFHS.select.tax <- list(selbal = HFHS.tax_selbal,
 graphlan_annot_generation(taxa_list = HFHS.select.tax, save_folder = 'graphlan/')
 ```
 
-```{r graphlanHFHS, echo = F, fig.cap = 'GraPhlAn of selected taxa from different methods in HFHS-Day1 data.'}
+```{r graphlanHFHS, echo = F, fig.cap = 'GraPhlAn of selected taxa from different methods in HFHSday1 data.'}
 knitr::include_graphics('./graphlan/taxa.png')
 ```
 

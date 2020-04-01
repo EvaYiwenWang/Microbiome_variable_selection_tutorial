@@ -19,7 +19,7 @@ For a detailed description of *selbal* see the vignette:
 https://htmlpreview.github.io/?https://github.com/UVic-omics/selbal/blob/master/vignettes/vignette.html
 
 
-We generated a wrapper function called *selbal_wrapper()* that will help us to handle the output of *selbal*. *selbal_wrapper()* will call *selbal()* function within the wrapper. The *selbal_wrapper()* function is uploaded via **functions.R**.
+We generated a wrapper function called *selbal_wrapper()* that will help us to handle the output of *selbal*. The *selbal_wrapper()* function is uploaded via **functions.R**.
 
 
 ## Crohn case study
@@ -48,13 +48,10 @@ To visualise the results of *selbal*, we recommend the new balance representatio
 grid.draw(selbal_Crohn$global.plot2) 
 ```
 
-
-*selbal()* is the original *selbal* function. To improve the readability of codes and to compare more easily with the other two methods, we use *selbal_wrapper()* with the same input as *selbal()*. *selbal_wrapper()* will call *selbal()* function within the wrapper. Thus in this tutorial, we use *selbal_wrapper()* instead of the original *selbal()* function:
-
+To improve the readability of codes and to compare more easily with the other two methods, we use *selbal_wrapper()* to handle the output from *selbal()*: 
 
 ```{r}
-Crohn.results_selbal <- selbal_wrapper(X = x_Crohn, Y = y_Crohn, 
-                                       maxV = 12, logit.acc = 'Dev') 
+Crohn.results_selbal <- selbal_wrapper(result = selbal_Crohn, X = x_Crohn) 
 ```
 
 The number of selected variables:
@@ -90,11 +87,17 @@ First, we need to check if the dependent variable **Y** is a factor.
 class(y_HFHSday1)
 ```
 
-In HFHSday1 data, we use *selbal_wrapper()* directly and set the maximum number of variables to be selected equal to 2 (**maxV = 2**):
+We set the maximum number of variables to be selected equal to 2 (**maxV = 2**) according to tuning function *selbal.cv()* (not shown here) [@rivera2018balances]:
+
+```{r}
+selbal_HFHSday1 <- selbal(x = x_HFHSday1, y = y_HFHSday1, maxV = 2, 
+                          logit.acc = 'Dev', draw = F)
+```
+
+We then use *selbal_wrapper()* to handle the results:
 
 ```{r, message = F, error = F, warning = F}
-HFHS.results_selbal <- selbal_wrapper(X = x_HFHSday1, Y = y_HFHSday1, 
-                                      maxV = 2, logit.acc = 'Dev') 
+HFHS.results_selbal <- selbal_wrapper(result = selbal_HFHSday1, X = x_HFHSday1) 
 ```
 
 The number of selected variables:
