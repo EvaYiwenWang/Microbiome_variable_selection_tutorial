@@ -42,11 +42,12 @@ https://github.com/UVic-omics/CoDA-Penalized-Regression. Therefore, let us copy 
 
 ```{r}
 # copy the repository from https://github.com/UVic-omics/CoDA-Penalized-Regression
-# system('git clone https://github.com/UVic-omics/CoDA-Penalized-Regression')
+system('git clone https://github.com/UVic-omics/CoDA-Penalized-Regression')
 
 # fetch the last modified repository from 
 # https://github.com/UVic-omics/CoDA-Penalized-Regression
-system('git pull https://github.com/UVic-omics/CoDA-Penalized-Regression')
+# When you have already git clone the repository
+# system('git pull https://github.com/UVic-omics/CoDA-Penalized-Regression')
 ```
 
 This vignette only displays the application of all methods on the case studies. Paper related codes and datasets including simulations are all available on GitHub: https://github.com/UVic-omics/Microbiome-Variable-Selection

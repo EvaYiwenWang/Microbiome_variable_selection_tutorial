@@ -9,10 +9,11 @@
 #######################################################################
 
 # copy the repository from https://github.com/UVic-omics/CoDA-Penalized-Regression
-# system('git clone https://github.com/UVic-omics/CoDA-Penalized-Regression')
+system('git clone https://github.com/UVic-omics/CoDA-Penalized-Regression')
 
 # fetch the last modified repository from https://github.com/UVic-omics/CoDA-Penalized-Regression
-system('git pull https://github.com/UVic-omics/CoDA-Penalized-Regression')
+# When you have already git clone the repository
+# system('git pull https://github.com/UVic-omics/CoDA-Penalized-Regression')
 
 # source the required functions
 source(file = 'CoDA-Penalized-Regression/R/functions_coda_penalized_regression.R')
